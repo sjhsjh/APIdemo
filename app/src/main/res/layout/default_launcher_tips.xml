@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_tips"
+    android:layout_width="322dp"
+    android:layout_height="420dp"
+    android:background="@drawable/bg_setlauncher" >
+<!-- @drawable/bg_setlauncher -->
+
+    <ImageView
+        android:id="@+id/closeView"
+        android:layout_width="12dp"
+        android:layout_height="12dp" 
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/ic_dialog_close" />
+
+    <TextView
+        android:id="@+id/tipsView"
+        android:layout_width="281dp"
+        android:layout_height="40dp" 
+        android:layout_above="@+id/OKBtn"
+        android:layout_marginBottom="28dp"
+        android:layout_marginLeft="21dp"
+        android:layout_marginRight="20dp"
+        android:text="设置HI-Launcher为默认桌面，让桌面更快捷，更好看！" />
+
+    <Button
+        android:id="@+id/OKBtn"
+        android:layout_width="322dp"
+        android:layout_height="48dp" 
+        android:layout_alignParentBottom="true"
+        android:background="#FF5272F3"
+        android:text="确定" />
+    
+
+</RelativeLayout>

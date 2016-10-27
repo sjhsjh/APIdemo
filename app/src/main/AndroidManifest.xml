@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.apidemo">
+
+    <!--     android:sharedUserId="android.uid.system" -->
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--     <uses-permission android:name="android.permission.DEVICE_POWER" /> -->
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/earth"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.example.apidemo.activity.ResolveInfoActivity"
+            android:label="ResolveInfoActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.sss" />
+            </intent-filter>
+        </activity>
+
+        <activity-alias
+            android:name="com.example.apidemo.PowerManagerActivity"
+            android:label="PowerManagerActivity2"
+            android:targetActivity="MainActivity"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.sjh" />
+            </intent-filter>
+
+        </activity-alias>
+
+
+        <activity
+            android:name="com.example.apidemo.activity.ShortCutActivity">
+            <intent-filter >
+                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+            </intent-filter>
+        </activity>
+
+
+    </application>
+
+</manifest>
