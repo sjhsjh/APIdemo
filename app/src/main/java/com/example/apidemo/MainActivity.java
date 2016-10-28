@@ -55,7 +55,7 @@ public class MainActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                if(DEBUG) Log.i("sjh0", "onItemClick position　test3　" + position);
+                if(DEBUG) Log.i("sjh0", "onItemClick position　test11111　" + position);
 
                 Object activityClass = parent.getItemAtPosition(position); //!!!
                 if(DEBUG) Log.i("sjh0", " activityClass = " + activityClass.toString());
