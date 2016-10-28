@@ -39,8 +39,7 @@ public class MainActivity extends Activity {
 //		sendBroadcast(createShortCutIntent);
 
 
-        HardWareUtils.registerWifiListener(this);
-
+        HardWareUtils.registerBluetoothListener(this);
 
         List<Object> list = new ArrayList<Object>();
         // TUDO
@@ -77,7 +76,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        HardWareUtils.unRegisterWifiListener(this);
+        HardWareUtils.unRegisterBluetoothListener(this);
     }
 
 
