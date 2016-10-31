@@ -61,7 +61,7 @@ public class MainActivity extends Activity {
 
                 Intent intent = new Intent(MainActivity.this, (Class<?>) activityClass);
                 startActivity(intent);
-                // overridePendingTransition(R.animator.slide_right_in, R.animator.slide_left_out);
+                overridePendingTransition(R.animator.slide_right_in, R.animator.slide_left_out);
             }
 
         });

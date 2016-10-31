@@ -10,7 +10,7 @@
         <!-- 设置没有标题 -->
         <!-- <item name="android:windowNoTitle">true</item> -->
         <!-- 设置activity切换动画 -->
-        <item name="android:windowAnimationStyle">@style/activityAnimation</item>
+        <!--<item name="android:windowAnimationStyle">@style/activityAnimation</item>-->
     </style>
 
     <!-- 全局activity切换动画！ animation 样式 -->

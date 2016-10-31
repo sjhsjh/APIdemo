@@ -222,6 +222,6 @@ public class ResolveInfoActivity extends Activity {
 		// if (DEBUG) Log.i("sjh1", "finish");
 		super.finish();
 		// 通过调用overridePendingTransition() 可以实时修改Activity的切换动画。但需注意的是:该函数必须在调用startActivity()或者finish()后立即调用，且只有效一次。
-		// overridePendingTransition(R.animator.slide_left_in, R.animator.slide_right_out);
+		 overridePendingTransition(R.animator.slide_left_in, R.animator.slide_right_out);
 	}
 }
