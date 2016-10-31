@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
                 if(DEBUG) Log.i("sjh0", "onItemClick position　test11111　" + position);
 
                 Object activityClass = parent.getItemAtPosition(position); //!!!
-                if(DEBUG) Log.i("sjh0", " activityClass = " + activityClass.toString());
+                if(DEBUG) Log.i("sjh0", " activity Class = " + activityClass.toString());
 
                 Intent intent = new Intent(MainActivity.this, (Class<?>) activityClass);
                 startActivity(intent);
