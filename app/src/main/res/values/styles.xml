@@ -6,7 +6,21 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- 设置没有标题 -->
+        <!-- <item name="android:windowNoTitle">true</item> -->
+        <!-- 设置activity切换动画 -->
+        <item name="android:windowAnimationStyle">@style/activityAnimation</item>
     </style>
+
+    <!-- 全局activity切换动画！ animation 样式 -->
+    <style name="activityAnimation" parent="@android:style/Animation">
+        <item name="android:activityOpenEnterAnimation">@animator/slide_right_in</item>
+        <item name="android:activityOpenExitAnimation">@animator/slide_left_out</item>
+        <item name="android:activityCloseEnterAnimation">@animator/slide_left_in</item>
+        <item name="android:activityCloseExitAnimation">@animator/slide_right_out</item>
+    </style>
+
 
 <!--</resources>
 <resources>
