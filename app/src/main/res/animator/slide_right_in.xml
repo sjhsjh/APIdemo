@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <translate
+        android:duration="200"
+        android:fromXDelta="100.0%p"
+
+        android:toXDelta="0.0" />
+<!--    translate 位置转移动画效果
+    整型值:
+    fromXDelta 属性为动画起始时 X坐标上的位置
+    toXDelta   属性为动画结束时 X坐标上的位置
+
+    注意:
+    没有指定，
+    默认是以自己为相对参照物
+    长整型值：
+    duration  属性为动画持续时间,毫秒
+    在这些属性里面还可以加上%和p,例如:
+    Android:toXDelta="100%",表示自身的100%,也就是从View自己的位置开始。
+    android:toXDelta="80%p",表示父层View的80%,是以它父层View为参照的。-->
+
+    <!--android:interpolator: 加速器，非常有用的属性，可以简单理解为动画的速度:
+    android:interpolator="@android:anim/accelerate_interpolator"
+    可选：
+    @android:anim/accelerate_interpolator： 越来越快
+    @android:anim/decelerate_interpolator：越来越慢
+    @android:anim/accelerate_decelerate_interpolator：先快后慢
+    @android:anim/anticipate_interpolator: 先后退一小步然后向前加速
+    @android:anim/overshoot_interpolator：快速到达终点超出一小步然后回到终点
+    @android:anim/anticipate_overshoot_interpolator：到达终点超出一小步然后回到终点
+    @android:anim/bounce_interpolator：到达终点产生弹球效果，弹几下回到终点
+    @android:anim/linear_interpolator：均匀速度。
+    -->
+
+    <!--android:startOffset: 延迟一定时间后运行动画-->
+
+    <!--set就是按书写顺序先后执行translate动画-->
+
+
+</set>

@@ -104,12 +104,7 @@ public class ResolveInfoActivity extends Activity {
 		});
 	}
 	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
 
-	
 	/**
 	 * 先检查包是否存在，再检查指定的Intent是否存在，再启动符合条件的第一个resolveInfo.
 	 * @param packageName
@@ -214,5 +209,19 @@ public class ResolveInfoActivity extends Activity {
 		}
 		if (DEBUG) Log.e("sjh3", "size" + applicationList.size());
 	}
-	
+
+	@Override
+	protected void onDestroy() {
+		// if (DEBUG) Log.i("sjh1", "onDestroy");
+		super.onDestroy();
+	}
+
+
+	@Override
+	public void finish() {
+		// if (DEBUG) Log.i("sjh1", "finish");
+		super.finish();
+		// 通过调用overridePendingTransition() 可以实时修改Activity的切换动画。但需注意的是:该函数必须在调用startActivity()或者finish()后立即调用，且只有效一次。
+		// overridePendingTransition(R.animator.slide_left_in, R.animator.slide_right_out);
+	}
 }
