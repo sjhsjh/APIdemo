@@ -53,7 +53,7 @@ public class DemoAdapter extends BaseAdapter {
 		else{
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.textView.setText(((Class<?>)getItem(position)).getSimpleName()); //getclass得“class”？
+		holder.textView.setText(((Class<?>)getItem(position)).getSimpleName()); // getclass得“class”？
 
 		return convertView;
 	}

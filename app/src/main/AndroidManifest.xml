@@ -34,10 +34,9 @@
             </intent-filter>
         </activity>
 
-        <activity-alias
-            android:name="com.example.apidemo.PowerManagerActivity"
+        <activity
+            android:name="com.example.apidemo.activity.PowerManagerActivity"
             android:label="PowerManagerActivity2"
-            android:targetActivity="MainActivity"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -45,8 +44,8 @@
                 <category android:name="android.intent.category.sjh" />
             </intent-filter>
 
-        </activity-alias>
-
+        </activity>
+<!--        android:targetActivity="MainActivity"-->
 
         <activity
             android:name="com.example.apidemo.activity.ShortCutActivity">

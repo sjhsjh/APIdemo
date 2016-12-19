@@ -6,6 +6,7 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
 
 import com.example.apidemo.R;
@@ -25,6 +26,11 @@ public class PowerManagerActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.general_layout);
+	//	/*
+		ViewStub viewStub = (ViewStub) findViewById(R.id.viewStub);		// 让ViewStub的内容显示
+		viewStub.inflate();
+		// viewStub.setVisibility(View.VISIBLE);
+	//	*/
 
 		final PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
 		final WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "PowerManagerActivity");
