@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import com.example.apidemo.activity.EventDispatchActivity;
 import com.example.apidemo.activity.PowerManagerActivity;
 import com.example.apidemo.activity.ResolveInfoActivity;
 import com.example.apidemo.adapter.DemoAdapter;
@@ -45,6 +46,7 @@ public class MainActivity extends Activity {
         // TUDO
         list.add(ResolveInfoActivity.class);
         list.add(PowerManagerActivity.class);
+        list.add(EventDispatchActivity.class);
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
@@ -56,7 +58,7 @@ public class MainActivity extends Activity {
                                     int position, long id) {
                 if(DEBUG) Log.i("sjh0", "onItemClick position　test11111　" + position);
 
-                Object activityClass = parent.getItemAtPosition(position); //!!!
+                Object activityClass = parent.getItemAtPosition(position); // 根据位置判断跳转哪个activity!!!会调用adapter的getItem().
                 if(DEBUG) Log.i("sjh0", " activity Class = " + activityClass.toString());
 
                 Intent intent = new Intent(MainActivity.this, (Class<?>) activityClass);

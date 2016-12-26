@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <com.example.apidemo.view.FatherView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerVertical="true"
+        android:background="#8000ff00">
+
+        <com.example.apidemo.view.ChildView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#800000ff"
+            android:text="Button"/>
+    </com.example.apidemo.view.FatherView>
+
+
+</RelativeLayout>

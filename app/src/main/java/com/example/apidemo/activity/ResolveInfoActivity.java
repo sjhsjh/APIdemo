@@ -32,7 +32,6 @@ public class ResolveInfoActivity extends Activity {
 		setContentView(R.layout.general_layout);
 
 		
-		
 		final OnDismissListener listener = new OnDismissListener() {
 			
 			@Override

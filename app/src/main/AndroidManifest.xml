@@ -2,12 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.apidemo">
 
-    <!--     android:sharedUserId="android.uid.system" -->
+    <!-- android:sharedUserId="android.uid.system" -->
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <!--     <uses-permission android:name="android.permission.DEVICE_POWER" /> -->
-    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <!-- <uses-permission android:name="android.permission.DEVICE_POWER" /> -->
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
@@ -16,43 +16,42 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.example.apidemo.activity.ResolveInfoActivity"
-            android:label="ResolveInfoActivity" >
+            android:name=".activity.ResolveInfoActivity"
+            android:label="ResolveInfoActivity">
             <intent-filter>
                 <action android:name="android.intent.action.sss" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.example.apidemo.activity.PowerManagerActivity"
-            android:label="PowerManagerActivity2"
+            android:name=".activity.PowerManagerActivity"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true"
+            android:label="PowerManagerActivity2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.sjh" />
             </intent-filter>
-
         </activity>
-<!--        android:targetActivity="MainActivity"-->
+        <!-- android:targetActivity="MainActivity" -->
 
-        <activity
-            android:name="com.example.apidemo.activity.ShortCutActivity">
-            <intent-filter >
-                <action android:name="android.intent.action.CREATE_SHORTCUT"/>
+        <activity android:name=".activity.ShortCutActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".activity.EventDispatchActivity"></activity>
 
 
     </application>
