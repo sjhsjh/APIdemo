@@ -50,8 +50,28 @@
                 <action android:name="android.intent.action.CREATE_SHORTCUT" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.EventDispatchActivity"></activity>
+
+        <activity
+            android:name=".activity.TestServiceActivity">
+        </activity>
+
+    <service
+        android:name=".service.TestService"
+        android:enabled="true"
+        android:exported="true">
+    </service>
+<!--    android:isolatedProcess=["true" | "false"]
+    android:icon="drawable resource"
+    android:label="string resource"
+    android:name="string"
+    android:permission="string"
+    android:process="string"
+    android:isolatedProcess : 如果设置为true，这个service将运行在一个从系统中其他部分分离出来的特殊进程中，我们只能通过Service API来与它进行交流。默认为false。
+    android:label : 显示给用户的这个service的名字。如果不设置，将会默认使用<application>的label属性。
+    android:name : service名称，这个属性是唯一一个必须填的属性。
+    android:permission : 其他组件必须具有所填的权限才能启动这个service。
+    android:process : service运行的进程的name。默认启动的service是运行在主进程中的。-->
 
 
     </application>

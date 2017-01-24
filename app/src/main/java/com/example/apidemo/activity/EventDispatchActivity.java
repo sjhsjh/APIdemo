@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import com.example.apidemo.R;
 
 public class EventDispatchActivity extends Activity {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

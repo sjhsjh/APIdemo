@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.example.apidemo.activity.EventDispatchActivity;
 import com.example.apidemo.activity.PowerManagerActivity;
 import com.example.apidemo.activity.ResolveInfoActivity;
+import com.example.apidemo.activity.TestServiceActivity;
 import com.example.apidemo.adapter.DemoAdapter;
 import com.example.apidemo.utils.HardWareUtils;
 
@@ -47,6 +48,7 @@ public class MainActivity extends Activity {
         list.add(ResolveInfoActivity.class);
         list.add(PowerManagerActivity.class);
         list.add(EventDispatchActivity.class);
+        list.add(TestServiceActivity.class);
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
