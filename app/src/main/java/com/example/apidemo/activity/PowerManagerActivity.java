@@ -39,9 +39,9 @@ public class PowerManagerActivity extends Activity {
 		final WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "PowerManagerActivity");
 		//设置是否判断wakelock的acquire和release次数是否相等，若为false，则一个release就取消所有acquire。若为true，没有wakelock的时候release则报错。
 		wakeLock.setReferenceCounted(false);
-		
+
 		Log.i("sjh2", "not interactive");
-	
+
 		((Button)findViewById(R.id.button1)).setText("acquire wakelock");
 		findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
 			

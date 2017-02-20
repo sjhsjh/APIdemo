@@ -59,7 +59,11 @@
     <service
         android:name=".service.TestService"
         android:enabled="true"
+        android:process=":remote"
         android:exported="true">
+        <intent-filter>
+            <action android:name=".AIDLAction" />
+        </intent-filter>
     </service>
 <!--    android:isolatedProcess=["true" | "false"]
     android:icon="drawable resource"
