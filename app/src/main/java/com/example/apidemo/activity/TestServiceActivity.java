@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.Messenger;
 import android.os.Process;
@@ -14,7 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
+import com.example.apidemo.Book;
 import com.example.apidemo.IMyAidlInterface;
 import com.example.apidemo.R;
 import com.example.apidemo.service.TestService;
@@ -119,7 +118,7 @@ public class TestServiceActivity extends Activity {
                 try {
                     Log.d("TestService", TAG + " mMyAidlInterface = " + mMyAidlInterface);
                     if(mMyAidlInterface != null){
-                        Log.d("TestService", TAG + " aidl:" + mMyAidlInterface.plus(4 , 8));
+                        Log.d("TestService", TAG + " aidl:" + mMyAidlInterface.plus(new Book(5), new Book(8)));
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();

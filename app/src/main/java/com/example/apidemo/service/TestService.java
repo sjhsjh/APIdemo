@@ -12,6 +12,7 @@ import android.os.Process;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import com.example.apidemo.Book;
 import com.example.apidemo.IMyAidlInterface;
 import com.example.apidemo.R;
 import com.example.apidemo.activity.TestServiceActivity;
@@ -51,7 +52,7 @@ public class TestService extends Service{
      * 每次其他组件调用startService()方法时，此方法将会被调用.在这里进行这个service主要的操作
      * @param intent
      * @param flags 默认情况下是0，对应的常量名为START_STICKY_COMPATIBILITY
-     * @param startId 在多次startService(...)的情况下，呈现0,1,2....递增
+     * @param startId 在service未destory前提下，多次startService()呈现0,1,2....递增
      * @return
      */
     @Override
@@ -117,7 +118,7 @@ public class TestService extends Service{
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy");
+        Log.d(TAG, "onDestroy. 服务停止！");
         // service调用的最后一个方法.在此进行资源的回收
         if(mHandler != null){
             mHandler.removeCallbacks(mRunnable);
@@ -142,8 +143,8 @@ public class TestService extends Service{
         }
 
         @Override
-        public int plus(int a, int b) throws RemoteException {
-            return a + b;
+        public int plus(Book book1, Book book2) throws RemoteException {
+            return book1.getNumber() + book2.getNumber();
         }
 
     }
