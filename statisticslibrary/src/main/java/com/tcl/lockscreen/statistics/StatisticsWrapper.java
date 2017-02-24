@@ -69,9 +69,9 @@ public class StatisticsWrapper implements IStatistics{
      * 每次模拟启动之前（即上传之前）执行该方法，以防用户使用中途关闭了diagnostic开关.
      */
     public void updateDiagnosticSwitch(){
-        final boolean diagnosticExistAndOpen = Settings.Global.getInt(contextApp.getContentResolver(), "def.diagnostic.on", -1) == 1 ? true : false;  // 根据Diagnostics总开关决定是否上传数据
+        final boolean diagnosticExistAndOpen =
+            Settings.Global.getInt(contextApp.getContentResolver(), "def.diagnostic.on", -1) == 1 ? true : false;  // 根据Diagnostics总开关决定是否上传数据
         mdiagnosticExistAndOpen = diagnosticExistAndOpen;
-        Log.e("sjh1", "updateDiagnosticSwitch diagnosticExistAndOpen = " + diagnosticExistAndOpen);
         mStatiticsSwitch = new IStatiticsSwitch(){
 
             @Override
