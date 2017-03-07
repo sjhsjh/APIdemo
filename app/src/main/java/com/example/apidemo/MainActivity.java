@@ -3,6 +3,10 @@ package com.example.apidemo;
 import java.util.ArrayList;
 import java.util.List;
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import com.example.apidemo.activity.EventDispatchActivity;
+import com.example.apidemo.activity.NotificationActivity;
 import com.example.apidemo.activity.PowerManagerActivity;
 import com.example.apidemo.activity.ResolveInfoActivity;
 import com.example.apidemo.activity.TestServiceActivity;
@@ -49,6 +54,7 @@ public class MainActivity extends Activity {
         list.add(PowerManagerActivity.class);
         list.add(EventDispatchActivity.class);
         list.add(TestServiceActivity.class);
+        list.add(NotificationActivity.class);
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
