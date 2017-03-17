@@ -51,7 +51,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.EventDispatchActivity" />
-        <activity android:name=".activity.TestServiceActivity"></activity>
+        <activity android:name=".activity.TestServiceActivity" />
 
         <service
             android:name=".service.TestService"
@@ -76,8 +76,8 @@
     android:process : service运行的进程的name。默认启动的service是运行在主进程中的。
         -->
 
-        <activity android:name=".activity.NotificationActivity"></activity>
-
+        <activity android:name=".activity.NotificationActivity" />
+        <activity android:name=".activity.DIYViewActivity"></activity>
     </application>
 
 </manifest>
