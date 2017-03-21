@@ -1,18 +1,19 @@
 package com.example.apidemo.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Path;
 import android.util.Log;
-import android.view.View;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import android.view.View;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import com.example.apidemo.R;
 import java.io.InputStream;
 
@@ -34,13 +35,13 @@ public class DIYView extends View {
         mPaint.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         mPaint.setAntiAlias(true);   // 设置画笔为无锯齿
 
-        int statusBarHeight1 = -1;
+        int statusBarHeight = -1;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resourceId > 0) {
             // 根据资源ID获取响应的尺寸值
-            statusBarHeight1 = getResources().getDimensionPixelSize(resourceId);    // 72
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);    // 72
         }
-        Log.e("sjh0", "statusBarHeight1 = " + statusBarHeight1);
+        Log.e("sjh0", "statusBarHeight = " + statusBarHeight);
     }
 
     /**
@@ -49,18 +50,35 @@ public class DIYView extends View {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.e("sjh0", "onDraw");
+        Log.w("sjh0", "onDraw");
         super.onDraw(canvas);
 
         canvas.drawRect(10, 10, 40, 40, mPaint);
-        canvas.clipRect(0, 0, 100 , 100);// clipxx方法只对设置以后的drawxx起作用，已经画出来的图形，是不会有作用的。
+        canvas.save();
+        canvas.rotate(30);
+        canvas.clipRect(0, 0, 300 , 300);// clipxx方法只对设置以后的drawxx起作用，已经画出来的图形，是不会有作用的。
 
-        Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
         mPaint.setColor(0xFF00FF00);
+        Paint.FontMetrics fontMetrics = mPaint.getFontMetrics();
         // 这里的y是指定这个字符baseline在屏幕上的位置！而不是左上角的y！上移fontMetrics.top的位置即可！
-        canvas.drawText("自定义View,canvas对象已经存在", 0, - fontMetrics.top, mPaint);
+        canvas.drawText("旋转文字", 0, - fontMetrics.top, mPaint);
 
-//        // Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.earth) ; // 有bug，以为是456dp。 456 * density = 1368
+        canvas.restore();
+        mPaint.setColor(0xFF0000FF);
+        canvas.drawText("restore之后恢复了正常的角度和显示区域", 100, 100 - fontMetrics.top, mPaint);
+
+        Path path3 = new Path();
+        path3.moveTo(90, 340);
+        path3.lineTo(150, 340);
+        path3.lineTo(120, 290);
+        path3.close();  // 将路径闭合
+        mPaint.setStyle(Paint.Style.STROKE); // 设置空心. 填充风格：Paint.Style.FILL
+        mPaint.setStrokeWidth(10);      // 默认头发线
+        canvas.drawPath(path3, mPaint); // 绘制三角形
+        // canvas.drawTextOnPath(文字, 文字的baseline对齐path, x偏移, y偏移, 画笔); // 沿着线写字
+
+
+//        // Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.earth) ; //xx 有bug，以为是456dp。 456 * density = 1368
 //        // 将res目录下的图片文件转换为bitmap对象方法一
 //        InputStream inputStream = getResources().openRawResource(R.drawable.earth);
 //        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
@@ -75,17 +93,6 @@ public class DIYView extends View {
 //        canvas.drawBitmap(bitmap, null, dstRect, mPaint);  // null即代表使用整幅图片.
 
 
-////        int width = mBmp.getWidth();
-////        6         int height = mBmp.getHeight();
-//        8         canvas.save();
-//        9         mPaint.setColor(Color.CYAN);
-//        10         canvas.drawRect(0, 0, width, height, mPaint);
-//        11         canvas.restore();
-//        12
-//        13         canvas.save();
-//        14         canvas.clipRect(0, 0, width*2, height*2);
-//        15         canvas.drawBitmap(mBmp, width, height, mPaint);
-//        16         canvas.restore();
     }
 
 

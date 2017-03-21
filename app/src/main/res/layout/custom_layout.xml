@@ -7,8 +7,13 @@
     <com.example.apidemo.view.DIYView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#3000ff00"
-     />
+        android:background="#3000ff00" />
+
+    <ImageView
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_centerVertical="true"
+        android:src="@drawable/path_usage" />
 
 
 </RelativeLayout>
