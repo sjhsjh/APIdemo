@@ -21,6 +21,7 @@ import java.io.InputStream;
  * Created on 2017/3/16.
  */
 public class DIYView extends View {
+    private static final boolean DEBUG = false;
     private Paint mPaint;
 
     public DIYView(Context context) {
@@ -41,7 +42,7 @@ public class DIYView extends View {
             // 根据资源ID获取响应的尺寸值
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);    // 72
         }
-        Log.e("sjh0", "statusBarHeight = " + statusBarHeight);
+        if(DEBUG) Log.i("sjh0", "statusBarHeight = " + statusBarHeight);
     }
 
     /**
@@ -50,7 +51,7 @@ public class DIYView extends View {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.w("sjh0", "onDraw");
+        if(DEBUG) Log.i("sjh0", "onDraw");
         super.onDraw(canvas);
 
         canvas.drawRect(10, 10, 40, 40, mPaint);
