@@ -24,6 +24,11 @@ public class UmengStatistics extends AbstractStatistics{
     }
 
     @Override
+    public void onEvent(Context context, String eventName, String value) {
+        MobclickAgent.onEvent(context, eventName, value);
+    }
+
+    @Override
     public void onEvent(Context context, String eventName, HashMap<String, String> map) {
         MobclickAgent.onEvent(context, eventName, map);
     }
@@ -51,5 +56,14 @@ public class UmengStatistics extends AbstractStatistics{
     @Override
     public void onPageEnd(String pageName) {
         MobclickAgent.onPageEnd(pageName);
+    }
+
+    /**
+     * 捕获程序崩溃日志，并在程序下次启动时发送到服务器
+     * @param isTrace
+     */
+    @Override
+    public void initTraceException(boolean isTrace) {
+        MobclickAgent.setCatchUncaughtExceptions(isTrace);
     }
 }

@@ -23,6 +23,11 @@ class AbstractStatistics implements IStatistics{
     }
 
     @Override
+    public void onEvent(Context context, String eventName, String value) {
+
+    }
+
+    @Override
     public void onEvent(Context context, String eventName, HashMap<String, String> map) {
 
     }
@@ -49,6 +54,11 @@ class AbstractStatistics implements IStatistics{
 
     @Override
     public void onPageEnd(String pageName) {
+
+    }
+
+    @Override
+    public void initTraceException(boolean isTrace) {
 
     }
 }

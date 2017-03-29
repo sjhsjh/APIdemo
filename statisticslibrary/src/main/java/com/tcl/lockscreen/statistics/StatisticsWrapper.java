@@ -32,24 +32,27 @@ public class StatisticsWrapper implements IStatistics{
         return StatisticsWrapperProduce.instance;
     }
 
-    // 外部接口，控制使用的统计类型
+    /**
+     * 外部接口，控制使用的统计类型.相应的统计对象的初始化。
+     * @param statisticsKind
+     */
     public void addStatisitcs(StatisticsKind statisticsKind) {
         if(!mStatisticsKind.contains(statisticsKind)) {
             mStatisticsKind.add(statisticsKind);
-            IStatistics iStatistics = StatisticsFactory.produce(statisticsKind);
+            IStatistics iStatistics = StatisticsFactory.produce(statisticsKind);    // new出统计对象
             if(iStatistics == null){
                 return;
             }
             if (contextApp == null) {
                 throw new NullPointerException(STATISTICS_MODULE_NOT_INIT);
             }
-            iStatistics.init(contextApp);
+            iStatistics.init(contextApp);  // 统计初始化
             mReportImpl.add(iStatistics);
         }
     }
 
     /**
-     * mIsDiagnostic 打开的时候才执行.
+     * 是否打开统计的总开关，已默认打开。mIsDiagnostic 打开的时候才执行.
      * @param statiticsSwitch
      */
     public void setStatiticsSwitch(IStatiticsSwitch statiticsSwitch) {
@@ -89,6 +92,18 @@ public class StatisticsWrapper implements IStatistics{
         if(mStatiticsSwitch.isOpenStatistics()) {
             for (int i = 0; i < mReportImpl.size(); i++) {
                 mReportImpl.get(i).onEvent(context, eventName);
+            }
+        }
+    }
+
+    @Override
+    public void onEvent(Context context, String eventName, String value) {
+        if(context == null) {
+            context = contextApp;
+        }
+        if(mStatiticsSwitch.isOpenStatistics()) {
+            for (int i = 0; i < mReportImpl.size(); i++) {
+                mReportImpl.get(i).onEvent(context, eventName, value);
             }
         }
     }
@@ -158,4 +173,14 @@ public class StatisticsWrapper implements IStatistics{
             }
         }
     }
+
+    @Override
+    public void initTraceException(boolean isTrace) {
+        if(mStatiticsSwitch.isOpenStatistics()) {
+            for (int i = 0; i < mReportImpl.size(); i++) {
+                mReportImpl.get(i).initTraceException(isTrace);
+            }
+        }
+    }
+
 }

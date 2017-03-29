@@ -7,7 +7,7 @@ package com.tcl.lockscreen.statistics;
  * @copyright TCL-MIE
  */
 public class StatisticsFactory {
-    public static IStatistics produce(StatisticsKind statisticsKind) {
+    protected static IStatistics produce(StatisticsKind statisticsKind) {
         switch (statisticsKind) {
             case STATISTICS_MIG:
                 return new MIGStatistics();

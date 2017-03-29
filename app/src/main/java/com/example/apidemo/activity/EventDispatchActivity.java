@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 
 public class EventDispatchActivity extends BaseActivity {

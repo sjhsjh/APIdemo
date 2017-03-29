@@ -33,6 +33,7 @@ dependencies {
     })
     // compile 'com.android.support:appcompat-v7:24.0.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.umeng.analytics:analytics:latest.integration'  // 下载友盟jar包
     compile files('libs/statistics-sdk-v1.7.6.3.jar')
 }
 

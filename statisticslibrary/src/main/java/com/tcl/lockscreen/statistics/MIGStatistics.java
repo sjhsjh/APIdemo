@@ -46,6 +46,11 @@ public class MIGStatistics extends AbstractStatistics{
     }
 
     @Override
+    public void onEvent(Context context, String eventName, String value) {
+        super.onEvent(context, eventName, value);
+    }
+
+    @Override
     public void onEvent(Context context, String eventName, HashMap<String, String> map) {
         if(!TextUtils.isEmpty(eventName) && map != null && map.size() > 0){
             Log.i("sjh1", "eventName = " + eventName + "map = " + map.toString());
