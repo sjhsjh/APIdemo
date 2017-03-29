@@ -10,10 +10,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import com.example.apidemo.BaseActivity;
 import com.example.apidemo.MainActivity;
 import com.example.apidemo.R;
 
-public class NotificationActivity extends Activity {
+public class NotificationActivity extends BaseActivity {
     private static final boolean DEBUG = false;
     private int number = 0;
 

@@ -23,8 +23,7 @@ import com.example.apidemo.activity.TestServiceActivity;
 import com.example.apidemo.adapter.DemoAdapter;
 import com.example.apidemo.utils.HardWareUtils;
 
-
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
     private static final boolean DEBUG = true;
     ListView mListView;
 
@@ -32,7 +31,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mListView =(ListView) findViewById(R.id.listview);
+        mListView = (ListView) findViewById(R.id.listview);
 
         Intent shortCutIntent = new Intent(MainActivity.this, PowerManagerActivity.class);
         // shortCutIntent.setComponent(new ComponentName("com.example.some3", "com.example.some3.MainActivity"));

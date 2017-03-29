@@ -6,10 +6,10 @@ import android.content.Intent.ShortcutIconResource;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
-
+import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 
-public class ShortCutActivity extends Activity {
+public class ShortCutActivity extends BaseActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

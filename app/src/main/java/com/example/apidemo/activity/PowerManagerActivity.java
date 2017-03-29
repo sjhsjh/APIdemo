@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.Button;
-
+import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 
 /**
@@ -21,7 +21,7 @@ import com.example.apidemo.R;
  * @author jinhui.shao
  *
  */
-public class PowerManagerActivity extends Activity {
+public class PowerManagerActivity extends BaseActivity {
 	private static final boolean DEBUG = false;
 
 	@Override

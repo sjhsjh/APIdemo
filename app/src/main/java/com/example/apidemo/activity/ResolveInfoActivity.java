@@ -1,7 +1,6 @@
 package com.example.apidemo.activity;
 
 import java.util.List;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.DialogInterface;
@@ -20,10 +19,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
+import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 
-public class ResolveInfoActivity extends Activity {
+public class ResolveInfoActivity extends BaseActivity {
 	private static final boolean DEBUG = true;
 	
 	@Override

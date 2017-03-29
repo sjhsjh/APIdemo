@@ -16,7 +16,7 @@ import android.view.WindowManager;
 import com.example.apidemo.R;
 import java.lang.reflect.Method;
 
-public class DIYViewActivity extends AppCompatActivity {
+public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
     private static final boolean DEBUG = false;
     
     @Override

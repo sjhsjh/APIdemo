@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import com.example.apidemo.BaseActivity;
 import com.example.apidemo.Book;
 import com.example.apidemo.IMyAidlInterface;
 import com.example.apidemo.R;
@@ -22,7 +23,7 @@ import com.example.apidemo.service.TestService;
  * <br> AIDL的客户端代码
  * Created by jinhui.shao on 2017/1/17.
  */
-public class TestServiceActivity extends Activity {
+public class TestServiceActivity extends BaseActivity {
     private final String TAG = "TestServiceActivity";
     public final static String ISHEAD = "isHead";
     private static final boolean DEBUG = true;

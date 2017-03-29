@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import com.example.apidemo.R;
 
-public class EventDispatchActivity extends Activity {
+public class EventDispatchActivity extends BaseActivity {
     private static final boolean DEBUG = false;
 
     @Override
