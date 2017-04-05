@@ -1,7 +1,6 @@
 package com.example.apidemo;
 
 import android.app.Application;
-
 import com.tcl.lockscreen.statistics.StatisticsKind;
 import com.tcl.lockscreen.statistics.StatisticsWrapper;
 
@@ -20,7 +19,6 @@ public class APIDemoApplication extends Application{
     private void initStaticstis() {
         StatisticsWrapper.getInstance().init(this);
         StatisticsWrapper.getInstance().addStatisitcs(StatisticsKind.STATISTICS_UMENG);
-        // StatisticsWrapper.getInstance().onResume(null);
     }
 
     private void initTraceException(){

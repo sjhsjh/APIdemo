@@ -16,6 +16,7 @@ public class UmengStatistics extends AbstractStatistics{
         MobclickAgent.setDebugMode(true);
         MobclickAgent.enableEncrypt(true);
         MobclickAgent.openActivityDurationTrack(false);
+        // MobclickAgent.setSessionContinueMillis(2000);   // 默认30s
     }
 
     @Override

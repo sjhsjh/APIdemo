@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="app_name">API-DEMO</string>
+    <string name="action_settings">Settings</string>
 
     <string name="replaced_str">==%4$s==%3$.2f==%2$d==%1$d</string>
     <string name="replaced_str_xliff">
-        ==<xliff:g id="aa">%4$-1s</xliff:g>
+        ==<xliff:g id="aa">%4$s</xliff:g>   <!--string中加入回车键实际会输出空格！！-->
         ==<xliff:g id="bb">%3$.2f</xliff:g>
         ==<xliff:g id="cc">%2$d</xliff:g>
         ==<xliff:g id="dd">%1$d</xliff:g>
         </string>
 
-    <string name="app_name">API-DEMO</string>
-    <string name="action_settings">Settings</string>
-
+    <!-- %n$ms：n代表是第几个参数，s代表输出的是字符串，设置m的值可以在输出之前放置空格（m这属性在非xliff字符串中才有效！！）-->
+    <string name="test1">=%1$d=</string>
+    <string name="test2">=%d=</string>
 
 </resources>
