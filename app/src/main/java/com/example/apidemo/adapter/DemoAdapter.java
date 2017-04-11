@@ -14,7 +14,7 @@ import com.example.apidemo.R;
 
 
 public class DemoAdapter extends BaseAdapter {
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	Context mContext;
 	List<Object> mData;
 	

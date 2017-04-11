@@ -13,12 +13,14 @@ import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import com.example.apidemo.R;
 import java.lang.reflect.Method;
 
 public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
     private static final boolean DEBUG = false;
-    
+    private ImageView mImageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +36,8 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
                 printDeviceDimen();
             }
         });
+
+        mImageView = (ImageView) findViewById(R.id.custom_image);
 
     }
 

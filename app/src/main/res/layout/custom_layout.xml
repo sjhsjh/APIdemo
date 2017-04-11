@@ -10,6 +10,7 @@
         android:background="#3000ff00" />
 
     <ImageView
+        android:id="@+id/custom_image"
         android:layout_width="240dp"
         android:layout_height="240dp"
         android:layout_centerVertical="true"
