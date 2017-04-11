@@ -1,10 +1,12 @@
 package com.example.apidemo.view;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import com.example.apidemo.R;
 
@@ -35,15 +37,39 @@ public class CustomRecycleView extends RecyclerView{
 
     private void init() {
         headerViewHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
+   //     this.setPadding(0, -headerViewHeight, 0 , 0);
     }
 
     private void animateBack(int curentPaddingTop) {
+        Log.w("sjh0", "curentPaddingTop = " + curentPaddingTop + " headerViewHeight = " + headerViewHeight);
         ValueAnimator valueAnimator = ValueAnimator.ofInt(curentPaddingTop, -headerViewHeight);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 int animatedValue = (int) animation.getAnimatedValue();
                 CustomRecycleView.this.setPadding(0, animatedValue, 0 , 0);
+                Log.w("sjh0", "animatedValue = " + animatedValue);
+            }
+        });
+        valueAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                Log.w("sjh0", "getPaddingTop = " + getPaddingTop());
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
             }
         });
         valueAnimator.start();
@@ -73,12 +99,12 @@ public class CustomRecycleView extends RecyclerView{
                 float detaY_2 = e.getY() - downY;
                 int paddingTop_2 = (int) (-headerViewHeight + detaY_2);
                 if(currentState == READY_TO_RESET) {
-                    // this.setPadding(0, -headerViewHeight, 0 , 0);
-                    animateBack(paddingTop_2);
+                   this.setPadding(0, -headerViewHeight, 0 , 0);
+                    //  animateBack(paddingTop_2);
                 }
                 else if(currentState == READY_TO_REFRESH) {
-                    // this.setPadding(0, 0, 0 , 0);
-                    animateBack(paddingTop_2);
+                    // this.setPadding(0, 0, 0, 0);
+                     animateBack(paddingTop_2);
                     currentState = REFRESHING;
                     // listener.onPullRefresh();
                 }
