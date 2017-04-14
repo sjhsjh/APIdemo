@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -24,20 +25,24 @@ public class CustomRecycleView extends RecyclerView{
 
     public CustomRecycleView(Context context) {
         super(context);
+        Log.e("sjh0", "cao1 ");
     }
 
     public CustomRecycleView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
+        Log.e("sjh0", "cao2 ");
+       init();
     }
 
     public CustomRecycleView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        Log.e("sjh0", "cao3 ");
     }
 
     private void init() {
         headerViewHeight = getResources().getDimensionPixelSize(R.dimen.header_height);
-   //     this.setPadding(0, -headerViewHeight, 0 , 0);
+       this.setPadding(0, -headerViewHeight, 0 , 0);
+        // setTop(-headerViewHeight);
     }
 
     private void animateBack(int curentPaddingTop) {
@@ -48,6 +53,7 @@ public class CustomRecycleView extends RecyclerView{
             public void onAnimationUpdate(ValueAnimator animation) {
                 int animatedValue = (int) animation.getAnimatedValue();
                 CustomRecycleView.this.setPadding(0, animatedValue, 0 , 0);
+                // setTop(animatedValue);
                 Log.w("sjh0", "animatedValue = " + animatedValue);
             }
         });
@@ -79,28 +85,31 @@ public class CustomRecycleView extends RecyclerView{
     public boolean onTouchEvent(MotionEvent e) {
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                downY = e.getY();
+                downY = e.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                float detaY = e.getY() - downY;
+                int detaY = (int) (e.getRawY() - downY);
                 int paddingTop = (int) (-headerViewHeight + detaY);
-                if(paddingTop > headerViewHeight) {     // 下拉才处理
+                Log.w("sjh0", "findFirstVisibleItemPosition = " + ((LinearLayoutManager)getLayoutManager()).findFirstVisibleItemPosition());
+                Log.e("sjh0", "paddingTop = " + paddingTop);
+                if(((LinearLayoutManager)getLayoutManager()).findFirstVisibleItemPosition() == 0 && paddingTop > -headerViewHeight) {     // 下拉才处理
                     this.setPadding(0, paddingTop, 0 , 0);
+                    // setTop(paddingTop);
                     if(paddingTop < 0) {
                         currentState = READY_TO_RESET;
                     }
                     else {
                         currentState = READY_TO_REFRESH;
                     }
-                    return true;    // 拦截TouchMove，不让listview处理该次move事件,会造成listview无法滑动
+                    // return true;    // 拦截TouchMove，不让listview处理该次move事件,会造成listview无法滑动
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                float detaY_2 = e.getY() - downY;
+                int detaY_2 = (int) (e.getRawY() - downY);
                 int paddingTop_2 = (int) (-headerViewHeight + detaY_2);
                 if(currentState == READY_TO_RESET) {
-                   this.setPadding(0, -headerViewHeight, 0 , 0);
-                    //  animateBack(paddingTop_2);
+                    //  this.setPadding(0, -headerViewHeight, 0 , 0);
+                    animateBack(paddingTop_2);
                 }
                 else if(currentState == READY_TO_REFRESH) {
                     // this.setPadding(0, 0, 0, 0);
@@ -108,14 +117,15 @@ public class CustomRecycleView extends RecyclerView{
                     currentState = REFRESHING;
                     // listener.onPullRefresh();
                 }
-                return true;
-            case MotionEvent.ACTION_CANCEL:
-        }
+                // return true;
 
+            case MotionEvent.ACTION_CANCEL:
+                break;
+        }
 
 //            141         case MotionEvent.ACTION_DOWN:
 //                142             //获取按下时y坐标
-//                143             downY = (int) ev.getY();
+//                143             downY = (int) ev.getRawY();
 //                144             break;
 //            145         case MotionEvent.ACTION_MOVE:
 //                146
@@ -124,7 +134,7 @@ public class CustomRecycleView extends RecyclerView{
 //                    149                 break;
 //                    150             }
 //                151             //手指滑动偏移量
-//                152             int deltaY = (int) (ev.getY() - downY);
+//                152             int deltaY = (int) (ev.getRawY() - downY);
 //                153
 //                154             //获取新的padding值
 //                155             int paddingTop = -headerViewHeight + deltaY;
@@ -171,8 +181,9 @@ public class CustomRecycleView extends RecyclerView{
 //            196         }
 //        197         return super.onTouchEvent(ev);
 
-
+        Log.w("sjh0", "11111= ");
         return super.onTouchEvent(e);
+
     }
 
 

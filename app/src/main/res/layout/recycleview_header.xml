@@ -9,7 +9,8 @@
         android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
-        android:text="head"
+        android:background="#50ff0000"
+        android:text="head--"
         android:textSize="16sp">
     </TextView>
 

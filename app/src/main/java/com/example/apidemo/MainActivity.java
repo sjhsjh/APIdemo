@@ -20,6 +20,7 @@ import com.example.apidemo.activity.NewsActivity;
 import com.example.apidemo.activity.NotificationActivity;
 import com.example.apidemo.activity.PowerManagerActivity;
 import com.example.apidemo.activity.ResolveInfoActivity;
+import com.example.apidemo.activity.SQLActivity;
 import com.example.apidemo.activity.TestServiceActivity;
 import com.example.apidemo.adapter.DemoAdapter;
 import com.example.apidemo.utils.HardWareUtils;
@@ -58,6 +59,7 @@ public class MainActivity extends BaseActivity {
         list.add(NotificationActivity.class);
         list.add(DIYViewActivity.class);
         list.add(NewsActivity.class);
+        list.add(SQLActivity.class);
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);

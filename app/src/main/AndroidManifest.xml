@@ -54,6 +54,7 @@
         <activity android:name=".activity.EventDispatchActivity" />
         <activity android:name=".activity.TestServiceActivity" />
         <activity android:name=".activity.NewsActivity" />
+        <activity android:name=".activity.SQLActivity" />
 
         <service
             android:name=".service.TestService"

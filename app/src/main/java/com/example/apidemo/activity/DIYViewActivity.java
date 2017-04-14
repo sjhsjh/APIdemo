@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.view.Window;
@@ -38,7 +39,13 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
         });
 
         mImageView = (ImageView) findViewById(R.id.custom_image);
-
+        mImageView.setRotationX(70f);
+        mImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mImageView.setRotationX(0f);
+            }
+        });
     }
 
 
