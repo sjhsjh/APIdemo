@@ -1,6 +1,7 @@
 package com.example.apidemo;
 
 import android.app.Application;
+import android.content.Context;
 import com.tcl.lockscreen.statistics.StatisticsKind;
 import com.tcl.lockscreen.statistics.StatisticsWrapper;
 
@@ -8,15 +9,21 @@ import com.tcl.lockscreen.statistics.StatisticsWrapper;
  * Created on 2017/3/29.
  */
 public class APIDemoApplication extends Application{
+    private static Context mContext;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        initStaticstis();
+        mContext = getApplicationContext();
+        initStatistics();
         initTraceException();
     }
 
-    private void initStaticstis() {
+    public static Context getContext(){
+        return mContext;
+    }
+
+    private void initStatistics() {
         StatisticsWrapper.getInstance().init(this);
         StatisticsWrapper.getInstance().addStatisitcs(StatisticsKind.STATISTICS_UMENG);
     }

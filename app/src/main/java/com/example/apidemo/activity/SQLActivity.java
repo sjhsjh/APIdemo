@@ -26,7 +26,7 @@ public class SQLActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.general_layout);
         mDdataSQLiteOpenHelper = new DataSQLiteOpenHelper(SQLActivity.this);
-        dataResolver = new DataResolver(this);
+        dataResolver = DataResolver.getInstance();
 
         ((Button)findViewById(R.id.button1)).setText("create or upgrade db");
         findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {

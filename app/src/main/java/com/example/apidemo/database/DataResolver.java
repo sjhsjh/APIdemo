@@ -1,11 +1,11 @@
 package com.example.apidemo.database;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.telecom.Log;
+import com.example.apidemo.APIDemoApplication;
 
 /**
  * <br>
@@ -19,12 +19,11 @@ public class DataResolver {
     }
 
     private static class DataResolverProducer {
-        private static DataResolver sInstance ;//= new DataResolver();
+        private static DataResolver sInstance = new DataResolver();
     }
 
-    // private DataResolver() {
-    public DataResolver(Context context) {
-        mDataSQLiteOpenHelper = new DataSQLiteOpenHelper(context);
+    private DataResolver() {
+        mDataSQLiteOpenHelper = new DataSQLiteOpenHelper(APIDemoApplication.getContext());
     }
 
     /**
