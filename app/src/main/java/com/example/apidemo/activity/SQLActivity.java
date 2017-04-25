@@ -25,10 +25,10 @@ public class SQLActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.general_layout);
-        mDdataSQLiteOpenHelper = new DataSQLiteOpenHelper(SQLActivity.this);
+        mDdataSQLiteOpenHelper = new DataSQLiteOpenHelper(this);
         dataResolver = DataResolver.getInstance();
 
-        ((Button)findViewById(R.id.button1)).setText("create or upgrade db");
+        ((Button)findViewById(R.id.button1)).setText("open OR create OR upgrade db");
         findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,7 +36,7 @@ public class SQLActivity extends BaseActivity {
             }
         });
 
-        ((Button)findViewById(R.id.button2)).setText("222");
+        ((Button)findViewById(R.id.button2)).setText("insert one row data ");
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,7 +56,7 @@ public class SQLActivity extends BaseActivity {
             }
         });
 
-        ((Button)findViewById(R.id.button4)).setText("delete");
+        ((Button)findViewById(R.id.button4)).setText("delete all");
         findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

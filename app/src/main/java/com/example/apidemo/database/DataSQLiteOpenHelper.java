@@ -39,7 +39,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
     public DataSQLiteOpenHelper(Context context){
         super(context, DATABASE_NAME, null, CURRENT_DATABASE_VERSION);
         mContext = context;
-        // 获取数据库，触发onCreate或者onUpgrade函数执行。
+        // 获取数据库，触发onCreate OR onUpgrade OR onOpen函数执行。
         getWritableDatabase();
     }
 
@@ -131,7 +131,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * 表结构变化时才执行
+     * 表结构变化时才执行。4.0之后只能升不能降、降级就跑出exception了。
      * @param db
      * @param oldVersion
      * @param newVersion
@@ -143,6 +143,24 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
             return;
         }
         createNewTable(db, NewsTable.TABLE_NAME, NewsTable.fieldMap);
+    }
+
+    /**
+     * 数据库连接被配置且数据库策略被创建、升级、必要的降级或getWritableDatabase之后，这个方法会被调用
+     * @param db
+     */
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        Log.w("sjh1", "onOpen db");
+        super.onOpen(db);
+    }
+
+    /**
+     * 关闭打开的数据库对象. getWritableDatabase()得到的db对象回收.
+     */
+    @Override
+    public synchronized void close() {
+        super.close();
     }
 
     /**
