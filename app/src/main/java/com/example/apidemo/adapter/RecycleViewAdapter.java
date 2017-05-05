@@ -15,18 +15,18 @@ import java.util.List;
  * Created by jinhui.shao on 2017/4/11.
  */
 public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private final static int TYPE_ITEM = 1;
-    private final static int TYPE_HEADER = 2;
-    private final static int TYPE_FOOTER = 3;
-    private List<Object> mItemDatas;
+    private final static int TYPE_ITEM = 0;
+    private final static int TYPE_HEADER = 1;
+    private final static int TYPE_FOOTER = 2;
+    private List<Integer> mItemDatas;
 
-    public RecycleViewAdapter(List<Object> itemDatas){
+    public RecycleViewAdapter(List<Integer> itemDatas){
         mItemDatas = itemDatas;
     }
 
     @Override
     public int getItemViewType(int position) {
-        Log.w("sjh0", "getItemViewType");
+        NLog.w("sjh0", "getItemViewType");
         if(position == 0){
             return TYPE_HEADER;
         }
@@ -40,7 +40,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.w("sjh0", "onCreateViewHolder:");
+        NLog.w("sjh0", "onCreateViewHolder:");
 
         if(viewType == TYPE_HEADER){
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleview_header, parent, false);
@@ -61,7 +61,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Log.w("sjh0", "onBindViewHolder:");
+        NLog.w("sjh0", "onBindViewHolder:");
 
         if(holder instanceof ItemViewHolder) {
             if(position - 1 < mItemDatas.size()){
@@ -78,11 +78,11 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        Log.w("sjh0", "getItemCount:");
+        NLog.w("sjh0", "getItemCount:");
         return mItemDatas.size() + 2;
-    }
+     }
 
-    public void setData(List<Object> itemDatas){
+    public void setData(List<Integer> itemDatas){
         mItemDatas = itemDatas;
     }
 

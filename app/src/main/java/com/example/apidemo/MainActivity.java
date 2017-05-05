@@ -9,7 +9,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -24,6 +23,7 @@ import com.example.apidemo.activity.SQLActivity;
 import com.example.apidemo.activity.TestServiceActivity;
 import com.example.apidemo.adapter.DemoAdapter;
 import com.example.apidemo.utils.HardWareUtils;
+import com.example.apidemo.utils.NLog;
 
 public class MainActivity extends BaseActivity {
     private static final boolean DEBUG = false;
@@ -69,10 +69,10 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                if(DEBUG) Log.i("sjh0", "onItemClick position is " + position);
+                NLog.i("sjh0", "onItemClick position is " + position);
 
                 Object activityClass = parent.getItemAtPosition(position); // 根据位置判断跳转哪个activity!!!会调用adapter的getItem().
-                if(DEBUG) Log.i("sjh0", " activity Class = " + activityClass.toString());
+                NLog.i("sjh0", " activity Class = " + activityClass.toString());
 
                 Intent intent = new Intent(MainActivity.this, (Class<?>) activityClass);
                 startActivity(intent);

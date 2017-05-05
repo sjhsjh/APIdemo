@@ -6,7 +6,6 @@ import android.database.ContentObserver;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
-import android.util.Log;
 
 /**
  * <br>
@@ -22,18 +21,18 @@ public class HardWareUtils {
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
             if(mWifiManager != null)
-                Log.i("sjh1", "WifiState : " + mWifiManager.getWifiState() + " isWifiEnabled : " + mWifiManager.isWifiEnabled());
+               NLog.i("sjh1", "WifiState : " + mWifiManager.getWifiState() + " isWifiEnabled : " + mWifiManager.isWifiEnabled());
             if(mLocationManager != null)
-                Log.i("sjh1", "gps enabled ?  " +  mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
+               NLog.i("sjh1", "gps enabled ?  " +  mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
             BluetoothAdapter bluetoothAdapter =  BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter != null){
-                Log.i("sjh1", "bluetooth enabled ? " + bluetoothAdapter.isEnabled());
+               NLog.i("sjh1", "bluetooth enabled ? " + bluetoothAdapter.isEnabled());
             }
             try {
                 int isAirplaneOpen = Settings.System.getInt(mContext.getContentResolver(), Settings.System.AIRPLANE_MODE_ON);
-                Log.i("sjh1", "Airplane Open ? " + isAirplaneOpen);
+               NLog.i("sjh1", "Airplane Open ? " + isAirplaneOpen);
             } catch (Settings.SettingNotFoundException e) {
-                Log.e("sjh1", e.getMessage());
+               NLog.e("sjh1", e.getMessage());
             }
         }
     };

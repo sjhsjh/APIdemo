@@ -13,7 +13,6 @@ import android.content.pm.ResolveInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
+import com.example.apidemo.utils.NLog;
 
 public class ResolveInfoActivity extends BaseActivity {
 	private static final boolean DEBUG = true;
@@ -35,7 +35,7 @@ public class ResolveInfoActivity extends BaseActivity {
 			
 			@Override
 			public void onDismiss(DialogInterface dialog) {
-				Log.e("sjh2", "onDismiss");
+				NLog.e("sjh2", "onDismiss");
 				
 			}
 		};
@@ -44,7 +44,7 @@ public class ResolveInfoActivity extends BaseActivity {
 
 			@Override
 			public void onCancel(DialogInterface dialog) {
-				Log.e("sjh2", "onCancel");
+				NLog.e("sjh2", "onCancel");
 				
 			}
 
@@ -62,10 +62,10 @@ public class ResolveInfoActivity extends BaseActivity {
 				//resolveIntent.setPackage("com.example.apidemo");
 				List<ResolveInfo> apps = packageManager.queryIntentActivities(resolveIntent, 0);
 				for(ResolveInfo ri : apps){
-					if (DEBUG) Log.i("sjh2", " " + ri.activityInfo.name + " -- " );
-					//if (DEBUG) Log.i("sjh2", " label = " + ri.loadLabel(packageManager) + " -- " );
+					NLog.i("sjh2", " " + ri.activityInfo.name + " -- " );
+					//NLog.i("sjh2", " label = " + ri.loadLabel(packageManager) + " -- " );
 				}
-				if (DEBUG) Log.i("sjh2", " apps.size() = " + apps.size() + " -- " );
+				NLog.i("sjh2", " apps.size() = " + apps.size() + " -- " );
 				Intent intent = new Intent(ResolveInfoActivity.this, PowerManagerActivity.class);
 				try {
 					startActivity(intent);
@@ -114,7 +114,7 @@ public class ResolveInfoActivity extends BaseActivity {
 		try {
 			packageInfo = packageManager.getPackageInfo(packageName, 0);////!!!!!!
 		} catch (NameNotFoundException e) {
-			Log.e("sjh3", "openApp() : " + e.getMessage());
+			NLog.e("sjh3", "openApp() : " + e.getMessage());
 			Toast.makeText(ResolveInfoActivity.this, packageName + " not found", Toast.LENGTH_SHORT).show();
 			e.printStackTrace();
 		}
@@ -132,10 +132,10 @@ public class ResolveInfoActivity extends BaseActivity {
 
 			List<ResolveInfo> apps = packageManager.queryIntentActivities(resolveIntent, 0); //询问给定intent是指向哪个包的哪个activity的。////!!!!!!
 			for(ResolveInfo ri : apps){
-				if (DEBUG) Log.i("sjh3", " " + ri.activityInfo.name + " -- " );
-				//if (DEBUG) Log.i("sjh2", " label = " + ri.loadLabel(packageManager) + " -- " );
+				NLog.i("sjh3", " " + ri.activityInfo.name + " -- " );
+				//NLog.i("sjh2", " label = " + ri.loadLabel(packageManager) + " -- " );
 			}
-			if (DEBUG) Log.i("sjh2", " apps.size() = " + apps.size() + " -- " );
+			NLog.i("sjh2", " apps.size() = " + apps.size() + " -- " );
 
 			if(!apps.isEmpty()){
 				ResolveInfo resolveInfo = apps.iterator().next(); //取第一个ResolveInfo
@@ -146,7 +146,7 @@ public class ResolveInfoActivity extends BaseActivity {
 				intent.addCategory(Intent.CATEGORY_LAUNCHER);
 
 				ComponentName cn = new ComponentName(packageName2, className);
-				if (DEBUG) Log.i("sjh3", " className = " + className + " ; " + resolveInfo.loadLabel(packageManager));
+				NLog.i("sjh3", " className = " + className + " ; " + resolveInfo.loadLabel(packageManager));
 				
 				//setIcon(resolveInfo.loadIcon(packageManager));
 
@@ -179,45 +179,45 @@ public class ResolveInfoActivity extends BaseActivity {
 		// 例如Bluetooth.apk内的activity就没有action.MAIN！而有些应用却有多个activity都有action.MAIN。
 		List<ResolveInfo> list = pm.queryIntentActivities(intent, 0);
 		for(ResolveInfo pi : list){
-			if (DEBUG) Log.i("sjh5", "label = " + pi.loadLabel(pm)  );
+			NLog.i("sjh5", "label = " + pi.loadLabel(pm)  );
 		}
-		if (DEBUG) Log.e("sjh5", "size" + list.size());//24
+		NLog.e("sjh5", "size" + list.size());//24
 		
 		
 		List<PackageInfo> packageList = pm.getInstalledPackages(0);
 		for(PackageInfo pi : packageList){
 			if((pi.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0){
-				if (DEBUG) Log.i("sjh2", "系统程序 label = " + pi.applicationInfo.loadLabel(pm) + " ==" + pi.packageName); //若应用程序没有设置label则会读出包名！
+				NLog.i("sjh2", "系统程序 label = " + pi.applicationInfo.loadLabel(pm) + " ==" + pi.packageName); //若应用程序没有设置label则会读出包名！
 			}
 			else{
-				if (DEBUG) Log.w("sjh2", "用户程序 label = " + pi.applicationInfo.loadLabel(pm) + " ==" + pi.packageName + " ==" + pi.applicationInfo.className); 
+				NLog.w("sjh2", "用户程序 label = " + pi.applicationInfo.loadLabel(pm) + " ==" + pi.packageName + " ==" + pi.applicationInfo.className);
 			}
 		}
-		if (DEBUG) Log.e("sjh2", "size" + packageList.size());//81
+		NLog.e("sjh2", "size" + packageList.size());//81
 	
 	
 		List<ApplicationInfo> applicationList = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
 		for(ApplicationInfo ai : applicationList){
 			if((ai.flags & ApplicationInfo.FLAG_SYSTEM) > 0){//81
-				if (DEBUG) Log.i("sjh3", "系统程序 label = " + ai.loadLabel(pm) + " ==" + ai.packageName); 
+				NLog.i("sjh3", "系统程序 label = " + ai.loadLabel(pm) + " ==" + ai.packageName);
 			}
 			else{
-				if (DEBUG) Log.w("sjh3", "用户程序 label = " + ai.loadLabel(pm)+ " ==" + ai.packageName + " ==" + ai.className); 
+				NLog.w("sjh3", "用户程序 label = " + ai.loadLabel(pm)+ " ==" + ai.packageName + " ==" + ai.className);
 			}
 		}
-		if (DEBUG) Log.e("sjh3", "size" + applicationList.size());
+		NLog.e("sjh3", "size" + applicationList.size());
 	}
 
 	@Override
 	protected void onDestroy() {
-		// if (DEBUG) Log.i("sjh1", "onDestroy");
+		// NLog.i("sjh1", "onDestroy");
 		super.onDestroy();
 	}
 
 
 	@Override
 	public void finish() {
-		// if (DEBUG) Log.i("sjh1", "finish");
+		// NLog.i("sjh1", "finish");
 		super.finish();
 		// 通过调用overridePendingTransition() 可以实时修改Activity的切换动画。但需注意的是:该函数必须在调用startActivity()或者finish()后立即调用，且只有效一次。
 		 overridePendingTransition(R.animator.slide_left_in, R.animator.slide_right_out);

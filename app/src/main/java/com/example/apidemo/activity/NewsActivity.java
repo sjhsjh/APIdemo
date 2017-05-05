@@ -3,15 +3,13 @@ package com.example.apidemo.activity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.widget.ListView;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.adapter.RecycleViewAdapter;
 import com.example.apidemo.view.CustomRecycleView;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * <br>
@@ -33,10 +31,9 @@ public class NewsActivity extends BaseActivity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        List<Object> itemDatas = new ArrayList<Object>();
-        for(int i = 0; i < 10; i++){
-            Object object = new Object();
-            itemDatas.add(object);
+        List<Integer> itemDatas = new ArrayList<Integer>();
+        for(int i = 0; i < 20; i++){
+            itemDatas.add(Integer.valueOf(i));
         }
         mAdapter = new RecycleViewAdapter(itemDatas);
 
@@ -49,7 +46,7 @@ public class NewsActivity extends BaseActivity {
 //            @Override
 //            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
 //                super.onScrolled(recyclerView, dx, dy);
-//                Log.w("sjh0", "onScrolled dx = " + dx + " dy = " + dy);
+//                NLog.w("sjh0", "onScrolled dx = " + dx + " dy = " + dy);
 //            }
 //        });
 

@@ -2,7 +2,6 @@ package com.example.apidemo.activity;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +9,8 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.example.apidemo.R;
+import com.example.apidemo.utils.NLog;
 
 
 /**
@@ -54,7 +53,7 @@ public class SetDefaultLauncherDialog extends Dialog {
 		mOKBtn.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Log.e("sjh2", "onClick");
+				NLog.e("sjh2", "onClick");
 				SetDefaultLauncherDialog.this.dismiss();
 			}
 		});
@@ -71,7 +70,7 @@ public class SetDefaultLauncherDialog extends Dialog {
 		 View decore = dialogWindow.getDecorView();
 				 decore.setPadding(  16, 50,0, 0);
 				 
-//		Log.e("sjh2", "asd" + decore.getPaddingTop());
+//		NLog.e("sjh2", "asd" + decore.getPaddingTop());
 		// mTipsView.setText("");
 
 	}

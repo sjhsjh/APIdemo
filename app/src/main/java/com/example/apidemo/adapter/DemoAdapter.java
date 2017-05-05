@@ -1,16 +1,14 @@
 package com.example.apidemo.adapter;
 
 import java.util.List;
-
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.example.apidemo.R;
+import com.example.apidemo.utils.NLog;
 
 
 public class DemoAdapter extends BaseAdapter {
@@ -25,13 +23,13 @@ public class DemoAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() { //size为0也行，只是Listview中没有条目
-		if(DEBUG) Log.d("sjh0", "getCount");
+		NLog.d("sjh0", "getCount");
 		return mData.size();
 	}
 
 	@Override
 	public Object getItem(int position) { //onItemClick中的getItemAtPosition才会调这里。Listview加载时不调这里
-		if(DEBUG) Log.i("sjh0", "getItem position = " + position);
+		NLog.i("sjh0", "getItem position = " + position);
 		return mData.get(position);
 	}
 
@@ -42,7 +40,7 @@ public class DemoAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if(DEBUG) Log.w("sjh0", "getView position = " + position);
+		NLog.w("sjh0", "getView position = " + position);
 		ViewHolder holder = null;
 		if(convertView == null){
 			holder = new ViewHolder();

@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Messenger;
 import android.os.Process;
 import android.os.RemoteException;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,6 +16,7 @@ import com.example.apidemo.Book;
 import com.example.apidemo.IMyAidlInterface;
 import com.example.apidemo.R;
 import com.example.apidemo.service.TestService;
+import com.example.apidemo.utils.NLog;
 
 /**
  * <br> AIDL的客户端代码
@@ -34,12 +33,12 @@ public class TestServiceActivity extends BaseActivity {
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {   // onBind返回非null之后调用. Component是TestService.IBinder是TestService的binder.
-            Log.d("TestService", "onServiceConnected.  ComponentName = " + name.toString() + "IBinder = " + service.toString());
+            NLog.d("TestService", "onServiceConnected.  ComponentName = " + name.toString() + "IBinder = " + service.toString());
             /*  TAG: 返回本地binder */
 //            mConnectedBinder = (TestService.MyBinder)service;
 //            mConnectedBinder.binderLog();
             /*  TAG: 启动AIDL远程binder */
-           mMyAidlInterface = IMyAidlInterface.Stub.asInterface(service);
+            mMyAidlInterface = IMyAidlInterface.Stub.asInterface(service);
         }
 
         /**
@@ -49,7 +48,7 @@ public class TestServiceActivity extends BaseActivity {
          */
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.d("TestService", "onServiceDisconnected.  ComponentName = " + name.toString() );
+            NLog.d("TestService", "onServiceDisconnected.  ComponentName = " + name.toString());
         }
     };
 
@@ -57,7 +56,7 @@ public class TestServiceActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.general_layout);
-        Log.d("TestService", "TestServiceActivity. process id is" + Process.myPid() + "  thread id is " + Thread.currentThread().getId());
+        NLog.d("TestService", "TestServiceActivity. process id is" + Process.myPid() + "  thread id is " + Thread.currentThread().getId());
 
         ((Button)findViewById(R.id.button1)).setText("start service");
         findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
@@ -117,9 +116,9 @@ public class TestServiceActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    Log.d("TestService", TAG + " mMyAidlInterface = " + mMyAidlInterface);
+                   NLog.d("TestService", TAG + " mMyAidlInterface = " + mMyAidlInterface);
                     if(mMyAidlInterface != null){
-                        Log.d("TestService", TAG + " aidl:" + mMyAidlInterface.plus(new Book(5), new Book(8)));
+                       NLog.d("TestService", TAG + " aidl:" + mMyAidlInterface.plus(new Book(5), new Book(8)));
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -139,7 +138,7 @@ public class TestServiceActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        Log.d("TestService", TAG + " onDestroy");
+        NLog.d("TestService", TAG + " onDestroy");
         unBindAllService(); // 若activity绑定了service，它destory的时候要解绑service，否则报错ServiceConnectionLeaked。
 
         super.onDestroy();

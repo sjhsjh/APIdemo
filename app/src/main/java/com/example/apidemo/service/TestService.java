@@ -11,12 +11,12 @@ import android.os.Looper;
 import android.os.Process;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import com.example.apidemo.Book;
 import com.example.apidemo.IMyAidlInterface;
 import com.example.apidemo.R;
 import com.example.apidemo.activity.TestServiceActivity;
 import com.example.apidemo.utils.AndroidUtils;
+import com.example.apidemo.utils.NLog;
 
 /**
  * <br> AIDL的服务端代码
@@ -30,7 +30,7 @@ public class TestService extends Service{
     private Runnable mRunnable = new Runnable() {   // 开线程定时循环工作！
         @Override
         public void run() {
-            Log.d(TAG, "mRunnable time = " + AndroidUtils.debugLog(System.currentTimeMillis()));
+            NLog.d(TAG, "mRunnable time = " + AndroidUtils.debugLog(System.currentTimeMillis()));
             if(Looper.myLooper() == null){
                 Looper.prepare();   // 循环的时候避免重复prepare
             }
@@ -43,7 +43,7 @@ public class TestService extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "TestService. process id is" + Process.myPid() + "  thread id is " + Thread.currentThread().getId());
+        NLog.d(TAG, "TestService. process id is" + Process.myPid() + "  thread id is " + Thread.currentThread().getId());
         // 只在service创建的时候调用一次，可以在此进行一些一次性的初始化操作
     }
 
@@ -57,7 +57,7 @@ public class TestService extends Service{
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG, "onStartCommand. flags = " + flags + " startId = " + startId);
+        NLog.d(TAG, "onStartCommand. flags = " + flags + " startId = " + startId);
 
         boolean isHead = intent.getBooleanExtra(TestServiceActivity.ISHEAD, false);
         if(isHead){
@@ -80,7 +80,7 @@ public class TestService extends Service{
 //            @Override
 //            public void run() {
 //                super.run();
-//                Log.d(TAG, "onStartCommand time = " + AndroidUtils.debugLog(System.currentTimeMillis()));
+//                NLog.d(TAG, "onStartCommand time = " + AndroidUtils.debugLog(System.currentTimeMillis()));
 //                if(Looper.myLooper() == null){
 //                    Looper.prepare();   // 循环的时候避免重复prepare
 //                }
@@ -101,7 +101,7 @@ public class TestService extends Service{
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d(TAG, "onBind");
+        NLog.d(TAG, "onBind");
         // 当其他组件调用bindService()方法时，此方法将会被调用.返回一个IBinder对象，它是用来支撑其他组件与service之间的通信。如果不想让这个service被绑定，在此返回null即可
 
         /*  TAG: 返回本地binder */
@@ -112,13 +112,13 @@ public class TestService extends Service{
 
     @Override
     public boolean onUnbind(Intent intent) {    // 很少重载该方法
-        Log.d(TAG, "onUnbind ");
+        NLog.d(TAG, "onUnbind ");
         return super.onUnbind(intent);
     }
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy. 服务停止！");
+        NLog.d(TAG, "onDestroy. 服务停止！");
         // service调用的最后一个方法.在此进行资源的回收
         if(mHandler != null){
             mHandler.removeCallbacks(mRunnable);
@@ -129,7 +129,7 @@ public class TestService extends Service{
     /*  TAG: 本地binder */
     public class MyBinder extends Binder{
         public void binderLog(){
-            Log.d(TAG, "binderLog");
+            NLog.d(TAG, "binderLog");
         }
     }
 

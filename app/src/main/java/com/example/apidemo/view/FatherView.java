@@ -2,9 +2,9 @@ package com.example.apidemo.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
+import com.example.apidemo.utils.NLog;
 
 /**
  *  2016/12/21.
@@ -27,19 +27,19 @@ public class FatherView extends LinearLayout{
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (DEBUG) Log.i("sjh1", "fatherView dispatchTouchEvent. " + event.getAction());
+        NLog.i("sjh1", "fatherView dispatchTouchEvent. " + event.getAction());
         return super.dispatchTouchEvent(event);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (DEBUG) Log.i("sjh1", "fatherView onInterceptTouchEvent. " + ev.getAction());
+        NLog.i("sjh1", "fatherView onInterceptTouchEvent. " + ev.getAction());
         return super.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (DEBUG) Log.i("sjh1", "fatherView onTouchEvent. " + event.getAction() );
+        NLog.i("sjh1", "fatherView onTouchEvent. " + event.getAction() );
         new Exception("sjh2").printStackTrace();
         return super.onTouchEvent(event);
     }

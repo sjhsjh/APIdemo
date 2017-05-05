@@ -4,8 +4,8 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.telecom.Log;
 import com.example.apidemo.APIDemoApplication;
+import com.example.apidemo.utils.NLog;
 
 /**
  * <br>
@@ -37,7 +37,7 @@ public class DataResolver {
         SQLiteDatabase db = mDataSQLiteOpenHelper.getWritableDatabase();
 
         long rowID = db.insert(tableName, null, contentValues);
-        Log.w("sjh1", "rowID = " + rowID);  // W/TelecomFramework: sjh1: rowID = 5
+        NLog.w("sjh1", "rowID = " + rowID);  // W/TelecomFramework: sjh1: rowID = 5
         // rowID从1开始
         return rowID > 0;
     }
@@ -59,7 +59,7 @@ public class DataResolver {
         String selection = "rowid" + " > ?";
         String[] selectionArgs = new String[]{Integer.toString(row)};
         int deleteCount = db.delete(tableName, selection, selectionArgs);
-        Log.w("sjh1", "rowCount = " + rowCount + "deleteCount = " + deleteCount);
+        NLog.w("sjh1", "rowCount = " + rowCount + "deleteCount = " + deleteCount);
         return deleteCount;
     }
 
@@ -78,7 +78,7 @@ public class DataResolver {
         String selection = "rowid" + " = ?";
         String[] selectionArgs = new String[]{Integer.toString(row)};
         int updateCount = db.update(tableName, contentValues, selection, selectionArgs);
-        Log.w("sjh1", "updateCount = " + updateCount);
+        NLog.w("sjh1", "updateCount = " + updateCount);
         return updateCount;
     }
 
@@ -98,7 +98,7 @@ public class DataResolver {
             if(cursor != null && cursor.moveToFirst()){
                 int columnIndex = cursor.getColumnIndex(NewsTable.NEWS_LIST);
                 newsJSON = cursor.getString(columnIndex);
-                Log.w("sjh1", "newsJSON = " + newsJSON);
+                NLog.w("sjh1", "newsJSON = " + newsJSON);
 
 //        while(cursor.moveToNext())
 //        {

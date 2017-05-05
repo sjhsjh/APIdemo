@@ -8,7 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.text.TextUtils;
-import android.util.Log;
+import com.example.apidemo.utils.NLog;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -45,7 +45,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.w("sjh1", "DataBase onCreate");
+        NLog.w("sjh1", "DataBase onCreate");
         // 执行初始创建数据库脚本
         createSQL(db);
         saveData2DB(db);
@@ -61,7 +61,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
 
                     db.setTransactionSuccessful();
                 } catch (SQLException e) {
-                    Log.e("sjh1", "createSQL", e);
+                    NLog.e("sjh1", "createSQL", e);
                     e.printStackTrace();
                 } finally {
                     db.endTransaction();
@@ -79,12 +79,12 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
             long rowId = db.insert(NewsTable.TABLE_NAME, null, values); // 只能在已存在的列中插入数据。内含try catch
             //插入记录失败，打印错误日志，但是不中断操作
             if (rowId <= 0) {
-                Log.e("sjh1", "Insert {0} to DB error, please check!");
+               NLog.e("sjh1", "Insert {0} to DB error, please check!");
             }
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e("sjh1", "saveData2DB", e);
+            NLog.e("sjh1", "saveData2DB", e);
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -105,12 +105,12 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
             long rowId = db.insert(NewsTable.TABLE_NAME, null, contentValues); // 只能在已存在的列中插入数据。内含try catch
             //插入记录失败，打印错误日志，但是不中断操作
             if (rowId <= 0) {
-                Log.e("sjh1", "Insert {0} to DB error, please check!");
+               NLog.e("sjh1", "Insert {0} to DB error, please check!");
             }
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.e("sjh1", "saveData2DB", e);
+            NLog.e("sjh1", "saveData2DB", e);
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -138,7 +138,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        Log.w("sjh1", "onUpgrade oldVersion = " + oldVersion + "  newVersion = " + newVersion);
+        NLog.w("sjh1", "onUpgrade oldVersion = " + oldVersion + "  newVersion = " + newVersion);
         if (oldVersion < INITIAL_DB_VERSION || oldVersion >= newVersion || newVersion > CURRENT_DATABASE_VERSION) {
             return;
         }
@@ -151,7 +151,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onOpen(SQLiteDatabase db) {
-        Log.w("sjh1", "onOpen db");
+        NLog.w("sjh1", "onOpen db");
         super.onOpen(db);
     }
 
@@ -171,7 +171,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
      * @return
      */
     private boolean createNewTable(SQLiteDatabase db, String tableName, LinkedHashMap<String, String> map) {
-        Log.w("sjh1", "map = " + map.toString());
+        NLog.w("sjh1", "map = " + map.toString());
         boolean result = false;
         Cursor cursor = null;
         try {
@@ -218,7 +218,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
 
         }
         catch (Exception e) {
-            Log.e("sjh1", "createNewTable has exception");
+            NLog.e("sjh1", "createNewTable has exception");
             e.printStackTrace();
             result = false;
         }
@@ -242,7 +242,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
      * @param existFieldStr 删除字段后table的所有字段！格式“a, b, c”
      */
     private void createExistFieldTable(SQLiteDatabase db, String tableName, String existFieldStr){
-        Log.w("sjh1", "createExistFieldTable");
+        NLog.w("sjh1", "createExistFieldTable");
         db.beginTransaction();
         try {
             //create table temp as select recordId, customer, place, time from record
@@ -257,7 +257,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
             db.execSQL(renameTableSql);
             db.setTransactionSuccessful();
         } catch (SQLException e) {
-            Log.e("sjh1", "SQLException : " + e.getMessage());
+            NLog.e("sjh1", "SQLException : " + e.getMessage());
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -274,7 +274,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
      */
     public void addColumnToTable(SQLiteDatabase db, String tableName,
                                  String columnName, String columnType, String defaultValue) {
-        Log.w("sjh1", "addColumnToTable");
+        NLog.w("sjh1", "addColumnToTable");
         if (!isExistColumnInTable(db, tableName, columnName)) {
             db.beginTransaction();
             try {
@@ -322,7 +322,7 @@ public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
             result = cursor != null && cursor.getColumnIndex(columnName) >= 0;
         }
         catch (Exception e) {
-            Log.e("sjh1", "isExistColumnInTable has exception");
+            NLog.e("sjh1", "isExistColumnInTable has exception");
             e.printStackTrace();
             result = false;
         }

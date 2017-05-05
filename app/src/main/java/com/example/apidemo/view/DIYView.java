@@ -3,7 +3,6 @@ package com.example.apidemo.view;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
-import android.util.Log;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
@@ -15,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import com.example.apidemo.R;
+import com.example.apidemo.utils.NLog;
 import java.io.InputStream;
 
 /**
@@ -42,7 +42,7 @@ public class DIYView extends View {
             // 根据资源ID获取响应的尺寸值
             statusBarHeight = getResources().getDimensionPixelSize(resourceId);    // 72
         }
-        if(DEBUG) Log.i("sjh0", "statusBarHeight = " + statusBarHeight);
+        NLog.i("sjh0", "statusBarHeight = " + statusBarHeight);
     }
 
     /**
@@ -51,7 +51,7 @@ public class DIYView extends View {
      */
     @Override
     protected void onDraw(Canvas canvas) {
-        if(DEBUG) Log.i("sjh0", "onDraw");
+        NLog.i("sjh0", "onDraw");
         super.onDraw(canvas);
 
         canvas.drawRect(10, 10, 40, 40, mPaint);
@@ -89,7 +89,7 @@ public class DIYView extends View {
 ////        Bitmap bitmap = bmpDraw.getBitmap();
 //        Rect srcRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight()); // 456px。 是对图片进行裁截，若是空null则显示整个图片
 //        Rect dstRect = new Rect(0, 0, bitmap.getWidth() / 2, bitmap.getHeight() / 2);  // 是图片在Canvas画布中显示的区域, 可拉伸图片！！!
-//        Log.e("sjh0", bitmap.getWidth() + "==" + bitmap.getHeight());
+//       NLog.e("sjh0", bitmap.getWidth() + "==" + bitmap.getHeight());
 //        // canvas.drawBitmap(bitmap, 0, 0, new Paint());   // 只能定义图片的起始坐标，不能改变图片显示的大小。
 //        canvas.drawBitmap(bitmap, null, dstRect, mPaint);  // null即代表使用整幅图片.
 
