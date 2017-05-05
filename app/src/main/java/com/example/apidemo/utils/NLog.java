@@ -102,6 +102,10 @@ public class NLog {
 		mLogFilePrefix = logFilePrefix == null ? "" : logFilePrefix;
 	}
 
+	public void setLogSwitch(boolean logSwitch) {
+		mLogSwitch = logSwitch;
+	}
+
 	/**
 	 * 要构造对象使用log，用处不大.
      */
