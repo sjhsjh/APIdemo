@@ -80,7 +80,7 @@ public class NLog {
 	private boolean mLogSwitch = true;							//日志开关
 	private static final int LOG_TYPE = LOG_BOTH_BUFF_SD;			//日志输出类型
 	private static final int LOG_LEVEL_MIN = VERBOSE;			//允许通过的最小日志等级
-	private static final String LOG_DIR_NAME = "NextLauncher_Data/debug_log";	//日志输出目录，位于sd卡目录下，根据项目修改
+	private static final String LOG_DIR_NAME = "APIDemo/debug_log";	//日志输出目录，位于sd卡目录下，根据项目修改
 	private static final String NO_LOG_FILE_NAME = "nolog";		//在日志输出目录下创建这个文件，在当前日志文件超过限制时禁止继续输出
 	private static final int LOG_COUNT_LIMIT_PER_FILE = 20000;	//每个文件的日志输出限制
 
@@ -322,7 +322,7 @@ public class NLog {
     }
 
     /**
-	 * 管理输出日志到缓存区和sd卡.
+	 * 管理输出日志到缓存区和sd卡.每次启动对应一个日志文件.
      */
 	@SuppressLint("SimpleDateFormat")
 	//CHECKSTYLE IGNORE 1 LINES
@@ -351,6 +351,7 @@ public class NLog {
 		String sdStateString = android.os.Environment.getExternalStorageState();
 		if (!sdStateString.equals(android.os.Environment.MEDIA_MOUNTED)) {
 			// 没有可读可写权限
+			android.util.Log.println(NLog.ERROR, TAG, "no write permission. ");
 			return 0;
 		}
 		
@@ -366,7 +367,7 @@ public class NLog {
 
 		msg = dateString + ": " + PRIORITYS_STRING[priority] + "/" + tag + ": " + msg + "\n";
 
-		synchronized (mLOCK) {
+		synchronized (mLOCK) {	// 注意不要在该函数段内使用NLog，否则就是死循环!
 			if (mLogCount % LOG_COUNT_LIMIT_PER_FILE == 0) {	// 创建日志文件
 				//超过行数限制时创建新日志文件
 				mLogCount = 0;
@@ -399,6 +400,7 @@ public class NLog {
 					try {
 						mCurFile.createNewFile();
 					} catch (IOException e) {
+						android.util.Log.println(NLog.ERROR, TAG, "e = " + e);
 						mCurFile = null;
 						e.printStackTrace();
 						return 0;
