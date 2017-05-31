@@ -23,8 +23,8 @@ import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
 
 public class ResolveInfoActivity extends BaseActivity {
-	private static final boolean DEBUG = true;
-	
+	private static final String TAG = "ResolveInfoActivity";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -175,11 +175,16 @@ public class ResolveInfoActivity extends BaseActivity {
 		Intent intent = new Intent();
 		intent.setAction(Intent.ACTION_MAIN);
 		intent.addCategory(Intent.CATEGORY_LAUNCHER);
+		//intent.addCategory(Intent.CATEGORY_APP_MESSAGING);
+ 		//intent.setPackage("com.google.android.calculator");
 		// 这样的app,所以得到的要比getInstalledPackages少(因为这会少了那种service、provider、receiver之类的app).
 		// 例如Bluetooth.apk内的activity就没有action.MAIN！而有些应用却有多个activity都有action.MAIN。
 		List<ResolveInfo> list = pm.queryIntentActivities(intent, 0);
-		for(ResolveInfo pi : list){
-			NLog.i("sjh5", "label = " + pi.loadLabel(pm)  );
+		for(ResolveInfo ri : list){
+			if (ri != null && ri.activityInfo != null) {
+				NLog.i("sjh5", "label = " + ri.loadLabel(pm) +  " packageName = " + ri.activityInfo.packageName + " classname = " + ri.activityInfo.name);
+			}
+
 		}
 		NLog.e("sjh5", "size" + list.size());//24
 		
@@ -187,7 +192,9 @@ public class ResolveInfoActivity extends BaseActivity {
 		List<PackageInfo> packageList = pm.getInstalledPackages(0);
 		for(PackageInfo pi : packageList){
 			if((pi.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) > 0){
-				NLog.i("sjh2", "系统程序 label = " + pi.applicationInfo.loadLabel(pm) + " ==" + pi.packageName); //若应用程序没有设置label则会读出包名！
+				NLog.i("sjh2", "系统程序 label = " + pi.applicationInfo.loadLabel(pm) + " ==" + pi.packageName + " ==" + pi.applicationInfo.className); //若应用程序没有设置label则会读出包名！
+				// 这里的pi.applicationInfo.className  经常读出null或者错误的classname，如：com.tct.calculator/com.tct.calculator.Calculator变成com.tct.calculator/com.tct.calculator.ClientApplication
+				// 下面的ai.className同理不准确. 用queryIntentActivities即可得到classname. tudo
 			}
 			else{
 				NLog.w("sjh2", "用户程序 label = " + pi.applicationInfo.loadLabel(pm) + " ==" + pi.packageName + " ==" + pi.applicationInfo.className);
@@ -198,14 +205,14 @@ public class ResolveInfoActivity extends BaseActivity {
 	
 		List<ApplicationInfo> applicationList = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
 		for(ApplicationInfo ai : applicationList){
-			if((ai.flags & ApplicationInfo.FLAG_SYSTEM) > 0){//81
-				NLog.i("sjh3", "系统程序 label = " + ai.loadLabel(pm) + " ==" + ai.packageName);
+			if((ai.flags & ApplicationInfo.FLAG_SYSTEM) > 0){
+				NLog.i("sjh3", "系统程序 label = " + ai.loadLabel(pm) + " ==" + ai.packageName + " ==" + ai.className);
 			}
 			else{
 				NLog.w("sjh3", "用户程序 label = " + ai.loadLabel(pm)+ " ==" + ai.packageName + " ==" + ai.className);
 			}
 		}
-		NLog.e("sjh3", "size" + applicationList.size());
+		NLog.e("sjh3", "size" + applicationList.size());//81
 	}
 
 	@Override
@@ -217,7 +224,7 @@ public class ResolveInfoActivity extends BaseActivity {
 
 	@Override
 	public void finish() {
-		// NLog.i("sjh1", "finish");
+		// NLog.i("sjh1", TAG + "finish");
 		super.finish();
 		// 通过调用overridePendingTransition() 可以实时修改Activity的切换动画。但需注意的是:该函数必须在调用startActivity()或者finish()后立即调用，且只有效一次。
 		 overridePendingTransition(R.animator.slide_left_in, R.animator.slide_right_out);
