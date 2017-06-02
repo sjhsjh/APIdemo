@@ -2,11 +2,6 @@ package com.example.apidemo;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +10,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import com.example.apidemo.activity.DIYViewActivity;
 import com.example.apidemo.activity.EventDispatchActivity;
+import com.example.apidemo.activity.HardWareActivity;
 import com.example.apidemo.activity.NewsActivity;
 import com.example.apidemo.activity.NotificationActivity;
 import com.example.apidemo.activity.PowerManagerActivity;
@@ -60,6 +56,7 @@ public class MainActivity extends BaseActivity {
         list.add(DIYViewActivity.class);
         list.add(NewsActivity.class);
         list.add(SQLActivity.class);
+        list.add(HardWareActivity.class);
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);

@@ -6,16 +6,8 @@ import android.graphics.Path;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 import android.view.View;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
-import java.io.InputStream;
 
 /**
  * Created on 2017/3/16.

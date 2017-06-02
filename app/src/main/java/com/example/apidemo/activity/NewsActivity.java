@@ -2,8 +2,6 @@ package com.example.apidemo.activity;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.widget.ListView;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.adapter.RecycleViewAdapter;

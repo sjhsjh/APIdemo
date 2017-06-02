@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.apidemo">
 
-    <!-- android:sharedUserId="android.uid.system" -->
+    <!-- android:sharedUserId="android.uid.system" -->  <!-- 没有系统的签名加上这uid是安装不上的-->
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- <uses-permission android:name="android.permission.DEVICE_POWER" /> -->
@@ -10,6 +10,11 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-feature android:name="android.hardware.camera2"/>
+    <uses-feature android:name="android.hardware.autofocus" />
+
 
     <application
         android:name=".APIDemoApplication"
@@ -56,6 +61,7 @@
         <activity android:name=".activity.TestServiceActivity" />
         <activity android:name=".activity.NewsActivity" />
         <activity android:name=".activity.SQLActivity" />
+        <activity android:name=".activity.HardWareActivity" />
 
         <service
             android:name=".service.TestService"

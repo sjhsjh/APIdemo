@@ -15,4 +15,7 @@
     <string name="test1">=%1$d=</string>
     <string name="test2">=%d=</string>
 
+    <string name="open_flashlight">打开闪光灯</string>
+    <string name="close_flashlight">关闭闪光灯</string>
+
 </resources>
