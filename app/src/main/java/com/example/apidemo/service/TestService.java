@@ -30,11 +30,13 @@ public class TestService extends Service{
     private Runnable mRunnable = new Runnable() {   // 开线程定时循环工作！
         @Override
         public void run() {
-            NLog.d(TAG, "mRunnable time = " + AndroidUtils.debugLog(System.currentTimeMillis()));
+            NLog.d(TAG, "mRunnable time = " + AndroidUtils.debugLog(System.currentTimeMillis()) + " thread id is " + Thread.currentThread().getId());
             if(Looper.myLooper() == null){
                 Looper.prepare();   // 循环的时候避免重复prepare
             }
-            mHandler = new Handler();
+            if(mHandler == null){
+                mHandler = new Handler();   // 注意该handler是当前线程的handler
+            }
             mHandler.postDelayed(this, 2000);
             Looper.loop();
         }
@@ -43,7 +45,7 @@ public class TestService extends Service{
     @Override
     public void onCreate() {
         super.onCreate();
-        NLog.d(TAG, "TestService. process id is" + Process.myPid() + "  thread id is " + Thread.currentThread().getId());
+        NLog.d(TAG, "onCreate. process id is " + Process.myPid() + " Thread id is " + Thread.currentThread().getId());
         // 只在service创建的时候调用一次，可以在此进行一些一次性的初始化操作
     }
 
@@ -52,7 +54,7 @@ public class TestService extends Service{
      * 每次其他组件调用startService()方法时，此方法将会被调用.在这里进行这个service主要的操作
      * @param intent
      * @param flags 默认情况下是0，对应的常量名为START_STICKY_COMPATIBILITY
-     * @param startId 在service未destory前提下，多次startService()呈现0,1,2....递增
+     * @param startId 在service未destory前提下，多次startService() startId会从0,1,2....递增
      * @return
      */
     @Override
@@ -76,21 +78,9 @@ public class TestService extends Service{
             startForeground(1, notification);
         }
 
-//        new Thread(){   // 开线程定时循环工作！
-//            @Override
-//            public void run() {
-//                super.run();
-//                NLog.d(TAG, "onStartCommand time = " + AndroidUtils.debugLog(System.currentTimeMillis()));
-//                if(Looper.myLooper() == null){
-//                    Looper.prepare();   // 循环的时候避免重复prepare
-//                }
-//                mHandler = new Handler();
-//                mHandler.postDelayed(this, 2000);
-//                Looper.loop();
-//            }
-//        }.start();
+
         if(mThread == null || !mThread.isAlive()){  // 防止开启多个线程.
-            mThread = new Thread(mRunnable);
+            mThread = new Thread(mRunnable);        // 开线程定时循环工作
             mThread.start();
         }
         // new Thread(mRunnable).start();
@@ -105,11 +95,16 @@ public class TestService extends Service{
         // 当其他组件调用bindService()方法时，此方法将会被调用.返回一个IBinder对象，它是用来支撑其他组件与service之间的通信。如果不想让这个service被绑定，在此返回null即可
 
         /*  TAG: 返回本地binder */
-        // return mMyBinder;
+         return mMyBinder;
         /*  TAG: 启动AIDL远程binder ，返回AIDL文件的内部类Binder对象！ */
-        return mAIDLBinder;
+        //return mAIDLBinder;
     }
 
+    /**
+     *
+     * @param intent
+     * @return 当该服务再次被绑定时是否用onRebind来代替onBind.
+     */
     @Override
     public boolean onUnbind(Intent intent) {    // 很少重载该方法
         NLog.d(TAG, "onUnbind ");

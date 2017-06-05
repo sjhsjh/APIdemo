@@ -25,20 +25,19 @@ import com.example.apidemo.utils.NLog;
 public class TestServiceActivity extends BaseActivity {
     private final String TAG = "TestServiceActivity";
     public final static String ISHEAD = "isHead";
-    private static final boolean DEBUG = true;
     private boolean mIsBind = false;
     private TestService.MyBinder mConnectedBinder;
     private IMyAidlInterface mMyAidlInterface;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {   // onBind返回非null之后调用. Component是TestService.IBinder是TestService的binder.
+        public void onServiceConnected(ComponentName name, IBinder service) {   // onBind返回非null之后调用. Component是TestService, IBinder是TestService的binder.
             NLog.d("TestService", "onServiceConnected.  ComponentName = " + name.toString() + "IBinder = " + service.toString());
             /*  TAG: 返回本地binder */
-//            mConnectedBinder = (TestService.MyBinder)service;
-//            mConnectedBinder.binderLog();
+            mConnectedBinder = (TestService.MyBinder)service;
+            mConnectedBinder.binderLog();
             /*  TAG: 启动AIDL远程binder */
-            mMyAidlInterface = IMyAidlInterface.Stub.asInterface(service);
+     //       mMyAidlInterface = IMyAidlInterface.Stub.asInterface(service);
         }
 
         /**

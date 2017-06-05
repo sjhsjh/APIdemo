@@ -66,8 +66,8 @@
         <service
             android:name=".service.TestService"
             android:enabled="true"
-            android:exported="true"
-            android:process=":remote">
+
+            android:exported="true" >
             <intent-filter>
                 <action android:name=".AIDLAction" />
             </intent-filter>
@@ -83,7 +83,7 @@
     android:label : 显示给用户的这个service的名字。如果不设置，将会默认使用<application>的label属性。
     android:name : service名称，这个属性是唯一一个必须填的属性。
     android:permission : 其他组件必须具有所填的权限才能启动这个service。
-    android:process : service运行的进程的name。默认启动的service是运行在主进程中的。
+    android:process : service运行的进程的name。默认启动的service是运行在主进程中的。远程服务时才写成android:process=":remote" ！！
         -->
 
         <activity android:name=".activity.NotificationActivity" />
