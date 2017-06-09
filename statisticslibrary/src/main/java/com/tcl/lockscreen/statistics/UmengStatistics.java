@@ -1,9 +1,7 @@
 package com.tcl.lockscreen.statistics;
 
 import android.content.Context;
-
 import com.umeng.analytics.MobclickAgent;
-
 import java.util.HashMap;
 
 /**
@@ -34,6 +32,12 @@ public class UmengStatistics extends AbstractStatistics{
         MobclickAgent.onEvent(context, eventName, map);
     }
 
+    /**
+     * @param context
+     * @param eventName
+     * @param map 可为null
+     * @param value
+     */
     @Override
     public void onEvent(Context context, String eventName, HashMap<String, String> map, int value) {
         MobclickAgent.onEventValue(context, eventName, map, value);

@@ -72,11 +72,15 @@ public class FlashLightManager {
                 cameraManager.setTorchMode("0", open);  // 6.0以后打开闪光灯不需要相机等权限
             } catch (CameraAccessException e) {
                 e.printStackTrace();
+                // android7.0 com.ibox.flashlight_060206.apk和com.devuni.flashlight_111217.apk可以占用相机，其他应用打开相机则报错：
+                // android.hardware.camera2.CameraAccessException: CAMERA_IN_USE (4): setTorchMode:1400:
+                // Torch for camera "0" is not available due to an existing camera user.  原因未明
                 return false;
             }
         }
         else {
             if (open) {
+                // 7.0运行该段代码无异常单不能打开闪光灯
                 PackageManager packageManager = mContext.getPackageManager();
                 FeatureInfo[] featureInfos = packageManager.getSystemAvailableFeatures();
                 if (featureInfos != null) {
@@ -85,12 +89,11 @@ public class FlashLightManager {
                             try {
                                 if (mCamera == null) {
                                     // 没有相机权限or打开camera未释放就再次open都会报错Fail to connect to camera service。
-                                    // (对我手机的手电筒CP_FlashLight，其他应用占用着执行Camera.open()无crash，且打开已打开的闪光灯就是重启闪光灯，原因未明)
+                                    // (对我4.4手机的手电筒CP_FlashLight，其他应用占用着执行Camera.open()无crash，且打开已打开的闪光灯就是重启闪光灯，原因未明)
                                     mCamera = Camera.open();
                                 }
                                 Camera.Parameters parameters = mCamera.getParameters();
                                 parameters.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-
                                 mCamera.setParameters(parameters);
                                 mCamera.startPreview();
                             } catch (Exception e) {
