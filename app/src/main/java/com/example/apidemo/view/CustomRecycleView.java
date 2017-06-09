@@ -7,15 +7,15 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import com.example.apidemo.R;
+import com.example.apidemo.utils.NLog;
 
 /**
  * <br>
  * Created by jinhui.shao on 2017/4/11.
  */
-public class CustomRecycleView extends RecyclerView{
+public class CustomRecycleView extends RecyclerView {
     private float downY;
     private int headerViewHeight;
     private final int READY_TO_RESET = 1; // 下拉一点距离即将还原的状态
@@ -25,18 +25,15 @@ public class CustomRecycleView extends RecyclerView{
 
     public CustomRecycleView(Context context) {
         super(context);
-        Log.e("sjh0", "cao1 ");
     }
 
     public CustomRecycleView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        Log.e("sjh0", "cao2 ");
-       init();
+        init();
     }
 
     public CustomRecycleView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        Log.e("sjh0", "cao3 ");
     }
 
     private void init() {
@@ -46,7 +43,7 @@ public class CustomRecycleView extends RecyclerView{
     }
 
     private void animateBack(int curentPaddingTop) {
-        Log.w("sjh0", "curentPaddingTop = " + curentPaddingTop + " headerViewHeight = " + headerViewHeight);
+        NLog.w("sjh0", "curentPaddingTop = " + curentPaddingTop + " headerViewHeight = " + headerViewHeight);
         ValueAnimator valueAnimator = ValueAnimator.ofInt(curentPaddingTop, -headerViewHeight);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -54,7 +51,7 @@ public class CustomRecycleView extends RecyclerView{
                 int animatedValue = (int) animation.getAnimatedValue();
                 CustomRecycleView.this.setPadding(0, animatedValue, 0 , 0);
                 // setTop(animatedValue);
-                Log.w("sjh0", "animatedValue = " + animatedValue);
+                NLog.w("sjh0", "animatedValue = " + animatedValue);
             }
         });
         valueAnimator.addListener(new Animator.AnimatorListener() {
@@ -65,7 +62,7 @@ public class CustomRecycleView extends RecyclerView{
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                Log.w("sjh0", "getPaddingTop = " + getPaddingTop());
+                NLog.w("sjh0", "getPaddingTop = " + getPaddingTop());
             }
 
             @Override
@@ -181,7 +178,6 @@ public class CustomRecycleView extends RecyclerView{
 //            196         }
 //        197         return super.onTouchEvent(ev);
 
-        Log.w("sjh0", "11111= ");
         return super.onTouchEvent(e);
 
     }

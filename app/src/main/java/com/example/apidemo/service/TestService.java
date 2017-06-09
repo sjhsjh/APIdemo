@@ -19,7 +19,7 @@ import com.example.apidemo.utils.AndroidUtils;
 import com.example.apidemo.utils.NLog;
 
 /**
- * <br> AIDL的服务端代码
+ * <br> AIDL的服务端代码（本地和远程）
  * Created by jinhui.shao on 2017/1/17.
  */
 public class TestService extends Service{
@@ -100,10 +100,17 @@ public class TestService extends Service{
         //return mAIDLBinder;
     }
 
+    @Override
+    public void onRebind(Intent intent) {
+        NLog.d(TAG, "onRebind");
+        super.onRebind(intent);
+    }
+
     /**
-     *
      * @param intent
      * @return 当该服务再次被绑定时是否用onRebind来代替onBind.
+     * 若为false，解绑后重新绑定会触发onServiceConnected但不会触发onBind(证明绑定过服务的客户端已把binder存起来)；
+     * 若为true，解绑后重新绑定会触发onServiceConnected和onRebind（无返回值）.
      */
     @Override
     public boolean onUnbind(Intent intent) {    // 很少重载该方法
