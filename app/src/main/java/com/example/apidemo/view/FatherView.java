@@ -40,10 +40,30 @@ public class FatherView extends LinearLayout{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         NLog.i("sjh1", "fatherView onTouchEvent. " + event.getAction() );
-        new Exception("sjh2").printStackTrace();
+        // new Exception("sjh2").printStackTrace();
         return super.onTouchEvent(event);
     }
 
+    /**
+     * 事件分发
+     * @param event
+     * @return  事件是否已被消费
+     */
+    public boolean dispatchTouchEvent(MotionEvent event){
+        boolean consume;
+        if(isView || isViewGroup && onInterceptTouchEvent(event) || child == null){   // Activity和View都没有onInterceptTouchEvent.  没有子View不能继续派发因此只能当作拦截下来了.
+            consume = onTouchEvent(event);
+        }
+        else {
+            consume = child.dispatchTouchEvent(event);
+            if(consume){
+            }
+            else{
+                consume = onTouchEvent(event);
+            }
+        }
 
+        return consume;
+    }
 
 }

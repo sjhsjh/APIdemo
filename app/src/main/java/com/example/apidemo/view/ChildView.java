@@ -10,7 +10,6 @@ import com.example.apidemo.utils.NLog;
  * 2016/12/21.
  */
 public class ChildView extends LinearLayout{
-    private static final boolean DEBUG = true;
 
     public ChildView(Context context) {
         super(context);

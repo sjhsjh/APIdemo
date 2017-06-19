@@ -8,7 +8,6 @@ import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
 
 public class EventDispatchActivity extends BaseActivity {
-    private static final boolean DEBUG = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
