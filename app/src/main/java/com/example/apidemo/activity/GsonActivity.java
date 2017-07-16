@@ -22,12 +22,13 @@ public class GsonActivity extends BaseActivity {
         IGSON ig = new Son();
         Gson gson = new Gson();
         String str = gson.toJson(ig);
-        NLog.e("sjh0", "toJson str = " + str);
+        NLog.i("sjh0", "toJson str = " + str);
 
         try {
             Gson gson2 = new Gson();
             IGSON ig2 = gson2.fromJson(str, IGSON.class);   // 包含(接口.class).newInstance。  Son才可以
-            NLog.e("sjh0", "fromJson ig2 = " + ig2);
+            // Book ig2 = gson2.fromJson(str, Book.class);  将A对象转json再还原成B对象竟然没有报错，但B的内容应该是错的
+            NLog.i("sjh0", "fromJson ig2 = " + ig2);
             // ig2.add();
         } catch (JsonSyntaxException e) {
             e.printStackTrace();
