@@ -87,8 +87,8 @@ public class CustomRecycleView extends RecyclerView {
             case MotionEvent.ACTION_MOVE:
                 int detaY = (int) (e.getRawY() - downY);
                 int paddingTop = (int) (-headerViewHeight + detaY);
-                Log.w("sjh0", "findFirstVisibleItemPosition = " + ((LinearLayoutManager)getLayoutManager()).findFirstVisibleItemPosition());
-                Log.e("sjh0", "paddingTop = " + paddingTop);
+                NLog.w("sjh0", "findFirstVisibleItemPosition = " + ((LinearLayoutManager)getLayoutManager()).findFirstVisibleItemPosition());
+                NLog.e("sjh0", "paddingTop = " + paddingTop);
                 if(((LinearLayoutManager)getLayoutManager()).findFirstVisibleItemPosition() == 0 && paddingTop > -headerViewHeight) {     // 下拉才处理
                     this.setPadding(0, paddingTop, 0 , 0);
                     // setTop(paddingTop);
