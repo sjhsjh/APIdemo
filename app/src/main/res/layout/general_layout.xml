@@ -78,8 +78,6 @@
         android:layout_marginBottom="28dp"
         android:text="TextView" />
 
-
-
     <ViewStub
         android:id="@+id/viewStub"
         android:layout_width="wrap_content"

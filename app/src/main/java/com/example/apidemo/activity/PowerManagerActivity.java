@@ -19,7 +19,6 @@ import com.example.apidemo.R;
  *
  */
 public class PowerManagerActivity extends BaseActivity {
-	private static final boolean DEBUG = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

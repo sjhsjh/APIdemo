@@ -195,6 +195,8 @@ public class ResolveInfoActivity extends BaseActivity {
 				NLog.i("sjh2", "系统程序 label = " + pi.applicationInfo.loadLabel(pm) + " ==" + pi.packageName + " ==" + pi.applicationInfo.className); //若应用程序没有设置label则会读出包名！
 				// 这里的pi.applicationInfo.className  经常读出null或者错误的classname，如：com.tct.calculator/com.tct.calculator.Calculator变成com.tct.calculator/com.tct.calculator.ClientApplication
 				// 下面的ai.className同理不准确. 用queryIntentActivities即可得到classname.
+				//label = Google packageName = com.google.android.googlequicksearchbox classname = com.google.android.googlequicksearchbox.SearchActivity
+				// I/sjh2: 系统程序 label = Google 应用  ：用pi.applicationInfo.loadLabel(pm)也将label“Google”错读取成“Google 应用”了。
 			}
 			else{
 				NLog.w("sjh2", "用户程序 label = " + pi.applicationInfo.loadLabel(pm) + " ==" + pi.packageName + " ==" + pi.applicationInfo.className);

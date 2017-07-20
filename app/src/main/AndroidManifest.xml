@@ -90,7 +90,7 @@
         <activity android:name=".activity.DIYViewActivity" />
         <activity android:name=".activity.GsonActivity" />
 
-        <meta-data android:value="58db526f310c935d4f001c2e" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="58db526f310c935d4f001c2e" android:name="UMENG_APPKEY"/>       //  测试key：59420a29a40fa31dad000ce9
         <meta-data android:value="my_channel" android:name="UMENG_CHANNEL"/>
 
     </application>
