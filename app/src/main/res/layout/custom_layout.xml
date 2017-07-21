@@ -16,5 +16,13 @@
         android:layout_centerVertical="true"
         android:src="@drawable/path_usage" />
 
-
+    <Button
+        android:id="@+id/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:minHeight="10dp"
+        android:text="btn"
+         />
+        <!-- android:minHeight="10dp"-->
 </RelativeLayout>

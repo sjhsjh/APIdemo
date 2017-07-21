@@ -13,6 +13,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
@@ -48,6 +49,14 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
         });
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Button btn = (Button) findViewById(R.id.btn);
+        NLog.i("sjh0", "minHeight = " + btn.getMinimumHeight() + " measuredHeight" + btn.getMeasuredHeight()
+                + " minWidth = " + btn.getMinimumWidth() + " measuredWidth" + btn.getMeasuredWidth());  //352
+        // minHeight 默认是48dp（192像素），minHeight改成10dp后measuredHeight是39dp，39dp就是包裹这些文字的最小高度。
+    }
 
     private void printDeviceDimen(){
         boolean hasMenuKey = ViewConfiguration.get(DIYViewActivity.this).hasPermanentMenuKey();    // 判断是否有物理的菜单键。即是否有导航栏。
