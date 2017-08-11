@@ -4,12 +4,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
+import android.view.View;
+import android.widget.Button;
 import com.example.apidemo.utils.NLog;
 
 /**
  * 2016/12/21.
  */
-public class ChildView extends LinearLayout{
+public class ChildView extends LinearLayout {
 
     public ChildView(Context context) {
         super(context);
@@ -21,6 +23,11 @@ public class ChildView extends LinearLayout{
 
     public ChildView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
     }
 
     @Override
@@ -38,6 +45,10 @@ public class ChildView extends LinearLayout{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         NLog.i("sjh1", "childview onTouchEvent. " + event.getAction());
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            requestDisallowInterceptTouchEvent(true);
+            return true;
+        }
         return super.onTouchEvent(event);
     }
 
