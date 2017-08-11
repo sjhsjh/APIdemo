@@ -3,19 +3,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <com.example.apidemo.view.FatherView
+        android:id="@+id/fatherview"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_centerVertical="true"
         android:background="#8000ff00">
 
         <com.example.apidemo.view.ChildView
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="#800000ff"
-            android:text="Button"/>
+            android:text="Button" />
     </com.example.apidemo.view.FatherView>
 
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fatherview">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="text"
+            android:textSize="500sp" />
+    </ScrollView>
 
 </RelativeLayout>
