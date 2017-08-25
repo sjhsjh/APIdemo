@@ -6,10 +6,10 @@
     <TextView
         android:id="@+id/itemview"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="50dp"
         android:background="#ffffff"
         android:gravity="center_vertical"
-        android:textSize="40sp" />
+        android:textSize="20sp" />
 
     <View
         android:layout_width="match_parent"

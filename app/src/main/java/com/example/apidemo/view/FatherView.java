@@ -42,9 +42,9 @@ public class FatherView extends LinearLayout{
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         NLog.i("sjh1", "fatherView onInterceptTouchEvent. " + ev.getAction());
-        if(ev.getAction() == MotionEvent.ACTION_MOVE){
-            return true;
-        }
+//        if(ev.getAction() == MotionEvent.ACTION_MOVE){
+//            return true;
+//        }
         return super.onInterceptTouchEvent(ev);
     }
 

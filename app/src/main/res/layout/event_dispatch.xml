@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeview"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,24 +11,44 @@
         android:background="#8000ff00">
 
         <com.example.apidemo.view.ChildView
+            android:id="@+id/childview"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:background="#800000ff"
             android:text="Button" />
     </com.example.apidemo.view.FatherView>
 
-    <ScrollView
+    <com.example.apidemo.view.MyHorizontalScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/fatherview">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="text"
-            android:textSize="500sp" />
-    </ScrollView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ListView
+                android:id="@+id/listview1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </ListView>
+
+            <ListView
+                android:id="@+id/listview2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </ListView>
+
+            <Button
+                android:id="@+id/scroll_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="btn"
+                android:textSize="50sp" />
+        </LinearLayout>
+
+    </com.example.apidemo.view.MyHorizontalScrollView>
 
 </RelativeLayout>
