@@ -72,7 +72,7 @@ public class MainActivity extends BaseActivity {
                 NLog.i("sjh0", "onItemClick position is " + position);
 
                 Object activityClass = parent.getItemAtPosition(position); // 根据位置判断跳转哪个activity!!!会调用adapter的getItem().
-                NLog.i("sjh0", " activity Class = " + activityClass.toString());
+                NLog.i("sjh0", "activity Class = " + activityClass.toString());
 
                 Intent intent = new Intent(MainActivity.this, (Class<?>) activityClass);
                 startActivity(intent);

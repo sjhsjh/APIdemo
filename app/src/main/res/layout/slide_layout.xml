@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
+    <Button
         android:id="@+id/head_view"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:background="#6000ff00">
-    </View>
+    </Button>
 
     <ListView
         android:id="@+id/listview_slide"

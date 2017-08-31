@@ -11,7 +11,6 @@ import com.example.apidemo.utils.NLog;
  *  2016/12/21.
  */
 public class FatherView extends LinearLayout{
-    private static final boolean DEBUG = true;
 
     public FatherView(Context context) {
         super(context);
