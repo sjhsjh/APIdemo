@@ -44,14 +44,18 @@ public class StickyLayout extends RelativeLayout{
         int x = (int)ev.getRawX();
         int y = (int)ev.getRawY();
         boolean intercept = false;
+
         switch (action){
             case MotionEvent.ACTION_DOWN :
                 break;
             case MotionEvent.ACTION_MOVE :
                 NLog.d("sjh3", "onInterceptTouchEvent ACTION_MOVE  y = " + y);
                 if(mHeadView.getY() > -mHeadView.getHeight() && mHeadView.getY() <= 0
-                        || (isListViewTop() && y - mLastInterceptY > 0)){   // mHeadView.getY()恒为0,因为它一直在父view的左上角。
+                        || (isListViewTop() && y - mLastInterceptY > 0)){
+                    // 若只平移父view，注意mHeadView它一直在父view的左上角，因此此时mHeadView.getY()恒为0。
+                    // 若listview和headview单独平移，listiew的平移会有延迟导致两者分离。分离了就不能判定listview已到顶部了。
                     mHeadView.setTranslationY(Math.min(0 , mHeadView.getTranslationY() + y - mLastInterceptY));
+
                     intercept = true;
                 }
                 else {
@@ -79,7 +83,6 @@ public class StickyLayout extends RelativeLayout{
 //        int x = (int)ev.getRawX();
 //        int y = (int)ev.getRawY();
 //        boolean intercept = false;
-//              //  (mGroupFlags & FLAG_DISALLOW_INTERCEPT) != 0)
 //        switch (action){
 //            case MotionEvent.ACTION_DOWN :
 //                break;
@@ -111,11 +114,11 @@ public class StickyLayout extends RelativeLayout{
 
     private boolean isListViewTop(){
         boolean result = false;
-        if(mListView.getFirstVisiblePosition() == 0){
+        if(mListView.getFirstVisiblePosition() == 1){
             View view = mListView.getChildAt(0);
-            if(view != null && view.getTop() >= 0){ // 证明该item跟listview顶部平齐.
-                result = true;
-            }
+//            if(view != null && view.getTop() >= 0){ // 证明该item跟listview顶部平齐.
+               result = true;
+//            }
         }
         return result;
     }
