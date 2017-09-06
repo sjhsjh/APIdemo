@@ -20,7 +20,6 @@ public class SlideActivity extends BaseActivity {
         createList(R.id.listview_slide);
     }
 
-
     private void createList(int resourceID) {
         ListView listView = (ListView) findViewById(resourceID);
         ArrayList<String> list = new ArrayList<String>();
