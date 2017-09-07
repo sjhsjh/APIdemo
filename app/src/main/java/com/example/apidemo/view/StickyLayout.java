@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,6 +25,7 @@ public class StickyLayout extends LinearLayout{
     private int mLastTouchY;
     private int mLastInterceptX;
     private int mLastInterceptY;
+    private int mTouchSlop;
 
     public StickyLayout(Context context) {
         super(context);
@@ -43,6 +45,7 @@ public class StickyLayout extends LinearLayout{
         mListView = (ListView) findViewById(R.id.listview_slide);
         mTopView = (LinearLayout) findViewById(R.id.top_view);
         // mTopView.setClickable(true);
+        mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();  // 32
         mScroller = new Scroller(getContext());
     }
 
@@ -62,20 +65,18 @@ public class StickyLayout extends LinearLayout{
 
         switch (action){
             case MotionEvent.ACTION_DOWN :
-
+                mLastTouchX = x;
+                mLastTouchY = y;
                 break;
             case MotionEvent.ACTION_MOVE :
                 NLog.d("sjh3", "dispatchTouchEvent ACTION_MOVE  y = " + y);
                 // 若只平移父view，注意mHeadView它一直在父view的左上角，因此此时mHeadView.getY()恒为0。
                 // 若listview和headview单独平移，listiew的平移会有延迟导致两者分离。分离了就不能判定listview已到顶部了。
-                if (y - mLastInterceptY > 0 && isListViewTop()) {   // 临界点下拉时允许父控件拦截！！！！！！核心②
-                    // requestDisallowInterceptTouchEvent(false);
+                if (y - mLastTouchY > 0 && isListViewTop()) {   // 临界点下拉时允许父控件拦截！！！！！！核心②
+                    requestDisallowInterceptTouchEvent(false);  // 方法一
 
-                    ev.setAction(MotionEvent.ACTION_CANCEL);
-                    dispatchTouchEvent(ev);
-                    NLog.e("sjh3", "dispatchTouchEvent ACTION_CANCEL===============  y = " + y);
-                    ev.setAction(MotionEvent.ACTION_DOWN);
-                    return dispatchTouchEvent(ev);
+//                    ev.setAction(MotionEvent.ACTION_DOWN);  // 方法二。再加个标志位，每次下拉到临界点只执行一次。
+//                    return dispatchTouchEvent(ev);
                 }
                 break;
             case MotionEvent.ACTION_CANCEL :
@@ -97,22 +98,25 @@ public class StickyLayout extends LinearLayout{
             case MotionEvent.ACTION_DOWN :
                 break;
             case MotionEvent.ACTION_MOVE :
-                NLog.d("sjh3", "onInterceptTouchEvent ACTION_MOVE  y = " + y);
+                NLog.d("sjh3", "onInterceptTouchEvent ACTION_MOVE  y = " + y + " mLastInterceptY = " + mLastInterceptY);
+                // if(Math.abs(y - mLastInterceptY) > mTouchSlop){     // 微小滑动不拦截，子ListView的onTouchEvent会返回true处理掉。
+                /* 对ListView，当Math.abs(downnY - mMotionY) > mTouchSlop时，即累计滑动了超过mTouchSlop距离就开始滑动！
+                   因此不能使用上述每次滑动判断是否超过mTouchSlop的判断。 可以使用累加滑动是否超过mTouchSlop的判断。*/
                 // 父控件拦截条件：
-                // 1. headView可见
-                // 2. headView已隐藏且ListView处于顶部且下拉
-                if (getScrollY() < mHeadViewHeight || y - mLastInterceptY > 0 && isListViewTop()) {
-                    intercept = true;
-                }
-
-                NLog.i("sjh3", "intercept = " + intercept);
+                    // 1. headView可见
+                    // 2. headView已隐藏且ListView处于顶部且下拉
+                    if (getScrollY() < mHeadViewHeight || y - mLastInterceptY > 0 && isListViewTop()) {
+                        intercept = true;
+                    }
+                    NLog.i("sjh3", "intercept = " + intercept);
+                // }
                 break;
             case MotionEvent.ACTION_CANCEL :
             case MotionEvent.ACTION_UP :
                 break;
 
         }
-        mLastTouchX = x;
+        mLastTouchX = x;    // down的时候初始化这些值; move的时候也初始化onTouchEvent的x、y值;
         mLastTouchY = y;
         mLastInterceptX = x;
         mLastInterceptY = y;
@@ -142,7 +146,7 @@ public class StickyLayout extends LinearLayout{
                     result = dispatchTouchEvent(event);
                 }
 
-                NLog.v("sjh3", "onTouchEvent ACTION_MOVE  y = " + y + " getScrollY = " + getScrollY());
+                NLog.v("sjh3", "onTouchEvent ACTION_MOVE  y = " + y);
                 break;
             case MotionEvent.ACTION_CANCEL :
             case MotionEvent.ACTION_UP :
