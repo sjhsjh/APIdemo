@@ -17,6 +17,7 @@ import com.example.apidemo.activity.NotificationActivity;
 import com.example.apidemo.activity.PowerManagerActivity;
 import com.example.apidemo.activity.ResolveInfoActivity;
 import com.example.apidemo.activity.SQLActivity;
+import com.example.apidemo.activity.ScrollActivity;
 import com.example.apidemo.activity.SlideActivity;
 import com.example.apidemo.activity.TestServiceActivity;
 import com.example.apidemo.adapter.DemoAdapter;
@@ -53,6 +54,7 @@ public class MainActivity extends BaseActivity {
         list.add(PowerManagerActivity.class);
         list.add(EventDispatchActivity.class);
         list.add(SlideActivity.class);
+        list.add(ScrollActivity.class);
         list.add(TestServiceActivity.class);
         list.add(NotificationActivity.class);
         list.add(DIYViewActivity.class);

@@ -54,7 +54,9 @@ public class StickyLayout extends LinearLayout{
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         ViewGroup.LayoutParams lp = mListView.getLayoutParams();
         mHeadViewHeight = mTopView.getHeight() / 2;
-        lp.height = getMeasuredHeight() - mHeadViewHeight;   // 不需要requestLayout，因为后面的onLayout会布局。 1984 - 400
+        lp.height = getMeasuredHeight() - mHeadViewHeight;   // 不需要requestLayout，因为后面的onLayout会布局。 2272 - 400    只看到17?????
+        NLog.e("sjh3", "getMeasuredHeight() " + getMeasuredHeight() + " mHeadViewHeight = " + mHeadViewHeight + " lp.height = " + lp.height
+         + "  mListView.getMeasuredHeight() = " + mListView.getMeasuredHeight());
     }
 
     @Override
@@ -139,7 +141,10 @@ public class StickyLayout extends LinearLayout{
                 return true;
             case MotionEvent.ACTION_MOVE :
                 // scrollBy(0, -(y - mLastTouchY));
-                scrollTo(0, Math.max(0, -(y - mLastTouchY) + getScrollY()));    // headView完全可见时不允许再下拉
+                int newY = -(y - mLastTouchY) + getScrollY();
+                newY = Math.max(0, newY);   // headView完全可见时不允许再下拉,限定移动范围0~mHeadViewHeight
+                newY = Math.min(newY, mHeadViewHeight);
+                scrollTo(0, newY);
                 // 上滑到临界点时瞬间把父view中处理的事件交给了子view！！！核心①！
                 if (getScrollY() >= mHeadViewHeight) {
                     event.setAction(MotionEvent.ACTION_DOWN);

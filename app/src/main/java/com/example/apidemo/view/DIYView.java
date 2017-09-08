@@ -13,7 +13,6 @@ import com.example.apidemo.utils.NLog;
  * Created on 2017/3/16.
  */
 public class DIYView extends View {
-    private static final boolean DEBUG = false;
     private Paint mPaint;
 
     public DIYView(Context context) {
