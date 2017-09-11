@@ -123,7 +123,7 @@ public class StickyLayout extends LinearLayout{
                 break;
 
         }
-        mLastTouchX = x;    // down的时候初始化这些值; move的时候也初始化onTouchEvent的x、y值;
+        mLastTouchX = x;    // down的时候初始化这些值; 下滑到临界点的时候无down事件，父view直接将move事件拦截给自己，因此move的时候也初始化onTouchEvent的x、y值;
         mLastTouchY = y;
         mLastInterceptX = x;
         mLastInterceptY = y;

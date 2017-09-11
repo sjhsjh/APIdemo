@@ -44,8 +44,8 @@ public class EventDispatchActivity extends BaseActivity {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
      //   NLog.i("sjh1", "activity dispatchTouchEvent. " + event.getAction());
-        NLog.w("sjh1", "first child text : " + ((TextView)((RelativeLayout)(mListView).getChildAt(0)).getChildAt(0)).getText()
-         + "  ===  " + ((TextView)((RelativeLayout)(mListView.getAdapter().getView(10, null, null))).getChildAt(0)).getText()); // getScrollY 0
+//        NLog.d("sjh1", "first child text : " + ((TextView)((RelativeLayout)(mListView).getChildAt(0)).getChildAt(0)).getText()
+//         + "  ===  " + ((TextView)((RelativeLayout)(mListView.getAdapter().getView(10, null, null))).getChildAt(0)).getText()); // getScrollY 0
         return super.dispatchTouchEvent(event);
     }
 

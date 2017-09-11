@@ -45,10 +45,10 @@ public class ChildView extends LinearLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         NLog.i("sjh1", "childview onTouchEvent. " + event.getAction());
-        if(event.getAction() == MotionEvent.ACTION_DOWN){
-            // requestDisallowInterceptTouchEvent(true);
-            return true;
-        }
+//        if(event.getAction() == MotionEvent.ACTION_DOWN){
+//            // requestDisallowInterceptTouchEvent(true);
+//            return true;
+//        }
         return super.onTouchEvent(event);
     }
 
