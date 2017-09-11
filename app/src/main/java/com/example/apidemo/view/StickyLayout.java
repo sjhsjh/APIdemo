@@ -3,6 +3,7 @@ package com.example.apidemo.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
 
 /**
- * <br>
+ * <br> ListView悬浮导航栏
  * Created by jinhui.shao on 2017/8/28.
  */
 public class StickyLayout extends LinearLayout{
@@ -26,6 +27,9 @@ public class StickyLayout extends LinearLayout{
     private int mLastInterceptX;
     private int mLastInterceptY;
     private int mTouchSlop;
+    private int mMaxVelocity;
+    private int mMinVelocity;
+    private VelocityTracker mVelocityTracker;
 
     public StickyLayout(Context context) {
         super(context);
@@ -46,6 +50,8 @@ public class StickyLayout extends LinearLayout{
         mTopView = (LinearLayout) findViewById(R.id.top_view);
         // mTopView.setClickable(true);
         mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();  // 32
+        mMaxVelocity = ViewConfiguration.get(getContext()).getScaledMaximumFlingVelocity();     // 32000
+        mMinVelocity = ViewConfiguration.get(getContext()).getScaledMinimumFlingVelocity();     // 200
         mScroller = new Scroller(getContext());
     }
 
@@ -55,7 +61,7 @@ public class StickyLayout extends LinearLayout{
         ViewGroup.LayoutParams lp = mListView.getLayoutParams();
         mHeadViewHeight = mTopView.getHeight() / 2;
         lp.height = getMeasuredHeight() - mHeadViewHeight;   // 不需要requestLayout，因为后面的onLayout会布局。 2272 - 400    只看到17?????
-        NLog.e("sjh3", "getMeasuredHeight() " + getMeasuredHeight() + " mHeadViewHeight = " + mHeadViewHeight + " lp.height = " + lp.height
+        NLog.i("sjh3", "getMeasuredHeight() " + getMeasuredHeight() + " mHeadViewHeight = " + mHeadViewHeight + " lp.height = " + lp.height
          + "  mListView.getMeasuredHeight() = " + mListView.getMeasuredHeight());
     }
 
@@ -64,7 +70,6 @@ public class StickyLayout extends LinearLayout{
         int action = ev.getAction();
         int x = (int)ev.getRawX();
         int y = (int)ev.getY();
-
         switch (action){
             case MotionEvent.ACTION_DOWN :
                 mLastTouchX = x;
@@ -104,7 +109,7 @@ public class StickyLayout extends LinearLayout{
                 // if(Math.abs(y - mLastInterceptY) > mTouchSlop){     // 微小滑动不拦截，子ListView的onTouchEvent会返回true处理掉。
                 /* 对ListView，当Math.abs(downnY - mMotionY) > mTouchSlop时，即累计滑动了超过mTouchSlop距离就开始滑动！
                    因此不能使用上述每次滑动判断是否超过mTouchSlop的判断。 可以使用累加滑动是否超过mTouchSlop的判断。*/
-                // 父控件拦截条件：
+                    // 父控件拦截条件：
                     // 1. headView可见
                     // 2. headView已隐藏且ListView处于顶部且下拉
                     if (getScrollY() < mHeadViewHeight || y - mLastInterceptY > 0 && isListViewTop()) {
@@ -133,6 +138,7 @@ public class StickyLayout extends LinearLayout{
         int action = event.getAction();
         int x = (int)event.getRawX();
         int y = (int)event.getY();
+        initVelocityTracker(event);
         boolean result = false;
 
         switch (action){
@@ -155,12 +161,52 @@ public class StickyLayout extends LinearLayout{
                 break;
             case MotionEvent.ACTION_CANCEL :
             case MotionEvent.ACTION_UP :
+                mVelocityTracker.computeCurrentVelocity(1000, mMaxVelocity);
+                int yVelocity = (int) mVelocityTracker.getYVelocity();
+                if (Math.abs(yVelocity) > mMinVelocity) {
+                    fling(yVelocity);
+                }
+                releaseVelocityTracker();
                 break;
 
         }
         mLastTouchX = x;
         mLastTouchY = y;
         return result || super.onTouchEvent(event);
+    }
+
+    /**
+     * 需重载computeScroll来使用
+     * @param yVelocity
+     */
+    private void fling(int yVelocity) {
+        // 范围是(startY + minY, startY + maxY)！！以startX，startY为参考点。绘制开始时先瞬间回到startX，startY。
+        mScroller.fling(0, getScrollY(), 0, -yVelocity, 0, 0, 0, mHeadViewHeight);
+        invalidate();
+    }
+
+    @Override
+    public void computeScroll() {
+        if (mScroller.computeScrollOffset()) {  // 返回值为boolean，true说明滚动尚未完成，false说明滚动已经完成。
+            scrollTo(mScroller.getCurrX(), mScroller.getCurrY());
+            postInvalidate();
+        }
+    }
+
+
+    private void initVelocityTracker(MotionEvent event){
+        if(mVelocityTracker == null){
+            mVelocityTracker = VelocityTracker.obtain();
+        }
+        mVelocityTracker.addMovement(event);
+    }
+
+    private void releaseVelocityTracker(){
+        if(mVelocityTracker != null){
+            mVelocityTracker.clear();
+            mVelocityTracker.recycle();
+            mVelocityTracker = null;
+        }
     }
 
     private boolean isListViewTop(){
