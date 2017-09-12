@@ -24,9 +24,75 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         mItemDatas = itemDatas;
     }
 
+//    @Override
+//    public int getCount() {
+//        return mItemDatas.size() + 2;
+//    }
+//
+//    @Override
+//    public Object getItem(int position) {
+//        NLog.i("sjh1", "getItem position = " + position);
+//        return mItemDatas.get(position);
+//    }
+//
+//    @Override
+//    public long getItemId(int position) {
+//        NLog.i("sjh1", "getItemId position = " + position);
+//        return position;
+//    }
+//
+//    @Override
+//    public int getViewTypeCount() {
+//        return 3;
+//    }
+//
+//    /**
+//     * @param position
+//     * @return
+//     */
+//    @Override
+//    public int getItemViewType(int position) {
+//        if (position == 0) {
+//            return TYPE_HEADER;
+//        } else if (position == getCount() - 1) {
+//            return TYPE_FOOTER;
+//        }
+//        else {
+//            return TYPE_ITEM;
+//        }
+//    }
+//
+//    @Override
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//        NLog.i("sjh1", "getView position = " + position + " convertView = " + convertView);
+//        ItemViewHolder itemViewHolder = new ItemViewHolder();
+//
+//        if (convertView == null) {
+//            if (position == 0) {
+//                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleview_header, parent, false);
+//                itemViewHolder.textview = ((TextView)convertView.findViewById(R.id.header_tips));
+//            } else if (position == getCount() - 1) {
+//                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleviewfooter, parent, false);
+//                itemViewHolder.textview = ((TextView)convertView.findViewById(R.id.footer_tips));
+//            } else {
+//                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+//                itemViewHolder.textview = ((TextView)convertView.findViewById(R.id.itemview));
+//            }
+//            convertView.setTag(itemViewHolder);
+//        }else {
+//            itemViewHolder = (ItemViewHolder)convertView.getTag();
+//        }
+//
+//        if(position > 0 && position < getCount() - 1 && itemViewHolder.textview != null){
+//            itemViewHolder.textview.setText(mItemDatas.get(position - 1).toString());
+//        }
+//
+//        return convertView;
+//    }
+
     @Override
     public int getItemViewType(int position) {
-        NLog.w("sjh0", "getItemViewType");
+        NLog.i("sjh0", "getItemViewType  position = " + position);
         if(position == 0){
             return TYPE_HEADER;
         }
@@ -40,8 +106,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        NLog.w("sjh0", "onCreateViewHolder:");
-
+        NLog.w("sjh0", "onCreateViewHolder");
         if(viewType == TYPE_HEADER){
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleview_header, parent, false);
             HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
@@ -61,8 +126,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        NLog.w("sjh0", "onBindViewHolder:");
-
+        NLog.w("sjh0", "onBindViewHolder: position = " + position);
         if(holder instanceof ItemViewHolder) {
             if(position - 1 < mItemDatas.size()){
                 ((ItemViewHolder)holder).textview.setText(mItemDatas.get(position - 1).toString());
@@ -78,7 +142,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() {
-        NLog.w("sjh0", "getItemCount:");
+        NLog.i("sjh0", "getItemCount");
         return mItemDatas.size() + 2;
      }
 
@@ -96,12 +160,13 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    private class HeaderViewHolder extends RecyclerView.ViewHolder {
-        private TextView mHeaderTips;
-        private ImageView mLoadingIcon;
+    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+        public TextView mHeaderTips;
+        public ImageView mLoadingIcon;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
+            mHeaderTips = (TextView) itemView.findViewById(R.id.header_tips);
         }
     }
 
@@ -111,6 +176,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         public FooterViewHolder(View itemView) {
             super(itemView);
+            mFootererTips = (TextView) itemView.findViewById(R.id.footer_tips);
         }
     }
 

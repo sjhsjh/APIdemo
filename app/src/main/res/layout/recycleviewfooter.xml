@@ -8,7 +8,7 @@
         android:id="@+id/footer_tips"
         android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="100dp"
         android:background="#50ff0000"
         android:text="foot"
         android:textSize="16sp">
