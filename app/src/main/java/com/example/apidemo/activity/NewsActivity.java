@@ -9,7 +9,6 @@ import com.example.apidemo.adapter.RecycleViewAdapter;
 import com.example.apidemo.view.CustomRecycleView;
 import java.util.ArrayList;
 import java.util.List;
-import static com.example.apidemo.view.CustomRecycleView.READY_TO_RESET;
 
 /**
  * <br> RecycleView的下拉刷新和加载更多
@@ -58,9 +57,9 @@ public class NewsActivity extends BaseActivity {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mRecyclerView.onStatusChange(READY_TO_RESET);
+                        mRecyclerView.animateBack();
                     }
-                }, 1500);
+                }, 4000);
             }
 
             @Override

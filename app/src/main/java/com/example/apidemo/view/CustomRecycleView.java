@@ -1,15 +1,13 @@
 package com.example.apidemo.view;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.animation.Animator;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import com.example.apidemo.R;
 import com.example.apidemo.adapter.RecycleViewAdapter;
 import com.example.apidemo.utils.NLog;
@@ -19,9 +17,9 @@ import com.example.apidemo.utils.NLog;
  * Created by jinhui.shao on 2017/4/11.
  */
 public class CustomRecycleView extends RecyclerView {
-    private float downY;
+    private int mLastTouchY;
     private int headerViewHeight;
-    public static final int READY_TO_RESET = 1; // 下拉一点距离即将还原的状态
+    private final int READY_TO_RESET = 1; // 下拉一点距离即将还原的状态（包含最初状态）
     private final int READY_TO_REFRESH = 2;   // 下拉很多距离，松开就刷新的状态
     private final int REFRESHING = 3;   // 正在刷新的状态
     private int currentState;
@@ -45,13 +43,54 @@ public class CustomRecycleView extends RecyclerView {
         setY(-headerViewHeight);
     }
 
-    private void animateBack(int curentY) {
-        animateBack(curentY, -headerViewHeight);
+    public void animateBack() {
+      //  animateBack(-headerViewHeight);
+        onStatusChange(READY_TO_RESET);
+        // scrollBy(0, 0);
+        // smoothScrollToPosition(2);   // 滑动到尚未可见的item的顶部
+        // scrollToPosition(0);
+        setY(-headerViewHeight);
+        ((LinearLayoutManager)getLayoutManager()).scrollToPositionWithOffset(0, 0); // position的顶部
+        // ((LinearLayoutManager)getLayoutManager()).setStackFromEnd(true);
+
+//        ValueAnimator valueAnimator = ValueAnimator.ofInt((int) getY(), -headerViewHeight);
+//        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                int animatedValue = (int) animation.getAnimatedValue();
+//                CustomRecycleView.this.setY(animatedValue);
+//            }
+//        });
+//        valueAnimator.addListener(new Animator.AnimatorListener() {
+//            @Override
+//            public void onAnimationStart(Animator animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                NLog.w("sjh0", "3423423" );
+//                ((LinearLayoutManager)getLayoutManager()).scrollToPositionWithOffset(0, 0); // position的顶部
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animation) {
+//
+//            }
+//        });
+//        valueAnimator.setDuration(10);
+//        valueAnimator.start();
+
     }
 
-    private void animateBack(int curentY, int targetY) {
-        NLog.e("sjh0", "animateBack currentY = " + curentY + " headerViewHeight = " + headerViewHeight);
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(curentY, targetY);
+    private void animateBack(int targetY) {
+        NLog.e("sjh0", "animateBack getY() = " + getY() + " headerViewHeight = " + headerViewHeight);
+        ValueAnimator valueAnimator = ValueAnimator.ofInt((int) getY(), targetY);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -83,62 +122,52 @@ public class CustomRecycleView extends RecyclerView {
         valueAnimator.start();
     }
 
+    // y - downY这种方式有弊端：若move的过程中view的位置发生改变，View的初始Y的downY都要重新赋值才行。
     @Override
     public boolean onTouchEvent(MotionEvent e) {
+        if(e.getAction() != MotionEvent.ACTION_DOWN && currentState == REFRESHING) {    // down事件都要记下mLastTouchY！
+            return super.onTouchEvent(e);
+        }
         int y = (int) e.getRawY();
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                downY = y;
+                mLastTouchY = y;
                 break;
             case MotionEvent.ACTION_MOVE:
-                NLog.d("sjh0", "y = "  + y + " downY = " + downY);
+                NLog.d("sjh0", "y = "  + y + " mLastTouchY = " + mLastTouchY);
                 NLog.d("sjh0", "canScrollVertically = "  + canScrollVertically(-1)
                         // 即使第一个可见item在屏幕外看不到，但是findFirstVisibleItemPosition是指在RecycleView中第一个可见的item！
                         + " findFirstVisibleItemPosition = " + ((LinearLayoutManager)getLayoutManager()).findFirstVisibleItemPosition());
                         // + (((TextView)((RelativeLayout)getChildAt(0)).getChildAt(0)).getText())
-                int detaY = (int) (y - downY);
-                int currentY =  -headerViewHeight + detaY;
-                if (!canScrollVertically(-1)) {
+                int detaY = y - mLastTouchY;
+                int currentY = (int) (getY() + detaY);
+                // if(getFirstVisiblePosition() == 0 && getChildAt(0).getTop == 0 && getTopScrollY() >= -300 ){ // ListView的判断
+                if (!canScrollVertically(-1) && currentY >= -headerViewHeight) {
                     NLog.w("sjh0", "currentY = " + currentY);
-                    if(currentY < -headerViewHeight){
-                        break;
-                    }
                     setY(Math.max(-headerViewHeight, currentY));
                     if (currentY < 0) {
                         onStatusChange(READY_TO_RESET);
                     } else {
                         onStatusChange(READY_TO_REFRESH);
                     }
-                    return true;    // 拦截TouchMove，不让listview处理该次move事件,会造成listview无法滑动
+                    mLastTouchY = y;
+                    return true;    // 拦截Touch move，不让listview处理该次move事件,会造成listview无法滑动
                 }
-//                if(getFirstVisiblePosition() == 0 && getTopScrollY() >= -300 ){     // 下拉才处理
-//                    this.setPadding(0, getTopScrollY(), 0 , 0);
-//                    if(getTopScrollY() < 0) {
-//                        currentState = READY_TO_RESET;
-//                    }
-//                    else {
-//                        currentState = READY_TO_REFRESH;
-//                    }
-//                     return true;    // 拦截TouchMove，不让listview处理该次move事件,会造成listview无法滑动
-//                }
                 break;
+            case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                int detaY_2 = (int) (y - downY);
-                int currentY_2 = -headerViewHeight + detaY_2;
                 if(currentState == READY_TO_RESET) {
-                    animateBack(currentY_2);
+                    animateBack();
                 }
                 else if(currentState == READY_TO_REFRESH) {
-                    animateBack(currentY_2, 0);
+                    animateBack(0);
                     onStatusChange(REFRESHING);
                     if(myRecyclerViewListener != null){
                         myRecyclerViewListener.onRefresh();
                     }
                 }
                 return true;
-                // smoothScrollToPosition(5);
-            case MotionEvent.ACTION_CANCEL:
-                break;
+
         }
 
 //            141         case MotionEvent.ACTION_DOWN:
@@ -198,7 +227,7 @@ public class CustomRecycleView extends RecyclerView {
 //                195             break;
 //            196         }
 //        197         return super.onTouchEvent(ev);
-
+        mLastTouchY = y;
         return super.onTouchEvent(e);
     }
 
@@ -212,14 +241,13 @@ public class CustomRecycleView extends RecyclerView {
         }
         switch (newStatus){
             case READY_TO_RESET :
-                animateBack((int) getY());
                 mHeaderViewHolder.mHeaderTips.setText("下拉刷新");
                 break;
             case READY_TO_REFRESH :
                 mHeaderViewHolder.mHeaderTips.setText("松开刷新");
                 break;
             case REFRESHING :
-                mHeaderViewHolder.mHeaderTips.setText("正在刷新");
+                mHeaderViewHolder.mHeaderTips.setText("正在刷新...");
                 // getAdapter().notifyItemChanged(5);  // 触发onCreateViewHolder和onBindViewHolder
                 break;
         }
