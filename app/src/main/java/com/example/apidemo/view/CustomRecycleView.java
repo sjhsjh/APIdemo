@@ -24,6 +24,7 @@ public class CustomRecycleView extends RecyclerView {
     private final int REFRESHING = 3;   // 正在刷新的状态
     private int currentState;
     private RecycleViewAdapter.HeaderViewHolder mHeaderViewHolder;
+    private LinearLayoutManager mLayoutManager;
 
     public CustomRecycleView(Context context) {
         super(context);
@@ -43,48 +44,66 @@ public class CustomRecycleView extends RecyclerView {
         setY(-headerViewHeight);
     }
 
+    @Override
+    public void setLayoutManager(LayoutManager layout) {
+        super.setLayoutManager(layout);
+        if(layout instanceof LinearLayoutManager){
+            mLayoutManager = (LinearLayoutManager) layout;
+        }
+    }
+
     public void animateBack() {
       //  animateBack(-headerViewHeight);
-        onStatusChange(READY_TO_RESET);
-        // scrollBy(0, 0);
-        // smoothScrollToPosition(2);   // 滑动到尚未可见的item的顶部
-        // scrollToPosition(0);
-        setY(-headerViewHeight);
-        ((LinearLayoutManager)getLayoutManager()).scrollToPositionWithOffset(0, 0); // position的顶部
-        // ((LinearLayoutManager)getLayoutManager()).setStackFromEnd(true);
 
-//        ValueAnimator valueAnimator = ValueAnimator.ofInt((int) getY(), -headerViewHeight);
-//        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-//            @Override
-//            public void onAnimationUpdate(ValueAnimator animation) {
-//                int animatedValue = (int) animation.getAnimatedValue();
-//                CustomRecycleView.this.setY(animatedValue);
-//            }
-//        });
-//        valueAnimator.addListener(new Animator.AnimatorListener() {
-//            @Override
-//            public void onAnimationStart(Animator animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationEnd(Animator animation) {
-//                NLog.w("sjh0", "3423423" );
-//                ((LinearLayoutManager)getLayoutManager()).scrollToPositionWithOffset(0, 0); // position的顶部
-//            }
-//
-//            @Override
-//            public void onAnimationCancel(Animator animation) {
-//
-//            }
-//
-//            @Override
-//            public void onAnimationRepeat(Animator animation) {
-//
-//            }
-//        });
-//        valueAnimator.setDuration(10);
-//        valueAnimator.start();
+//        onStatusChange(READY_TO_RESET);
+//        // scrollBy(0, 0);
+//        // smoothScrollToPosition(2);   // 滑动到尚未可见的item的顶部
+//        // scrollToPosition(0);
+//        setY(-headerViewHeight);
+//        mLayoutManager.scrollToPositionWithOffset(0, 0); // position的顶部
+//        // ((LinearLayoutManager)getLayoutManager()).setStackFromEnd(true);
+
+        if(mLayoutManager.findFirstVisibleItemPosition() == 0){
+            ValueAnimator valueAnimator = ValueAnimator.ofInt(0, getChildAt(0).getTop() - headerViewHeight);
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    int animatedValue = (int) animation.getAnimatedValue();
+                    CustomRecycleView.this.setY(animatedValue);
+                }
+            });
+            valueAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    NLog.w("sjh0", "2222" );
+                    onStatusChange(READY_TO_RESET);
+                    setY(-headerViewHeight);
+                    mLayoutManager.scrollToPositionWithOffset(0, 0);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            // valueAnimator.setDuration(10);
+            valueAnimator.start();
+        }
+        else {
+            onStatusChange(READY_TO_RESET);
+            setY(-headerViewHeight);
+            mLayoutManager.scrollToPositionWithOffset(0, 0);
+        }
 
     }
 
@@ -125,10 +144,11 @@ public class CustomRecycleView extends RecyclerView {
     // y - downY这种方式有弊端：若move的过程中view的位置发生改变，View的初始Y的downY都要重新赋值才行。
     @Override
     public boolean onTouchEvent(MotionEvent e) {
+        int y = (int) e.getRawY();
         if(e.getAction() != MotionEvent.ACTION_DOWN && currentState == REFRESHING) {    // down事件都要记下mLastTouchY！
+            mLastTouchY = y;
             return super.onTouchEvent(e);
         }
-        int y = (int) e.getRawY();
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mLastTouchY = y;
