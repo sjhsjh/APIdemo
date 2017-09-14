@@ -18,7 +18,6 @@ public class NewsActivity extends BaseActivity {
     private CustomRecycleView mRecyclerView;
     private RecycleViewAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
-    private int lastVisibleItem = 0;
     private Handler mHandler;
 
     @Override
@@ -37,19 +36,6 @@ public class NewsActivity extends BaseActivity {
         }
         mAdapter = new RecycleViewAdapter(itemDatas);
 
-//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//            }
-//
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                NLog.w("sjh0", "onScrolled dx = " + dx + " dy = " + dy);
-//            }
-//        });
-
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setRecyclerViewListener(new CustomRecycleView.MyRecyclerViewListener() {
             @Override
@@ -57,17 +43,38 @@ public class NewsActivity extends BaseActivity {
                 mHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mRecyclerView.animateBack();
+                        mRecyclerView.animateBackWhenUpdateFinish();
                     }
-                }, 4000);
+                }, 2000);
             }
 
             @Override
             public void onLoadMore() {
-
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        int lastNumber = mAdapter.mItemDatas.get(mAdapter.mItemDatas.size() - 1).intValue();
+                        for(int i = 0; i < 5; i++){
+                            mAdapter.mItemDatas.add(Integer.valueOf(i + lastNumber + 1));
+                        }
+                        // mAdapter.notifyItemInserted(4);
+                        mAdapter.notifyDataSetChanged();
+                        mRecyclerView.setLoadMoreComplete();
+                    }
+                }, 2000);
             }
         });
 
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+//        View container = findViewById(R.id.container);
+//        ViewGroup.LayoutParams lp = container.getLayoutParams();
+//        lp.height = container.getMeasuredHeight() + getResources().getDimensionPixelSize(R.dimen.header_height);
+//        container.setLayoutParams(lp);
     }
 
 }

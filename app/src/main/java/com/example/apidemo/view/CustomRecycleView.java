@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import com.example.apidemo.R;
 import com.example.apidemo.adapter.RecycleViewAdapter;
 import com.example.apidemo.utils.NLog;
@@ -24,7 +25,9 @@ public class CustomRecycleView extends RecyclerView {
     private final int REFRESHING = 3;   // 正在刷新的状态
     private int currentState;
     private RecycleViewAdapter.HeaderViewHolder mHeaderViewHolder;
+    private RecycleViewAdapter.FooterViewHolder mFooterViewHolder;
     private LinearLayoutManager mLayoutManager;
+    private boolean isLoadMore;
 
     public CustomRecycleView(Context context) {
         super(context);
@@ -44,6 +47,49 @@ public class CustomRecycleView extends RecyclerView {
         setY(-headerViewHeight);
     }
 
+//    public static boolean isSlideToBottom(RecyclerView recyclerView) {
+//        if (recyclerView == null) return false;
+//        if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange())
+//            return true;
+//        return false;
+//    }
+
+    @Override
+    public void setAdapter(Adapter adapter) {
+        super.setAdapter(adapter);
+
+        addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                NLog.w("sjh0", "onScrolled dx = " + dx + " dy = " + dy + " isLoadMore = " + isLoadMore);
+//                NLog.e("sjh0", "extent = " + computeVerticalScrollExtent() + " offset = " + computeVerticalScrollOffset()
+//                 + " range = " + computeVerticalScrollRange());
+
+
+                if(!isLoadMore && mLayoutManager.findLastVisibleItemPosition() == getAdapter().getItemCount() - 1 && !canScrollVertically(1)){
+                    NLog.w("sjh0", "===================================");
+                    if(myRecyclerViewListener != null){
+                        onLoadingStatusChange(true);
+                        myRecyclerViewListener.onLoadMore();
+                    }
+
+                }
+            }
+        });
+
+    }
+
+    public void setLoadMoreComplete() {
+        onLoadingStatusChange(false);
+        // footerView.setVisibility(GONE);  // footerView虽然不在了看不到了，但是这个item还在的
+    }
+
     @Override
     public void setLayoutManager(LayoutManager layout) {
         super.setLayoutManager(layout);
@@ -52,19 +98,30 @@ public class CustomRecycleView extends RecyclerView {
         }
     }
 
-    public void animateBack() {
-      //  animateBack(-headerViewHeight);
+    private void animateBack() {
+        animateBack(-headerViewHeight);
+        onStatusChange(READY_TO_RESET);
 
-//        onStatusChange(READY_TO_RESET);
 //        // scrollBy(0, 0);
 //        // smoothScrollToPosition(2);   // 滑动到尚未可见的item的顶部
 //        // scrollToPosition(0);
 //        setY(-headerViewHeight);
 //        mLayoutManager.scrollToPositionWithOffset(0, 0); // position的顶部
 //        // ((LinearLayoutManager)getLayoutManager()).setStackFromEnd(true);
+//         getAdapter().notifyItemChanged(5);  // 触发onCreateViewHolder和onBindViewHolder
+//         mLayoutManager.findViewByPosition(getAdapter().getItemCount() - 1); // 不在屏幕内的item，findViewByPosition的结果为空
+    }
 
+    private boolean recycleViewHasTranslate;
+    /**
+     * 正在刷新时滑动了recycleview：
+     * 1、滑动到仍然看到headview：先动画平移recycleView，动画结束后瞬间平移到初始位置并滚动到顶部。
+     * 2、滑动到已经看不到headview：recycleview瞬间平移到初始位置并滚动到顶部。
+     */
+    public void animateBackWhenUpdateFinish() {
         if(mLayoutManager.findFirstVisibleItemPosition() == 0){
-            ValueAnimator valueAnimator = ValueAnimator.ofInt(0, getChildAt(0).getTop() - headerViewHeight);
+            NLog.w("sjh0", "-getChildAt(0).getTop() - headerViewHeight = " + (- getChildAt(0).getTop() - headerViewHeight ));
+            ValueAnimator valueAnimator = ValueAnimator.ofInt(0,  - getChildAt(0).getTop() - headerViewHeight);
             valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
@@ -80,10 +137,11 @@ public class CustomRecycleView extends RecyclerView {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    NLog.w("sjh0", "2222" );
+                    NLog.w("sjh0", "animateBackWhenUpdateFinish onAnimationEnd" );
+                    recycleViewHasTranslate = true;
+                    setY(-headerViewHeight);    // 平移recycleView到初始位置
+                    mLayoutManager.scrollToPositionWithOffset(0, 0);    // recycleView滚动到顶部
                     onStatusChange(READY_TO_RESET);
-                    setY(-headerViewHeight);
-                    mLayoutManager.scrollToPositionWithOffset(0, 0);
                 }
 
                 @Override
@@ -96,7 +154,6 @@ public class CustomRecycleView extends RecyclerView {
 
                 }
             });
-            // valueAnimator.setDuration(10);
             valueAnimator.start();
         }
         else {
@@ -108,7 +165,7 @@ public class CustomRecycleView extends RecyclerView {
     }
 
     private void animateBack(int targetY) {
-        NLog.e("sjh0", "animateBack getY() = " + getY() + " headerViewHeight = " + headerViewHeight);
+        NLog.w("sjh0", "up animateBack getY() = " + getY() + " headerViewHeight = " + headerViewHeight);
         ValueAnimator valueAnimator = ValueAnimator.ofInt((int) getY(), targetY);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
@@ -141,10 +198,14 @@ public class CustomRecycleView extends RecyclerView {
         valueAnimator.start();
     }
 
-    // y - downY这种方式有弊端：若move的过程中view的位置发生改变，View的初始Y的downY都要重新赋值才行。
     @Override
     public boolean onTouchEvent(MotionEvent e) {
         int y = (int) e.getRawY();
+//        if(recycleViewHasTranslate){
+//            recycleViewHasTranslate = false;
+//            e.setAction(MotionEvent.ACTION_DOWN);
+//            return dispatchTouchEvent(e);
+//        }
         if(e.getAction() != MotionEvent.ACTION_DOWN && currentState == REFRESHING) {    // down事件都要记下mLastTouchY！
             mLastTouchY = y;
             return super.onTouchEvent(e);
@@ -154,16 +215,17 @@ public class CustomRecycleView extends RecyclerView {
                 mLastTouchY = y;
                 break;
             case MotionEvent.ACTION_MOVE:
-                NLog.d("sjh0", "y = "  + y + " mLastTouchY = " + mLastTouchY);
+                NLog.d("sjh0", "y = "  + y + " mLastTouchY = " + mLastTouchY + " getChildAt(0).getTop() = " + getChildAt(0).getTop());
                 NLog.d("sjh0", "canScrollVertically = "  + canScrollVertically(-1)
-                        // 即使第一个可见item在屏幕外看不到，但是findFirstVisibleItemPosition是指在RecycleView中第一个可见的item！
-                        + " findFirstVisibleItemPosition = " + ((LinearLayoutManager)getLayoutManager()).findFirstVisibleItemPosition());
+                        // 即使第一个可见item在屏幕外看不到，但是findFirstVisibleItemPosition是指在RecycleView中第一个可见的item！getTop是指子view顶部与recycleView顶部边缘的距离！
+                        + " findFirstVisibleItemPosition = " + mLayoutManager.findFirstVisibleItemPosition()
+                        + " findLastVisibleItemPosition = " + mLayoutManager.findLastVisibleItemPosition());
                         // + (((TextView)((RelativeLayout)getChildAt(0)).getChildAt(0)).getText())
                 int detaY = y - mLastTouchY;
                 int currentY = (int) (getY() + detaY);
-                // if(getFirstVisiblePosition() == 0 && getChildAt(0).getTop == 0 && getTopScrollY() >= -300 ){ // ListView的判断
+                // ListView的判断: if(getFirstVisiblePosition() == 0 && getChildAt(0).getTop == 0 && getTopScrollY() >= -300 ){
                 if (!canScrollVertically(-1) && currentY >= -headerViewHeight) {
-                    NLog.w("sjh0", "currentY = " + currentY);
+                    NLog.i("sjh0", "currentY = " + currentY);
                     setY(Math.max(-headerViewHeight, currentY));
                     if (currentY < 0) {
                         onStatusChange(READY_TO_RESET);
@@ -251,6 +313,10 @@ public class CustomRecycleView extends RecyclerView {
         return super.onTouchEvent(e);
     }
 
+    /**
+     * headView UI刷新
+     * @param newStatus
+     */
     public void onStatusChange(int newStatus){
         if(newStatus == currentState){
             return;
@@ -268,8 +334,29 @@ public class CustomRecycleView extends RecyclerView {
                 break;
             case REFRESHING :
                 mHeaderViewHolder.mHeaderTips.setText("正在刷新...");
-                // getAdapter().notifyItemChanged(5);  // 触发onCreateViewHolder和onBindViewHolder
                 break;
+        }
+    }
+
+    /**
+     * footView UI刷新
+     * @param isLoading
+     */
+    private void onLoadingStatusChange(boolean isLoading){
+        if(isLoadMore == isLoading){
+            return;
+        }
+        isLoadMore = isLoading;
+        if(mFooterViewHolder == null){
+            mFooterViewHolder = (RecycleViewAdapter.FooterViewHolder) findViewHolderForAdapterPosition(getAdapter().getItemCount() - 1);
+        }
+        if(isLoading){
+            mFooterViewHolder.mProgressBar.setVisibility(View.VISIBLE);
+            mFooterViewHolder.mFootererTips.setText("正在加载");
+        }
+        else {
+            mFooterViewHolder.mProgressBar.setVisibility(View.GONE);
+            mFooterViewHolder.mFootererTips.setText("上拉加载");
         }
     }
 

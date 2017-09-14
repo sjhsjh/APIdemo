@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:background="#50ff0000"
+    android:gravity="center">
+
+    <ProgressBar
+        android:id="@+id/processbar"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone">
+    </ProgressBar>
 
     <TextView
         android:id="@+id/footer_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_toRightOf="@+id/processbar"
         android:gravity="center_vertical"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#50ff0000"
-        android:text="foot"
+        android:text="上拉加载"
         android:textSize="16sp">
+
     </TextView>
 
 </RelativeLayout>

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
@@ -18,7 +19,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final static int TYPE_ITEM = 0;
     private final static int TYPE_HEADER = 1;
     private final static int TYPE_FOOTER = 2;
-    private List<Integer> mItemDatas;
+    public List<Integer> mItemDatas;
 
     public RecycleViewAdapter(List<Integer> itemDatas){
         mItemDatas = itemDatas;
@@ -137,7 +138,6 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }else if(holder instanceof FooterViewHolder){
 
         }
-
     }
 
     @Override
@@ -162,7 +162,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
         public TextView mHeaderTips;
-        public ImageView mLoadingIcon;
+        public ImageView mHeaderIcon;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
@@ -170,13 +170,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    private class FooterViewHolder extends RecyclerView.ViewHolder {
-        private TextView mFootererTips;
-        private ImageView mLoadingIcon;
+    public class FooterViewHolder extends RecyclerView.ViewHolder {
+        public TextView mFootererTips;
+        public ProgressBar mProgressBar;
 
         public FooterViewHolder(View itemView) {
             super(itemView);
             mFootererTips = (TextView) itemView.findViewById(R.id.footer_tips);
+            mProgressBar = (ProgressBar) itemView.findViewById(R.id.processbar);
         }
     }
 
