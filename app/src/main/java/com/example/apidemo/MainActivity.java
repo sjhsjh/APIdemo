@@ -55,10 +55,10 @@ public class MainActivity extends BaseActivity {
         list.add(EventDispatchActivity.class);
         list.add(SlideActivity.class);
         list.add(ScrollActivity.class);
+        list.add(NewsActivity.class);
+        list.add(DIYViewActivity.class);
         list.add(TestServiceActivity.class);
         list.add(NotificationActivity.class);
-        list.add(DIYViewActivity.class);
-        list.add(NewsActivity.class);
         list.add(SQLActivity.class);
         list.add(HardWareActivity.class);
         list.add(GsonActivity.class);

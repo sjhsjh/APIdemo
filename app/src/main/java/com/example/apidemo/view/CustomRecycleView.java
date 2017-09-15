@@ -47,12 +47,20 @@ public class CustomRecycleView extends RecyclerView {
         setY(-headerViewHeight);
     }
 
-//    public static boolean isSlideToBottom(RecyclerView recyclerView) {
-//        if (recyclerView == null) return false;
-//        if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange())
-//            return true;
-//        return false;
-//    }
+    /**
+     * View中的canScrollVertically、LinearLayoutManager都包含以下3个方法。
+     *  computeVerticalScrollExtent()是当前屏幕显示的区域高度；（recycleView貌似固定是应用区域高度）
+     *  computeVerticalScrollOffset() 是当前屏幕之前滑过的距离，向上为正；（实测奇怪地会减少一条item的高度）
+     *   而computeVerticalScrollRange()是整个View控件的高度。（实测奇怪地会减少一条item的高度）
+     * @param recyclerView
+     * @return
+     */
+    public static boolean isSlideToBottom(RecyclerView recyclerView) {
+        if (recyclerView == null) {
+            return false;
+        }
+        return recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() >= recyclerView.computeVerticalScrollRange();
+    }
 
     @Override
     public void setAdapter(Adapter adapter) {
@@ -67,13 +75,9 @@ public class CustomRecycleView extends RecyclerView {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                NLog.w("sjh0", "onScrolled dx = " + dx + " dy = " + dy + " isLoadMore = " + isLoadMore);
-//                NLog.e("sjh0", "extent = " + computeVerticalScrollExtent() + " offset = " + computeVerticalScrollOffset()
-//                 + " range = " + computeVerticalScrollRange());
-
-
+                NLog.i("sjh0", "onScrolled dx = " + dx + " dy = " + dy + " isLoadMore = " + isLoadMore);
                 if(!isLoadMore && mLayoutManager.findLastVisibleItemPosition() == getAdapter().getItemCount() - 1 && !canScrollVertically(1)){
-                    NLog.w("sjh0", "===================================");
+                    NLog.w("sjh0", "begin load......");
                     if(myRecyclerViewListener != null){
                         onLoadingStatusChange(true);
                         myRecyclerViewListener.onLoadMore();
@@ -220,7 +224,6 @@ public class CustomRecycleView extends RecyclerView {
                         // 即使第一个可见item在屏幕外看不到，但是findFirstVisibleItemPosition是指在RecycleView中第一个可见的item！getTop是指子view顶部与recycleView顶部边缘的距离！
                         + " findFirstVisibleItemPosition = " + mLayoutManager.findFirstVisibleItemPosition()
                         + " findLastVisibleItemPosition = " + mLayoutManager.findLastVisibleItemPosition());
-                        // + (((TextView)((RelativeLayout)getChildAt(0)).getChildAt(0)).getText())
                 int detaY = y - mLastTouchY;
                 int currentY = (int) (getY() + detaY);
                 // ListView的判断: if(getFirstVisiblePosition() == 0 && getChildAt(0).getTop == 0 && getTopScrollY() >= -300 ){
@@ -368,7 +371,6 @@ public class CustomRecycleView extends RecyclerView {
 
     public interface MyRecyclerViewListener {
         void onRefresh();
-
         void onLoadMore();
     }
 

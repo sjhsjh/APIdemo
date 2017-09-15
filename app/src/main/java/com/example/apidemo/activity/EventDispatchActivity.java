@@ -15,8 +15,6 @@ import com.example.apidemo.view.ChildView;
 import com.example.apidemo.view.MyHorizontalScrollView;
 import java.util.ArrayList;
 import android.app.Activity;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class EventDispatchActivity extends BaseActivity {
     private MyHorizontalScrollView mScrollView;

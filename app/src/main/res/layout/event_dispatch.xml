@@ -29,11 +29,11 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <ListView
+            <com.example.apidemo.view.MyListView
                 android:id="@+id/listview1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-            </ListView>
+            </com.example.apidemo.view.MyListView>
 
             <ListView
                 android:id="@+id/listview2"

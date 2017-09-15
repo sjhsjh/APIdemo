@@ -9,7 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.Scroller;
 
 /**
- * <br>
+ * <br> 使用Scroller进行startScroll和fling
  * Created by jinhui.shao on 2017/9/8.
  */
 public class MyView extends RelativeLayout {
