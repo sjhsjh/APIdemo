@@ -8,7 +8,7 @@ import com.example.apidemo.R;
 import java.util.ArrayList;
 
 /**
- * <br> 悬浮header的ListView
+ * <br> 悬浮header的ListView，根布局是StickyLayout
  * Created by jinhui.shao on 2017/8/28.
  */
 public class SlideActivity extends BaseActivity {

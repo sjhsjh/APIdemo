@@ -10,6 +10,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import com.example.apidemo.activity.DIYViewActivity;
 import com.example.apidemo.activity.EventDispatchActivity;
+import com.example.apidemo.activity.GestureDectorActivity;
 import com.example.apidemo.activity.GsonActivity;
 import com.example.apidemo.activity.HardWareActivity;
 import com.example.apidemo.activity.NewsActivity;
@@ -53,6 +54,7 @@ public class MainActivity extends BaseActivity {
         list.add(ResolveInfoActivity.class);
         list.add(PowerManagerActivity.class);
         list.add(EventDispatchActivity.class);
+        list.add(GestureDectorActivity.class);
         list.add(SlideActivity.class);
         list.add(ScrollActivity.class);
         list.add(NewsActivity.class);

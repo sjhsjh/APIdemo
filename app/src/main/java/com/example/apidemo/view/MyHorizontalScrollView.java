@@ -116,7 +116,7 @@ public class MyHorizontalScrollView extends HorizontalScrollView{
                 NLog.d("sjh1", "ACTION_UP " + getScrollX() + " XVelocity = " + XVelocity);
                 if(Math.abs(XVelocity) > 100){
                     // 先向右移动一大截，再快速左滑，此时判断快滑方向是否和当前index平移的方向相反。若相反，则先按位置更新下位置。
-                    // 若此时要推走大于半页，则值推走该半页，若只要推走小于半页，则推走该半页同时移到下一页
+                    // 若此时要推走大于半页，则推走该半页，若只要推走小于半页，则推走该半页同时移到下一页
                     if((getScrollX() - mScreenWidth * mCurrentIndex) * XVelocity > 0){
                         mCurrentIndex = (int)(getScrollX() + 0.5 * mScreenWidth) / mScreenWidth;
                     }
