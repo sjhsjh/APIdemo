@@ -1,6 +1,7 @@
 package com.example.apidemo.activity;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
@@ -29,7 +30,6 @@ public class GestureDectorActivity extends BaseActivity{
 
     private class MyGestureListener implements GestureDetector.OnGestureListener{
 
-        // 用户轻触触摸屏，由1个MotionEvent ACTION_DOWN触发       
         public boolean onDown(MotionEvent e) {
             NLog.i("sjh7", "onDown");
             Toast.makeText(GestureDectorActivity.this, "onDown", Toast.LENGTH_SHORT).show();
@@ -42,8 +42,7 @@ public class GestureDectorActivity extends BaseActivity{
          *   
          * 而onDown也是由一个MotionEventACTION_DOWN触发的，但是他没有任何限制，  
          * 也就是说当用户点击的时候，首先MotionEventACTION_DOWN，onDown就会执行，
-         * 如果在按下的瞬间没有松开或者是拖动的时候onShowPress就会执行，如果是按下的时间超过瞬间  
-         * （这块我也不太清楚瞬间的时间差是多少，一般情况下都会执行onShowPress），拖动了，就不执行onShowPress。  
+         * 如果在按下的瞬间没有松开或者是拖动的时候onShowPress就会执行.
          */
         public void onShowPress(MotionEvent e) {
             NLog.i("sjh7", "onShowPress");
@@ -59,17 +58,19 @@ public class GestureDectorActivity extends BaseActivity{
             return true;
         }
 
-        // 用户按下触摸屏，并拖动，由1个MotionEvent ACTION_DOWN, 多个ACTION_MOVE触发       
+        /**
+         *  mHandler.sendEmptyMessageAtTime(LONG_PRESS, mCurrentDownEvent.getDownTime() + TAP_TIMEOUT + LONGPRESS_TIMEOUT);
+         */
+        public void onLongPress(MotionEvent e) {
+            NLog.i("sjh7", "onLongPress");
+            Toast.makeText(GestureDectorActivity.this, "onLongPress", Toast.LENGTH_LONG).show();
+        }
+
+        // 用户按下触摸屏，并拖动，由1个MotionEvent ACTION_DOWN, 多个ACTION_MOVE触发
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             NLog.i("sjh7", "onScroll:"+(e2.getX()-e1.getX()) +"   "+distanceX);
             // Toast.makeText(GestureDectorActivity.this, "onScroll", Toast.LENGTH_LONG).show();
             return true;
-        }
-
-        // 用户长按触摸屏，由多个MotionEvent ACTION_DOWN触发       
-        public void onLongPress(MotionEvent e) {
-            NLog.i("sjh7", "onLongPress");
-            Toast.makeText(GestureDectorActivity.this, "onLongPress", Toast.LENGTH_LONG).show();
         }
 
         // 用户按下触摸屏、快速移动后松开，由1个MotionEvent ACTION_DOWN, 多个ACTION_MOVE, 1个ACTION_UP触发       
@@ -96,7 +97,7 @@ public class GestureDectorActivity extends BaseActivity{
          */
         @Override
         public boolean onDoubleTap(MotionEvent e) {
-            NLog.w("sjh7", "onDoubleTap");
+            NLog.w("sjh7", "onDoubleTap " + e.getAction());
             return false;
         }
 
@@ -106,7 +107,7 @@ public class GestureDectorActivity extends BaseActivity{
          */
         @Override
         public boolean onDoubleTapEvent(MotionEvent e) {
-            NLog.w("sjh7", "onDoubleTapEvent");
+            NLog.w("sjh7", "onDoubleTapEvent " + e.getAction());
             return false;
         }
 
