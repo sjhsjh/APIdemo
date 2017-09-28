@@ -1,7 +1,6 @@
 package com.example.apidemo.activity;
 
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Toast;
@@ -36,22 +35,21 @@ public class GestureDectorActivity extends BaseActivity{
             return false;
         }
 
-        /*    
-         * 用户轻触触摸屏，尚未松开或拖动，由一个1个MotionEvent ACTION_DOWN触发    
-         * 注意和onDown()的区别，强调的是没有松开或者拖动的状态    
-         *   
-         * 而onDown也是由一个MotionEventACTION_DOWN触发的，但是他没有任何限制，  
-         * 也就是说当用户点击的时候，首先MotionEventACTION_DOWN，onDown就会执行，
-         * 如果在按下的瞬间没有松开或者是拖动的时候onShowPress就会执行.
+        /**
+         * （e为down事件）onDown后TAP_TIMEOUT（100ms）内无up和move事件则触发！
+         * 如果用户按下屏幕后没有立即松开或拖动会调用此方法,事件调用顺序为onDown--->onShowPress.
          */
         public void onShowPress(MotionEvent e) {
             NLog.i("sjh7", "onShowPress");
             Toast.makeText(GestureDectorActivity.this, "onShowPress", Toast.LENGTH_SHORT).show();
         }
 
-        // 用户（轻触触摸屏后）松开，由一个1个MotionEvent ACTION_UP触发       
-        ///轻击一下屏幕，立刻抬起来，才会有这个触发    
-        //从名子也可以看出,一次单独的轻击抬起操作,当然,如果除了Down以外还有其它操作,那就不再算是Single操作了,所以这个事件 就不再响应    
+        /**
+         * （e为up事件）onDown后TAP_TIMEOUT + LONGPRESS_TIMEOUT（100 + 500ms）内up并且之前无move则触发！！
+         * 如果用户按下屏幕后没有移动并且立即松开会调用此方法,
+         * 如果点击一下快速抬起则事件调用顺序为onDown-->onSingleTapUp-->onSingleTapUpConfirmed,
+         * 如果稍微慢点点击抬起则事件调用顺序为onDown-->onShowPress-->onSingleTapUp-->onSingleTapUpConfirmed.
+         */
         public boolean onSingleTapUp(MotionEvent e) {
             NLog.i("sjh7", "onSingleTapUp");
             Toast.makeText(GestureDectorActivity.this, "onSingleTapUp", Toast.LENGTH_SHORT).show();
@@ -59,21 +57,30 @@ public class GestureDectorActivity extends BaseActivity{
         }
 
         /**
+         *  （e为down事件）onDown后TAP_TIMEOUT + LONGPRESS_TIMEOUT（100 + 500ms）内无up和move事件则触发！！
          *  mHandler.sendEmptyMessageAtTime(LONG_PRESS, mCurrentDownEvent.getDownTime() + TAP_TIMEOUT + LONGPRESS_TIMEOUT);
+         *  如果用户按下屏幕后没有松开或拖动会调用此方法,事件调用顺序为onDown-->onShowPress-->onLongPress.
          */
         public void onLongPress(MotionEvent e) {
             NLog.i("sjh7", "onLongPress");
             Toast.makeText(GestureDectorActivity.this, "onLongPress", Toast.LENGTH_LONG).show();
         }
 
-        // 用户按下触摸屏，并拖动，由1个MotionEvent ACTION_DOWN, 多个ACTION_MOVE触发
+        /**
+         * 用户按下屏幕后手指在屏幕上滑动会调用此方法,与onFling的区别是在一个滑动事件中onScroll会调用多次,参数中的后两个为滑动的距离而不是滑动的速度.
+         * onScroll的四个参数分别为e1为down的event,e2为当前Event,distanceX即detaScrollX，距离上次滑动滑动的距离。
+         * 事件调用顺序为onDown-->onScroll-->onScroll-->......-->onFling.
+         */
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             NLog.i("sjh7", "onScroll:"+(e2.getX()-e1.getX()) +"   "+distanceX);
-            // Toast.makeText(GestureDectorActivity.this, "onScroll", Toast.LENGTH_LONG).show();
             return true;
         }
 
-        // 用户按下触摸屏、快速移动后松开，由1个MotionEvent ACTION_DOWN, 多个ACTION_MOVE, 1个ACTION_UP触发       
+        /**
+         * up时若速度大于指定值则触发。用户按下屏幕后手指在屏幕上快速滑动后松开会调用此方法,但是一次滑动事件"仅会调用一次"!
+         * onFling()的四个参数分别为e1为down的event, e2为当前up的event,velocityX--X轴上的手指滑动速度,像素/秒。
+         * 事件调用顺序为onDown-->onScroll-->onScroll-->......-->onFling.
+         */
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
             NLog.i("sjh7", "onFling");
             Toast.makeText(GestureDectorActivity.this, "onFling", Toast.LENGTH_LONG).show();
@@ -82,18 +89,22 @@ public class GestureDectorActivity extends BaseActivity{
     }
 
     private class MyDoubleTapListener implements GestureDetector.OnDoubleTapListener {
-        /*
-         * 用来判定该次点击是SingleTap而不是DoubleTap，如果连续点击两次就是DoubleTap手势，如果只点击一次，
-         * 系统等待一段时间后没有收到第二次点击则判定该次点击为SingleTap而不是DoubleTap,
-         * 然后触发SingleTapConfirmed事件。
+        /**
+         * e为down事件，注意它是down后延时触发！！因为它与onDoubleTap是互斥的，因此使用于判断双击动作的时候，而onSingleTapUp则是up触发，更广泛使用
+         * down后DOUBLE_TAP_TIMEOUT（300ms）时判断是否已经up，若是则触发，否则不触发。
+         * 当用户按下屏幕后并快速抬起时调用并在之后短时间没有二次点击,主要是用来确认用户该次点击是onSingleTap而不是onDoubleTap.
+         * 事件调用顺序为:onDownn-->onSingleTap-->onSingleTapConfirmed.MotionEvent e
          */
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            NLog.w("sjh7", "onSingleTapConfirmed");
+            NLog.w("sjh7", "onSingleTapConfirmed. 300ms after down");
             return false;
         }
 
-        /*双击事件
+        /**
+         * e为down事件，注意它是down触发！当用户双击屏幕时调用,onDoubleTap与onSingleTapConfirmed的触发是互斥的（一个是down后300ms内触发，一个是300ms时触发）.
+         * 如果两次down相差DOUBLE_TAP_TIMEOUT（300ms）以内且down的位置相差100像素以内则触发。
+         * 该事件调用顺序为:ondown-->onSingleTap-->onDoubleTap().
          */
         @Override
         public boolean onDoubleTap(MotionEvent e) {
@@ -102,8 +113,8 @@ public class GestureDectorActivity extends BaseActivity{
         }
 
         /*
-         * 双击间隔中发生的动作。指触发onDoubleTap以后，在双击之间发生的其它动作，包含down、up和move事件
-         * @MotionEvent e中包含了双击直接发生的其他动作.
+         * 从双击动作的down开始，到下一个up之间所有的down,up和move事件！
+         * 当用户双击屏幕间,触发的触摸事件,包含down,up和move事件,事件封装在参数MotionEvent中.
          */
         @Override
         public boolean onDoubleTapEvent(MotionEvent e) {
