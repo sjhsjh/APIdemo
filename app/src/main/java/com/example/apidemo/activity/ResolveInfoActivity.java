@@ -1,8 +1,14 @@
 package com.example.apidemo.activity;
 
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.usage.UsageStats;
+import android.app.usage.UsageStatsManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
@@ -13,6 +19,7 @@ import android.content.pm.ResolveInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,6 +31,8 @@ import com.example.apidemo.utils.NLog;
 
 public class ResolveInfoActivity extends BaseActivity {
 	private static final String TAG = "ResolveInfoActivity";
+	private Handler mHandler = new Handler();
+	private boolean cycleLog = true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,23 +64,23 @@ public class ResolveInfoActivity extends BaseActivity {
 			
 			@Override
 			public void onClick(View v) {
-				// openApp("com.example.some3");
+				openApp("com.example.some3");
+
 				PackageManager packageManager = getPackageManager();
 				final Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);	//过滤出只含有该action和category的intent
 				resolveIntent.addCategory("android.intent.category.sjh");
 				//resolveIntent.setPackage("com.example.apidemo");
 				List<ResolveInfo> apps = packageManager.queryIntentActivities(resolveIntent, 0);
 				for(ResolveInfo ri : apps){
-					NLog.i("sjh2", " " + ri.activityInfo.name + " -- " );
-					//NLog.i("sjh2", " label = " + ri.loadLabel(packageManager) + " -- " );
+					NLog.i("sjh2", " label = " + ri.loadLabel(packageManager) + " packageName = " + ri.activityInfo.packageName + " classname = " + ri.activityInfo.name);
 				}
-				NLog.i("sjh2", " apps.size() = " + apps.size() + " -- " );
-				Intent intent = new Intent(ResolveInfoActivity.this, PowerManagerActivity.class);
-				try {
-					startActivity(intent);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				NLog.i("sjh2", " apps.size() = " + apps.size());
+
+//				try {
+//					startActivity(resolveIntent);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 			}
 		});
 		
@@ -98,6 +107,24 @@ public class ResolveInfoActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				readInstalledApps();
+			}
+		});
+		final Runnable runnable = new Runnable() {
+			@Override
+			public void run() {
+				if(cycleLog) {
+					NLog.i("sjh2", "getMonitorAppPkg = " + getMonitorAppPkg());
+					mHandler.postDelayed(this, 1000);
+				}
+			}
+		};
+
+		((Button)findViewById(R.id.button5)).setText("Log MonitorAppPkg");
+		findViewById(R.id.button5).setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mHandler.postDelayed(runnable, 1000);
 			}
 		});
 	}
@@ -217,9 +244,36 @@ public class ResolveInfoActivity extends BaseActivity {
 		NLog.e("sjh3", "size" + applicationList.size());//81
 	}
 
+	/**
+	 * @return 返回当前最前端应用的包名，5.0以上需要“查看其他应用使用情况”的权限
+     */
+	private String getMonitorAppPkg(){
+		String currentApp = null;
+		if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+			UsageStatsManager usm = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
+			long time = System.currentTimeMillis();
+			List<UsageStats> appList = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, time - 1000 * 1000, time);
+			if (appList != null && appList.size() > 0) {
+				SortedMap<Long, UsageStats> mySortedMap = new TreeMap<Long, UsageStats>();
+				for (UsageStats usageStats : appList) {
+					mySortedMap.put(usageStats.getLastTimeUsed(), usageStats);
+				}
+				if (mySortedMap != null && !mySortedMap.isEmpty()) {
+					currentApp = mySortedMap.get(mySortedMap.lastKey()).getPackageName();
+				}
+			}
+		} else {
+			ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+			List<ActivityManager.RunningAppProcessInfo> tasks = am.getRunningAppProcesses();
+			currentApp = tasks.get(0).processName;
+		}
+		return currentApp;
+	}
+
 	@Override
 	protected void onDestroy() {
 		// NLog.i("sjh1", "onDestroy");
+		cycleLog = false;
 		super.onDestroy();
 	}
 
