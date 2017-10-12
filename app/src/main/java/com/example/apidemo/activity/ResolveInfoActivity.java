@@ -33,16 +33,11 @@ public class ResolveInfoActivity extends BaseActivity {
 	private static final String TAG = "ResolveInfoActivity";
 	private Handler mHandler = new Handler();
 	private boolean cycleLog = true;
-	private RelativeLayout relativeLayout;
-	private ImageView image;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.general_layout);
-		relativeLayout = (RelativeLayout) findViewById(R.id.relative2);
-		image = new ImageView(ResolveInfoActivity.this);
-		image.setImageResource(R.drawable.earth);
 
 		final OnDismissListener listener = new OnDismissListener() {
 			
@@ -128,19 +123,16 @@ public class ResolveInfoActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				//mHandler.postDelayed(runnable, 1000);
-			//	relativeLayout.removeView(image);
-				relativeLayout.removeAllViews();
-				relativeLayout.addView(image);
+				mHandler.postDelayed(runnable, 1000);
 			}
 		});
 
-		((Button)findViewById(R.id.button6)).setText("=== ");
+		((Button)findViewById(R.id.button6)).setText("tudo ");
 		findViewById(R.id.button6).setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				relativeLayout.addView(image);
+
 			}
 		});
 	}
