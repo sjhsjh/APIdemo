@@ -12,9 +12,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />   <!--    SYSTEM_OVERLAY_WINDOW-->
+
     <uses-feature android:name="android.hardware.camera2"/>
     <uses-feature android:name="android.hardware.autofocus" />
-
 
     <application
         android:name=".APIDemoApplication"
@@ -62,6 +63,7 @@
         <activity android:name=".activity.NewsActivity" />
         <activity android:name=".activity.SQLActivity" />
         <activity android:name=".activity.HardWareActivity" />
+        <activity android:name=".activity.WindowActivity" />
 
         <service
             android:name=".service.TestService"

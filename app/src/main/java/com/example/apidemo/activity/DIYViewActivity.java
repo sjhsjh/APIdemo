@@ -53,8 +53,9 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         Button btn = (Button) findViewById(R.id.btn);
-        NLog.i("sjh0", "minHeight = " + btn.getMinimumHeight() + " measuredHeight" + btn.getMeasuredHeight()
-                + " minWidth = " + btn.getMinimumWidth() + " measuredWidth" + btn.getMeasuredWidth());  //352
+        NLog.i("sjh0", "minHeight = " + btn.getMinimumHeight() + " measuredHeight = " + btn.getMeasuredHeight()
+                + " minWidth = " + btn.getMinimumWidth() + " measuredWidth = " + btn.getMeasuredWidth()
+        + " getWidth = " + btn.getWidth());  //352
         // minHeight 默认是48dp（192像素），minHeight改成10dp后measuredHeight是39dp，39dp就是包裹这些文字的最小高度。
     }
 

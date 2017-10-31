@@ -21,6 +21,7 @@ import com.example.apidemo.activity.SQLActivity;
 import com.example.apidemo.activity.ScrollActivity;
 import com.example.apidemo.activity.SlideActivity;
 import com.example.apidemo.activity.TestServiceActivity;
+import com.example.apidemo.activity.WindowActivity;
 import com.example.apidemo.adapter.DemoAdapter;
 import com.example.apidemo.utils.HardWareUtils;
 import com.example.apidemo.utils.NLog;
@@ -64,6 +65,7 @@ public class MainActivity extends BaseActivity {
         list.add(SQLActivity.class);
         list.add(HardWareActivity.class);
         list.add(GsonActivity.class);
+        list.add(WindowActivity.class);
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
