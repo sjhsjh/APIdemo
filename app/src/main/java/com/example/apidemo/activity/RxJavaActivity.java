@@ -8,6 +8,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -33,7 +34,7 @@ public class RxJavaActivity extends BaseActivity{
                 emitter.onComplete();
             }
         });
-        Observable.zip
+
         //创建一个下游 Observer
         Observer<Integer> observer = new Observer<Integer>() {
             @Override
@@ -83,7 +84,7 @@ public class RxJavaActivity extends BaseActivity{
                 }, new Action() {    // onComplete
                     @Override
                     public void run() throws Exception {
-                        NLog.i"sjh0", "action run().");
+                        NLog.i("sjh0", "action run().");
                     }
                 }, new Consumer<Disposable>() {    // onSubscribe
                     @Override
@@ -92,6 +93,6 @@ public class RxJavaActivity extends BaseActivity{
                     }
                 });
     }
-    }
+
 
 }
