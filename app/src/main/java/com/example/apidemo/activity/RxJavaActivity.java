@@ -2,27 +2,90 @@ package com.example.apidemo.activity;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.View;
+import android.widget.Button;
 import com.example.apidemo.BaseActivity;
+import com.example.apidemo.R;
+import com.example.apidemo.newwork.IRequest;
 import com.example.apidemo.utils.NLog;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Administrator on 2017/12/6.
  */
 public class RxJavaActivity extends BaseActivity{
+    private static final String ACCUWEATHER_APIKEY = "af7408e9f4d34fa6a411dd92028d4630";
+    private static final String BaseUrl = "http://api.accuweather.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.general_layout);
 
+        ((Button)findViewById(R.id.button1)).setText("RxJavaSample1");
+        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                RxJavaSample1();
+            }
+        });
+
+        ((Button)findViewById(R.id.button2)).setText("RxJavaSample2");
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                RxJavaSample2();
+            }
+        });
+
+        ((Button)findViewById(R.id.button3)).setText("RxJavaMap");
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                RxJavaMap();
+            }
+        });
+
+        ((Button)findViewById(R.id.button4)).setText("Retrofit request");
+        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                RetrofitRequest();
+            }
+        });
+
+
+    }
+
+    private void RxJavaSample1(){
         //创建一个上游 Observable，上游就是被观察者：
         Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
@@ -30,8 +93,8 @@ public class RxJavaActivity extends BaseActivity{
                 NLog.d("sjh0", "subscribe() ");
                 emitter.onNext(1);
                 emitter.onNext(2);
-                emitter.onNext(3);
                 emitter.onComplete();
+                emitter.onNext(3);  // 能发送但不再被接收
             }
         });
 
@@ -53,24 +116,28 @@ public class RxJavaActivity extends BaseActivity{
             }
 
             @Override
-            public void onComplete() {
+            public void onComplete() {  // onComplete()之后会触发dispose();dispose之后onNext等所有回调不能再被触发。
                 NLog.d("sjh0", "complete");
             }
         };
 
-        //建立连接并开始发送事件
+        //注册监听并开始发送事件
         observable.subscribe(observer);
+    }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void RxJavaSample2(){
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
                 NLog.d("sjh0", "subscribe() " + Thread.currentThread());
-                e.onNext("onNext-string");
+                // TUDO：此处由subscribeOn指定为IO线程，因此可以进行网络请求、读取数据库等耗时操作。
+
+                e.onNext("onNext-string");  // 回调到被observeOn指定为主线程的Observer中！！！
                 e.onComplete();
             }
-        }).subscribeOn(Schedulers.io())    // 指定 subscribe() 发生在 IO 线程
-                .observeOn(AndroidSchedulers.mainThread()) // 指定Subscriber（Observer）的回调发生在主线程
+        }).subscribeOn(Schedulers.io())    // 指定 subscribe() 发生在 IO 线程，以第一次指定的线程为准。
+                .observeOn(AndroidSchedulers.mainThread()) // 指定Subscriber（Observer）的回调发生在主线程，以最新指定的线程为准。
                 .subscribe(new Consumer<String>() {    // onNext
                     @Override
                     public void accept(@NonNull String text) throws Exception {
@@ -92,6 +159,132 @@ public class RxJavaActivity extends BaseActivity{
                         NLog.i("sjh0", "onSubscribe() ");
                     }
                 });
+    }
+
+    /**
+     * RxJava map和flatMap的使用方法.
+     */
+    private void RxJavaMap(){
+        Observable.create(new ObservableOnSubscribe<Integer>() {
+
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) throws Exception {
+                e.onNext(1);
+                e.onNext(2);
+                e.onNext(3);
+                e.onComplete();
+            }
+        })
+        // map()用于值or类型的转换！由类ObservableMap中的源码可知，map的作用实际是执行apply方法转换数据之后再回调onNext():
+        // actual.onNext(function.apply(t));
+//        .map(new Function<Integer, String>() {
+//                @Override
+//                public String apply(Integer integer) throws Exception {
+//                    return "apply " + integer;
+//                }
+//        })
+//        .subscribe(new Consumer<String>() {
+//            @Override
+//            public void accept(String s) throws Exception {
+//                NLog.d("sjh0", "map(). onNext-s = " + s);
+//            }
+//
+//        });
+        // flatMap的作用实际上是遍历取出集合类型然后调用onNext().
+        // concatMap与flatMap的区别仅仅是concatMap是严格按照上游发送的顺序来发送的
+        .flatMap(new Function<Integer, ObservableSource<Double>>() {
+            @Override
+            public ObservableSource<Double> apply(Integer integer) throws Exception {
+                final List list = new ArrayList<>();
+                for (int i = 0; i < 3; i++) {
+                    list.add(integer + 10.0);
+                }
+                return Observable.fromIterable(list).delay(10, TimeUnit.MILLISECONDS);
+            }
+        })
+        .subscribe(new Consumer<Double>() {
+            @Override
+            public void accept(Double aDouble) throws Exception {
+                NLog.i("sjh0", "flatMap(). onNext-double = " + aDouble);
+            }
+        });
+
+    }
+
+
+    private void RetrofitRequest(){
+        IRequest iRequest = produceRetrofit().create(IRequest.class);
+        final Call<ResponseBody> call = iRequest.getWeather("beijing", ACCUWEATHER_APIKEY);
+        // 方法①
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                try {
+                    NLog.w("sjh0", "onResponse = " + response.body().string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+        // 方法②
+//                Thread thread = new Thread(){
+//                    @Override
+//                    public void run() {
+//                        // IOException: java.net.UnknownHostException: Unable to resolve host "api.accuweather.com": No address associated with hostname（断网）
+//                        retrofit2.Response<ResponseBody> response = null;   // 注意这不是okhttp3的Response！！
+//                        try {
+//                            response = call.execute();
+//                            if(response.isSuccessful()){
+//                                NLog.w("sjh0", response.body().string());
+//                                // locationEntity = response.body();   // 混淆了bean的话locationEntity也不为null，只是内容全为null
+//                            }
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                };
+//                thread.start();
+
+    }
+
+
+    public class RequestIntercepteor implements Interceptor {
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request oldRequest = chain.request();
+            Request newRequest = oldRequest.newBuilder()
+                    .addHeader("Content-Type", "application/json; charset=utf-8")
+                    .addHeader("Connection", "Keep-alive")
+                    .build();
+            return chain.proceed(newRequest);
+        }
+    }
+
+    private OkHttpClient produceHttpClient(){
+        // OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+        builder.readTimeout(10, TimeUnit.SECONDS);
+        builder.connectTimeout(10, TimeUnit.SECONDS);
+        builder.addInterceptor(new RequestIntercepteor());
+        return builder.build();
+    }
+
+    private Retrofit produceRetrofit(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BaseUrl)
+                .client(produceHttpClient())
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+
+        return retrofit;
     }
 
 
