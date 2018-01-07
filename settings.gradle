@@ -1,1 +1,1 @@
-include ':app', ':statisticslibrary'
+include ':app', ':statisticslibrary', ':JavaC'
