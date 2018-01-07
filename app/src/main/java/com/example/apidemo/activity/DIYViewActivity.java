@@ -20,7 +20,6 @@ import com.example.apidemo.utils.NLog;
 import java.lang.reflect.Method;
 
 public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
-    private static final boolean DEBUG = false;
     private ImageView mImageView;
 
     @Override
@@ -47,6 +46,7 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
                 mImageView.setRotationX(0f);
             }
         });
+
     }
 
     @Override
