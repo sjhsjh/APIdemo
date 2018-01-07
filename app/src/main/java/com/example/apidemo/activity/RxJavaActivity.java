@@ -1,9 +1,16 @@
 package com.example.apidemo.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.newwork.IRequest;
@@ -11,6 +18,8 @@ import com.example.apidemo.utils.NLog;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -82,6 +91,30 @@ public class RxJavaActivity extends BaseActivity{
             }
         });
 
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+
+            public void run() {
+                InputMethodManager inputManager = (InputMethodManager)RxJavaActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                // inputManager.showSoftInput(((EditText)findViewById(R.id.edittext)), 0);
+                inputManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);    // 不延时直接弹出软键盘则会出现自动弹起输入法后又收回去的现象。
+//                ((EditText)findViewById(R.id.edittext)).setFocusable(true);   // 由于刚跳到一个新的界面，界面未加载完全而无法弹出软键盘。因此此时赋予焦点并没有用。
+//                ((EditText)findViewById(R.id.edittext)).setFocusableInTouchMode(true);
+//                ((EditText)findViewById(R.id.edittext)).requestFocus();
+            }
+
+        }, 500);
+
+        ((EditText)findViewById(R.id.edittext)).setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_SEARCH ||
+                        (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    NLog.w("sjh7", "actionId yy " + actionId);
+                }
+                return false;    // 返回false会收起输入法
+            }
+        });
 
     }
 

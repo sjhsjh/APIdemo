@@ -78,6 +78,16 @@
         android:layout_marginBottom="28dp"
         android:text="TextView" />
 
+    <EditText
+        android:id="@+id/edittext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/textView2"
+        android:layout_toRightOf="@+id/textView2"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:layout_marginLeft="10dp" />
+
     <ViewStub
         android:id="@+id/viewStub"
         android:layout_width="wrap_content"
