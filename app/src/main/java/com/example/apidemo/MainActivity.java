@@ -19,6 +19,7 @@ import com.example.apidemo.activity.PowerManagerActivity;
 import com.example.apidemo.activity.ReferenceActivity;
 import com.example.apidemo.activity.ResolveInfoActivity;
 import com.example.apidemo.activity.RxJavaActivity;
+import com.example.apidemo.activity.SDActivity;
 import com.example.apidemo.activity.SQLActivity;
 import com.example.apidemo.activity.ScrollActivity;
 import com.example.apidemo.activity.SlideActivity;
@@ -70,6 +71,7 @@ public class MainActivity extends BaseActivity {
         list.add(WindowActivity.class);
         list.add(RxJavaActivity.class);
         list.add(ReferenceActivity.class);
+        list.add(SDActivity.class);
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
