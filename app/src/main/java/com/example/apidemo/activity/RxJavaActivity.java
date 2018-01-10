@@ -98,9 +98,14 @@ public class RxJavaActivity extends BaseActivity{
                 InputMethodManager inputManager = (InputMethodManager)RxJavaActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
                 // inputManager.showSoftInput(((EditText)findViewById(R.id.edittext)), 0);
                 inputManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);    // 不延时直接弹出软键盘则会出现自动弹起输入法后又收回去的现象。
-//                ((EditText)findViewById(R.id.edittext)).setFocusable(true);   // 由于刚跳到一个新的界面，界面未加载完全而无法弹出软键盘。因此此时赋予焦点并没有用。
+
+                // 由于刚跳到一个新的界面，界面未加载完全而无法弹出软键盘。因此此时赋予焦点并没有用。
+//                ((EditText)findViewById(R.id.edittext)).setFocusable(true);   // 这3句话是获取焦点的所需语句
 //                ((EditText)findViewById(R.id.edittext)).setFocusableInTouchMode(true);
 //                ((EditText)findViewById(R.id.edittext)).requestFocus();
+                // 隐藏输入法
+                // inputManager.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+                // inputManager.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
             }
 
         }, 500);

@@ -60,7 +60,8 @@ public class StickyLayout extends LinearLayout{
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         ViewGroup.LayoutParams lp = mListView.getLayoutParams();
         mHeadViewHeight = mTopView.getHeight() / 2;
-        lp.height = getMeasuredHeight() - mHeadViewHeight;   // 不需要requestLayout，因为后面的onLayout会布局。 2272 - 400    只看到17?????
+        lp.height = getMeasuredHeight() - mHeadViewHeight;   // 不需要requestLayout，因为后面的onLayout会布局,此处非常重要。 2272 - 400    只看到17?????
+        // lp.topMargin = xx;
         NLog.i("sjh3", "getMeasuredHeight() " + getMeasuredHeight() + " mHeadViewHeight = " + mHeadViewHeight + " lp.height = " + lp.height
          + "  mListView.getMeasuredHeight() = " + mListView.getMeasuredHeight());
     }
@@ -68,7 +69,7 @@ public class StickyLayout extends LinearLayout{
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
-        int x = (int)ev.getRawX();
+        int x = (int)ev.getX();
         int y = (int)ev.getY();
         switch (action){
             case MotionEvent.ACTION_DOWN :
@@ -97,7 +98,7 @@ public class StickyLayout extends LinearLayout{
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
-        int x = (int)ev.getRawX();
+        int x = (int)ev.getX(); // 只是用于detax的话可用getRawX
         int y = (int)ev.getY();
         boolean intercept = false;
 
@@ -108,14 +109,29 @@ public class StickyLayout extends LinearLayout{
                 NLog.d("sjh3", "onInterceptTouchEvent ACTION_MOVE  y = " + y + " mLastInterceptY = " + mLastInterceptY);
                 // if(Math.abs(y - mLastInterceptY) > mTouchSlop){     // 微小滑动不拦截，子ListView的onTouchEvent会返回true处理掉。
                 /* 对ListView，当Math.abs(downnY - mMotionY) > mTouchSlop时，即累计滑动了超过mTouchSlop距离就开始滑动！
+                   如果微小的deta距离都抛弃，父view不拦截，listview达到累计距离就会错误地滑动起来了。
                    因此不能使用上述每次滑动判断是否超过mTouchSlop的判断。 可以使用累加滑动是否超过mTouchSlop的判断。*/
-                    // 父控件拦截条件：
-                    // 1. headView可见
-                    // 2. headView已隐藏且ListView处于顶部且下拉
-                    if (getScrollY() < mHeadViewHeight || y - mLastInterceptY > 0 && isListViewTop()) {
-                        intercept = true;
+
+                if(Math.abs(x - mLastTouchX) > mTouchSlop || Math.abs(y - mLastTouchY) > mTouchSlop) {
+                    // 不要拦截水平方向的事件
+                    if (Math.abs(y - mLastTouchY) > Math.abs(x - mLastTouchX)) {
+                        // 父控件拦截条件：
+                        // 1. headView可见
+                        // 2. headView已隐藏且ListView处于顶部且下拉
+                        if (getScrollY() < mHeadViewHeight){
+                            intercept = true;
+
+                        }
+                        if(y - mLastInterceptY > 0 && isListViewTop()){
+                            intercept = true;
+                            mLastTouchX = x;    // down的时候初始化这些值; 下滑到临界点的时候无down事件，父view直接将move事件拦截给自己，因此move的时候也初始化onTouchEvent的x、y值;
+                            mLastTouchY = y;
+                        }
+                        NLog.i("sjh3", "intercept = " + intercept);
+
                     }
-                    NLog.i("sjh3", "intercept = " + intercept);
+                }
+
                 // }
                 break;
             case MotionEvent.ACTION_CANCEL :
@@ -123,8 +139,7 @@ public class StickyLayout extends LinearLayout{
                 break;
 
         }
-        mLastTouchX = x;    // down的时候初始化这些值; 下滑到临界点的时候无down事件，父view直接将move事件拦截给自己，因此move的时候也初始化onTouchEvent的x、y值;
-        mLastTouchY = y;
+
         mLastInterceptX = x;
         mLastInterceptY = y;
         if(intercept){
@@ -136,7 +151,7 @@ public class StickyLayout extends LinearLayout{
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
-        int x = (int)event.getRawX();
+        int x = (int)event.getX();
         int y = (int)event.getY();
         initVelocityTracker(event);
         boolean result = false;
