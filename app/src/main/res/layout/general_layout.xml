@@ -14,7 +14,24 @@
         android:layout_marginLeft="56dp"
         android:layout_marginTop="16dp"
         android:text="Button" />
-    
+
+    <EditText
+        android:id="@+id/edittext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/button1"
+        android:layout_toRightOf="@+id/button1"
+        android:imeOptions="actionSearch"
+        android:inputType="text"
+        android:layout_marginLeft="20dp" />
+
+    <EditText
+        android:id="@+id/edittext2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/edittext"
+        android:layout_below="@+id/edittext"
+        android:layout_marginTop="20dp" />
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
@@ -77,16 +94,6 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="28dp"
         android:text="TextView" />
-
-    <EditText
-        android:id="@+id/edittext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_toRightOf="@+id/textView2"
-        android:imeOptions="actionSearch"
-        android:inputType="text"
-        android:layout_marginLeft="10dp" />
 
     <ViewStub
         android:id="@+id/viewStub"
