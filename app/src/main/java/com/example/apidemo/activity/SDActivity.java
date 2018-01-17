@@ -76,15 +76,19 @@ public class SDActivity extends BaseActivity {
                     boolean isValid = m.matches();
                     if (!isValid) {
                         // int differ = afterText.length() - beforeText.length();   // 新增的字符数
-      // ==原来焦点在edittext上时edittext.setText()会令光标移到最前方！！
-      //      cursorPos = editText2.getSelectionStart() - 1;
-                        final int a = cursorPos;
-                        int b = a;
-                        b++;
-                        // 如果用户的输入不符合规范，则显示之前输入的文本
+
+                        // 方法① final不能少，代表仅取得cursorPos的值，correctPos的值不跟随cursorPos的值变化。
+                        final int correctPos = cursorPos;
+                        // 方法②
+                        // int a[] = new int[1];
+                        // a[0] = correctPos;
+                        // 方法③ beforeTextChanged时不处理cursorPos，
+                        // previousCursor = editText2.getSelectionStart() - differ;
+
+                        // 如果用户的输入不符合规范，则显示之前输入的文本.注意此处内会执行beforeTextChanged！！！
                         editText2.setText(beforeText);
                         // 光标移动到输入错误字符前的位置，因为用户可以在字符串中间输入字符！
-                        editText2.setSelection(a);   // 光标移动到文本末尾: afterText.length() - differ
+                        editText2.setSelection(correctPos);   // 光标移动到文本末尾: afterText.length() - differ
                     }
                 }
 
