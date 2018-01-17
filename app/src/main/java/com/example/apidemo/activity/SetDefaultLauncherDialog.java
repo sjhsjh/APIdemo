@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -70,8 +71,20 @@ public class SetDefaultLauncherDialog extends Dialog {
 		 View decore = dialogWindow.getDecorView();
 				 decore.setPadding(  16, 50,0, 0);
 				 
-//		NLog.e("sjh2", "asd" + decore.getPaddingTop());
+		// NLog.e("sjh2", "asd" + decore.getPaddingTop());
 		// mTipsView.setText("");
+
+//		Window window = getWindow();
+//		window.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL);	// dialod默认在应用程序中央，设置x、y偏离是相对于应用程序中央的偏离，因此要设置顶部对齐。
+//		// 去除dialog自带padding
+//		View decore = window.getDecorView();
+//		decore.setPadding(0, 0, 0, 0);
+//		// dialog位置移动
+//		WindowManager.LayoutParams lp = window.getAttributes();
+//		lp.width = 100;
+//		lp.height = 100;
+//		lp.y = 0;
+//		window.setAttributes(lp);
 
 	}
 
