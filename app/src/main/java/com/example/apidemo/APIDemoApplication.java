@@ -3,6 +3,7 @@ package com.example.apidemo;
 import android.app.Application;
 import android.content.Context;
 import com.example.apidemo.utils.CrashHandler;
+import com.example.apidemo.utils.NLog;
 import com.tcl.lockscreen.statistics.StatisticsKind;
 import com.tcl.lockscreen.statistics.StatisticsWrapper;
 
@@ -19,6 +20,7 @@ public class APIDemoApplication extends Application{
         initStatistics();
         initTraceException();
         initCrashHandler();
+        initNLog();
     }
 
     public static Context getContext(){
@@ -37,7 +39,11 @@ public class APIDemoApplication extends Application{
     private void initCrashHandler(){
         CrashHandler crashHandler = new CrashHandler();
         crashHandler.init(getApplicationContext());
+    }
 
+    private void initNLog(){
+        NLog.setLogDirPath(android.os.Environment.getExternalStorageDirectory().getAbsolutePath());
+        // android.os.Environment.getExternalStorageDirectory().getAbsolutePath()  getExternalFilesDir(null).getPath()
     }
 
 }

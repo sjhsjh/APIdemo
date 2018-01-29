@@ -98,18 +98,18 @@ public class SDActivity extends BaseActivity {
             });
 
 
-        NLog.i("sjh7", "1: " +getFilesDir().getAbsolutePath()  //  /data/data/com.example.apidemo/files 三星是：/data/user/0/com.example.apidemo/files
-                        + "\n2: " + getFilesDir().getPath()              //  /data/data/com.example.apidemo/files
-                        + "\n3: " + getCacheDir().getPath()              //  /data/data/com.example.apidemo/cache
+        NLog.i("sjh7", "1: " +getFilesDir().getAbsolutePath()  //  /data/data/com.example.apidemo/files 三星和vivo是：/data/user/0/com.example.apidemo/files
+                        + "\n2: " + getFilesDir().getPath()    //  /data/data/com.example.apidemo/files
+                        + "\n3: " + getCacheDir().getPath()    //  /data/data/com.example.apidemo/cache
 
                         + "\n4: " + getExternalFilesDir(null).getPath() //  /storage/emulated/0/Android/data/com.example.apidemo/files
                         + "\n5: " + getExternalCacheDir().getPath()     //  /storage/emulated/0/Android/data/com.example.apidemo/cache
-                        + "\n6: " + Environment.getExternalStorageDirectory().getAbsolutePath()//   /storage/emulated/0
+                        + "\n6: " + Environment.getExternalStorageDirectory().getAbsolutePath()//   /storage/emulated/0   无SD卡权限能获取路径，但是需要声明写SD卡权限才能写SD卡。
 
                         + "\n7: " + Environment.getRootDirectory().getPath()     //  /system
                         + "\n8: " + Environment.getDataDirectory().getPath()     //  /data
                         + "\n9: " + getPrimaryStoragePath()                      //  /storage/emulated/0/
-                        + "\n10: " + getSecondaryStoragePath()                    //  /storage/sdcard1 ??? 三星为null
+                        + "\n10: " + getSecondaryStoragePath()                   //  /storage/sdcard1 ??? 三星和vivo为null。
 
         );
     }

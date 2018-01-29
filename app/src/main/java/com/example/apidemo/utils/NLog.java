@@ -1,6 +1,7 @@
 package com.example.apidemo.utils;
 
 import android.annotation.SuppressLint;
+import android.text.TextUtils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -80,17 +81,16 @@ public class NLog {
 	private boolean mLogSwitch = true;							//日志开关
 	private static final int LOG_TYPE = LOG_BOTH_BUFF_SD;			//日志输出类型
 	private static final int LOG_LEVEL_MIN = VERBOSE;			//允许通过的最小日志等级
-	private static final String LOG_DIR_NAME = "APIDemo/debug_log";	//日志输出目录，位于sd卡目录下，根据项目修改
+	private static final String LOG_DIR_NAME = "debug_log";	//日志输出目录，位于sd卡目录下，根据项目修改
 	private static final String NO_LOG_FILE_NAME = "nolog";		//在日志输出目录下创建这个文件，在当前日志文件超过限制时禁止继续输出
 	private static final int LOG_COUNT_LIMIT_PER_FILE = 20000;	//每个文件的日志输出限制
-
+	private static String mLogDirPath;// = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();	//  /storage/emulated/0/Android/data/com.example.apidemo/files
 
 	private final Object mLOCK = new Object();
 	private File mCurFile;
 	private int mLogCount;
 	private String mLogFilePrefix;
 	private boolean mFirstLog = true;
-
 	//CHECKSTYLE IGNORE 1 LINES
 	private static final NLog sInstance = new NLog("nlog");
 
@@ -100,6 +100,12 @@ public class NLog {
 	 */
 	public NLog(String logFilePrefix) {
 		mLogFilePrefix = logFilePrefix == null ? "" : logFilePrefix;
+	}
+
+	public static void setLogDirPath(String logDirPath) {
+		if(!TextUtils.isEmpty(logDirPath)){
+			mLogDirPath = logDirPath;
+		}
 	}
 
 	public void setLogSwitch(boolean logSwitch) {
@@ -330,6 +336,15 @@ public class NLog {
 		if(!mLogSwitch){
 			return 0;
 		}
+		if(TextUtils.isEmpty(mLogDirPath)){
+			android.util.Log.println(priority, tag, msg);
+			android.util.Log.println(NLog.ERROR, TAG, "mLogDirPath empty. ");
+			return 0;
+		}
+		if (mFirstLog) {
+			mFirstLog = false;
+			ins(TAG, "====================\n======Log init======\n====================");	// 注意tag是“NLog”而不是传入参数的tag。
+		}
 		switch (LOG_TYPE) {
 			case LOG_NORMAL:
 				return android.util.Log.println(priority, tag, msg);
@@ -341,7 +356,6 @@ public class NLog {
 			default :
 				break;
 		}
-
 		if (priority < VERBOSE || priority > ASSERT) {
 			throw new IllegalArgumentException("wrong priority =" + priority);
 		}
@@ -354,12 +368,7 @@ public class NLog {
 			android.util.Log.println(NLog.ERROR, TAG, "no write permission. ");
 			return 0;
 		}
-		
-		if (mFirstLog) {
-			mFirstLog = false;
-			ins(TAG, "====================\n======Log init======\n====================");
-		}
-		
+
 		//格式化输出信息
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		Date date = new Date(System.currentTimeMillis());
@@ -371,9 +380,8 @@ public class NLog {
 			if (mLogCount % LOG_COUNT_LIMIT_PER_FILE == 0) {	// 创建日志文件
 				//超过行数限制时创建新日志文件
 				mLogCount = 0;
-
-				String dirName = android.os.Environment.getExternalStorageDirectory().getAbsolutePath()
-						+ File.separator + LOG_DIR_NAME;
+				// 创建文件夹
+				String dirName = mLogDirPath + File.separator + LOG_DIR_NAME;
 				File dir = new File(dirName);
 				try {
 					if (dir.exists() && !dir.isDirectory()) {
@@ -384,6 +392,7 @@ public class NLog {
 					}
 				} catch (SecurityException e) {
 					dir = null;
+					android.util.Log.println(NLog.ERROR, TAG, "SecurityException = " + e.getMessage());
 					return 0;
 				}
 				
@@ -391,7 +400,7 @@ public class NLog {
 					mCurFile = null;
 					return 0;
 				}
-
+				// 每次进入程序都创建 文件名带有时刻的日志文件
 				dateString = dateString.replace(':', '-').replace(' ', '_');
 				String sCurFileName = dirName + File.separator + mLogFilePrefix + "_" + dateString + ".txt";
 
@@ -413,13 +422,13 @@ public class NLog {
 			if (mCurFile == null) {
 				return 0;
 			}
-
 			try {
 				//写数据
 				FileOutputStream outputStream = new FileOutputStream(mCurFile, true);
-				outputStream.write(msg.getBytes());
+				outputStream.write(msg.getBytes());		// 文件被删除后outputStream.write仍能创建文件并继续写入数据。
 				outputStream.close();
 			} catch (Exception e) {
+				// 若文件夹被删除则报错FileNotFoundException。
 				e.printStackTrace();
 			}
 		}
