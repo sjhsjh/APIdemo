@@ -106,7 +106,8 @@
         android:layout_alignLeft="@+id/textView1"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="28dp"
-        android:text="TextView" />
+        android:text="TextView"
+        />
 
     <ViewStub
         android:id="@+id/viewStub"
