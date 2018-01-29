@@ -96,25 +96,24 @@ public class SDActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                NLog.d("sjh8", "afterTextChanged =" + s);
             }
 
             });
 
 
+        NLog.i("sjh7", "1: " +getFilesDir().getAbsolutePath()  //  /data/data/com.example.apidemo/files 三星是：/data/user/0/com.example.apidemo/files
+                        + "\n2: " + getFilesDir().getPath()              //  /data/data/com.example.apidemo/files
+                        + "\n3: " + getCacheDir().getPath()              //  /data/data/com.example.apidemo/cache
 
-        NLog.i("sjh7", getFilesDir().getAbsolutePath()  //  /data/data/com.example.apidemo/files
-                 + " " + getFilesDir().getPath()        //  /data/data/com.example.apidemo/files
-                        + " 1: " + getCacheDir().getPath() //  /data/data/com.example.apidemo/cache
+                        + "\n4: " + getExternalFilesDir(null).getPath() //  /storage/emulated/0/Android/data/com.example.apidemo/files
+                        + "\n5: " + getExternalCacheDir().getPath()     //  /storage/emulated/0/Android/data/com.example.apidemo/cache
+                        + "\n6: " + Environment.getExternalStorageDirectory().getAbsolutePath()//   /storage/emulated/0
 
-                        + " 2: " + getExternalFilesDir(null).getPath() //  /storage/emulated/0/Android/data/com.example.apidemo/files
-                        + " 3: " + getExternalCacheDir().getPath()     //  /storage/emulated/0/Android/data/com.example.apidemo/cache
-                        + " 4: " + Environment.getExternalStorageDirectory().getAbsolutePath()//   /storage/emulated/0
-
-                        + " 5: " + Environment.getRootDirectory().getPath()     //  /system
-                        + " 6: " + Environment.getDataDirectory().getPath()     //  /data
-                        + " 7: " + getPrimaryStoragePath()                      //  /storage/emulated/0/
-                        + " 8: " + getSecondaryStoragePath()                    //  /storage/sdcard1 ???
+                        + "\n7: " + Environment.getRootDirectory().getPath()     //  /system
+                        + "\n8: " + Environment.getDataDirectory().getPath()     //  /data
+                        + "\n9: " + getPrimaryStoragePath()                      //  /storage/emulated/0/
+                        + "\n10: " + getSecondaryStoragePath()                    //  /storage/sdcard1 ??? 三星为null
 
         );
     }
