@@ -28,7 +28,7 @@ public class DemoAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) { //onItemClick中的getItemAtPosition才会调这里。Listview加载时不调这里
+	public Object getItem(int position) { // onItemClick中的getItemAtPosition才会调这里。Listview加载时不调这里
 		NLog.i("sjh0", "getItem position = " + position);
 		return mData.get(position);
 	}
@@ -40,7 +40,7 @@ public class DemoAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		NLog.w("sjh0", "getView position = " + position);
+		// NLog.w("sjh0", "getView position = " + position);
 		ViewHolder holder = null;
 		if(convertView == null){
 			holder = new ViewHolder();

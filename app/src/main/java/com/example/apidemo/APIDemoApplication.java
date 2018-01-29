@@ -2,6 +2,7 @@ package com.example.apidemo;
 
 import android.app.Application;
 import android.content.Context;
+import com.example.apidemo.utils.CrashHandler;
 import com.tcl.lockscreen.statistics.StatisticsKind;
 import com.tcl.lockscreen.statistics.StatisticsWrapper;
 
@@ -17,6 +18,7 @@ public class APIDemoApplication extends Application{
         mContext = getApplicationContext();
         initStatistics();
         initTraceException();
+        initCrashHandler();
     }
 
     public static Context getContext(){
@@ -30,6 +32,12 @@ public class APIDemoApplication extends Application{
 
     private void initTraceException(){
         StatisticsWrapper.getInstance().initTraceException(true);
+    }
+
+    private void initCrashHandler(){
+        CrashHandler crashHandler = new CrashHandler();
+        crashHandler.init(getApplicationContext());
+
     }
 
 }
