@@ -388,7 +388,12 @@ public class NLog {
 						dir.delete();
 					}
 					if (!dir.exists()) {
-						dir.mkdirs();
+						boolean result = dir.mkdirs();
+						if(!result){
+							dir = null;
+							android.util.Log.println(NLog.ERROR, TAG, "mkdirs fail. ");
+							return 0;
+						}
 					}
 				} catch (SecurityException e) {
 					dir = null;

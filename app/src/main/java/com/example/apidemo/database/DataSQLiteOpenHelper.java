@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class DataSQLiteOpenHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "lockscreen.db";
+    public static final String DATABASE_NAME = "apidemo.db";
     /** 桌面数据库原始版本号 */
     private static final int INITIAL_DB_VERSION = 1;
     /** 桌面数据库当前版本号 */

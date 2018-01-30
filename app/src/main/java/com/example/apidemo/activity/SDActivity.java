@@ -1,8 +1,13 @@
 package com.example.apidemo.activity;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.storage.StorageManager;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -66,10 +71,18 @@ public class SDActivity extends BaseActivity {
                 String afterText = s.toString();
                 NLog.d("sjh8", "onTextChanged =" + afterText);
 
-                if (!TextUtils.isEmpty(afterText)) {    // 清空输入框后肯定不需要再匹配正则
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                NLog.d("sjh8", "afterTextChanged =" + s);
+
+                if (!TextUtils.isEmpty(s)) {    // 清空输入框后肯定不需要再匹配正则
                     Pattern p = Pattern.compile("^[\u4e00-\u9fa5_a-zA-Z0-9]{1,6}$");
-                    Matcher m = p.matcher(afterText);
+                    Matcher m = p.matcher(s);
                     boolean isValid = m.matches();
+                    // 等价于 boolean isValid = afterText.matches("^[\u4e00-\u9fa5_a-zA-Z0-9]{1,6}$");
+
                     if (!isValid) {
                         // int differ = afterText.length() - beforeText.length();   // 新增的字符数
 
@@ -81,8 +94,8 @@ public class SDActivity extends BaseActivity {
                         // 方法③ beforeTextChanged时不处理cursorPos，
                         // previousCursor = editText2.getSelectionStart() - differ;
 
-                        // 如果用户的输入不符合规范，则显示之前输入的文本.注意此处内会执行beforeTextChanged！！！
-                        editText2.setText(beforeText);
+                        // 如果用户的输入不符合规范，则显示之前输入的文本。注意setText会执行beforeTextChanged！还触发了anr。editText2.setText(beforeText);
+                        s.replace(0, s.length(), beforeText);
                         // 光标移动到输入错误字符前的位置，因为用户可以在字符串中间输入字符！
                         editText2.setSelection(correctPos);   // 光标移动到文本末尾: afterText.length() - differ
                     }
@@ -90,31 +103,47 @@ public class SDActivity extends BaseActivity {
 
             }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                NLog.d("sjh8", "afterTextChanged =" + s);
-            }
-
             });
 
 
-        NLog.i("sjh7", "1: " +getFilesDir().getAbsolutePath()  //  /data/data/com.example.apidemo/files 三星和vivo是：/data/user/0/com.example.apidemo/files
-                        + "\n2: " + getFilesDir().getPath()    //  /data/data/com.example.apidemo/files
-                        + "\n3: " + getCacheDir().getPath()    //  /data/data/com.example.apidemo/cache
+        NLog.i("sjh7",
+            // 三星和vivo是（android6.0开始有多用户，/data/user/0目录会指向/data/data）：/data/user/0/com.example.apidemo/files
+          "1: " + getFilesDir().getAbsolutePath()       //  /data/data/com.example.apidemo/files
+            + "\n2: " + getFilesDir().getPath()              //  /data/data/com.example.apidemo/files
+            + "\n3: " + getCacheDir().getPath()              //  /data/data/com.example.apidemo/cache   当设备的内部存储空间不足时，Android可能会删除这些缓存文件以回收空间。
+            // 在您的内部存储空间内创建（或打开现有的）目录。默认不存在,且getDir后才创建app_dir的文件夹，带读写权限。
+            + "\n4: " + getDir("sjh", Context.MODE_PRIVATE).getAbsolutePath()   //  /data/data/com.example.apidemo/app_sjh
+            //  默认不存在,且databases文件夹和dbname文件都不会自动创建，带读写权限。
+            + "\n5: " + getDatabasePath("dbName")                               //  /data/data/com.example.apidemo/databases/dbname
 
-                        + "\n4: " + getExternalFilesDir(null).getPath() //  /storage/emulated/0/Android/data/com.example.apidemo/files
-                        + "\n5: " + getExternalCacheDir().getPath()     //  /storage/emulated/0/Android/data/com.example.apidemo/cache
-                        + "\n6: " + Environment.getExternalStorageDirectory().getAbsolutePath()//   /storage/emulated/0   无SD卡权限能获取路径，但是需要声明写SD卡权限才能写SD卡。
+            + "\n11: " + getExternalFilesDir(null).getPath()     //  /storage/emulated/0/Android/data/com.example.apidemo/files
+            + "\n12: " + getExternalCacheDir().getPath()              //  /storage/emulated/0/Android/data/com.example.apidemo/cache
 
-                        + "\n7: " + Environment.getRootDirectory().getPath()     //  /system
-                        + "\n8: " + Environment.getDataDirectory().getPath()     //  /data
-                        + "\n9: " + getPrimaryStoragePath()                      //  /storage/emulated/0/
-                        + "\n10: " + getSecondaryStoragePath()                   //  /storage/sdcard1 ??? 三星和vivo为null。
+            ////////////////////////////////////////////////////////////////////////
+            + "\n21: " + Environment.getExternalStorageDirectory().getAbsolutePath()//   /storage/emulated/0   无SD卡权限能获取路径，但是需要声明写SD卡权限才能写SD卡。
+            + "\n22: " + Environment.getRootDirectory().getAbsolutePath()           //  /system 不可读写
+            + "\n23: " + Environment.getDataDirectory().getAbsolutePath()           //  /data
+            + "\n24: " + Environment.getDownloadCacheDirectory().getAbsolutePath()  //  /cache  需声明权限or声明权限+申请权限
+            + "\n25: " + getPrimaryStoragePath()                                    //  /storage/emulated/0/
+            + "\n26: " + getSecondaryStoragePath()                                  //  /storage/sdcard1  三星和vivo无外置TF卡所以为null。
+
+            + "\n31: " + getPackageCodePath()       // /data/app/com.example.apidemo-2/base.apk  默认存在，apk包路径.
+            + "\n32: " + getPackageResourcePath()   // /data/app/com.example.apidemo-2/base.apk  默认存在，apk包路径.
+
 
         );
+
+
+        NLog.w("sjh8",   "checkSelfPermission = " + ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+         + ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE));
+        // != PackageManager.PERMISSION_GRANTED  0 与 -1
+        //   NLog.i("sjh8", "=====" + ((TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId());
     }
 
-    // 获取主存储卡路径
+    /**
+     * 获取主存储卡路径
+     * @return
+     */
     public String getPrimaryStoragePath() {
         try {
             StorageManager sm = (StorageManager) getSystemService(STORAGE_SERVICE);
@@ -128,8 +157,11 @@ public class SDActivity extends BaseActivity {
         return null;
     }
 
-    // 获取次存储卡路径,一般就是外置 TF 卡了. 不过也有可能是 USB OTG 设备...
-    // 其实只要判断第二章卡在挂载状态,就可以用了.
+    /**
+     * 获取次存储卡路径,一般就是外置TF卡了. 不过也有可能是USB OTG设备
+     * 其实只要判断第二章卡在挂载状态,就可以用了.
+     * @return
+     */
     public String getSecondaryStoragePath() {
         try {
             StorageManager sm = (StorageManager) getSystemService(STORAGE_SERVICE);

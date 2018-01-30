@@ -48,10 +48,10 @@ public class CrashHandler implements UncaughtExceptionHandler {
             mCrashDirPath = "\\sdcard\\crashes";
         }
         else {
-            mCrashDirPath = // Environment.getExternalStorageDirectory().getAbsolutePath()
-            context.getExternalFilesDir(null).getPath()  + File.separator + "crashes";
+            mCrashDirPath = context.getExternalFilesDir(null).getPath()  + File.separator + "crashes";
+                          // Environment.getExternalStorageDirectory().getAbsolutePath();
         }
-        NLog.d("sjh8", "file.exists() = " + file.exists() + " mCrashDirPath=" + mCrashDirPath);
+        NLog.d("sjh8", "\\sdcard exists ? " + file.exists() + " mCrashDirPath=" + mCrashDirPath);
 
         //获取系统默认的UncaughtException处理器  
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();

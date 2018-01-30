@@ -42,7 +42,7 @@ public class APIDemoApplication extends Application{
     }
 
     private void initNLog(){
-        NLog.setLogDirPath(android.os.Environment.getExternalStorageDirectory().getAbsolutePath());
+        NLog.setLogDirPath(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/APIDemoLog");
         // android.os.Environment.getExternalStorageDirectory().getAbsolutePath()  getExternalFilesDir(null).getPath()
     }
 
