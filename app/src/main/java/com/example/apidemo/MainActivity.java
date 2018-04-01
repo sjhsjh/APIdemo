@@ -13,6 +13,7 @@ import com.example.apidemo.activity.EventDispatchActivity;
 import com.example.apidemo.activity.GestureDectorActivity;
 import com.example.apidemo.activity.GsonActivity;
 import com.example.apidemo.activity.HardWareActivity;
+import com.example.apidemo.activity.MessengerActivity;
 import com.example.apidemo.activity.NewsActivity;
 import com.example.apidemo.activity.NotificationActivity;
 import com.example.apidemo.activity.PowerManagerActivity;
@@ -72,6 +73,7 @@ public class MainActivity extends BaseActivity {
         list.add(RxJavaActivity.class);
         list.add(ReferenceActivity.class);
         list.add(SDActivity.class);
+        list.add(MessengerActivity.class);
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
