@@ -6,7 +6,9 @@ import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.Button;
+import android.widget.TextView;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 
@@ -24,11 +26,13 @@ public class PowerManagerActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.general_layout);
-		/*
+
 		ViewStub viewStub = (ViewStub) findViewById(R.id.viewStub);		// 让ViewStub的内容显示
-		viewStub.inflate();
-		// viewStub.setVisibility(View.VISIBLE);
-		*/
+		viewStub.inflate();	// or viewStub.setVisibility(View.VISIBLE);
+		// viewStub.setVisibility(View.GONE);	// 竟然还生效
+		TextView inflateViewStub = (TextView) findViewById(R.id.inflate_viewstub);
+		inflateViewStub.setText("I'm viewStub. ");
+		Log.i("sjh2", "viewStub " + viewStub + findViewById(R.id.textview));
 		////////////////////////////////////////////////////////////////////////////////////////////
 
 		final PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);

@@ -111,13 +111,19 @@
 
     <ViewStub
         android:id="@+id/viewStub"
-        android:layout_width="wrap_content"
+        android:inflatedId="@+id/inflate_viewstub"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout="@layout/textview_item"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"/>
 
-    <include layout="@layout/merge_layout" />
+
+    <include layout="@layout/merge_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        />
+    <!--android:layout_below="@+id/button6"-->
 
 
     <RelativeLayout

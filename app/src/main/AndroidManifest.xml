@@ -43,11 +43,11 @@
             android:name=".activity.PowerManagerActivity"
             android:enabled="true"
             android:exported="true"
-            android:label="PowerManagerActivity2">
+            android:label="PowerManagerActivityLabel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.sjh" />
+                <action android:name="android.intent.action.222" />
+                <category android:name="android.intent.category.sjh2" />
             </intent-filter>
         </activity>
         <!-- android:targetActivity="MainActivity" -->
@@ -61,8 +61,12 @@
         <activity android:name=".activity.TestServiceActivity" />
         <activity android:name=".activity.NewsActivity" />
         <activity android:name=".activity.SQLActivity" />
-        <activity android:name=".activity.HardWareActivity" />
-        <activity android:name=".activity.WindowActivity" />
+        <activity android:name=".activity.HardWareActivity"
+            android:launchMode="singleTask"
+            android:taskAffinity="com.sjh.zyc.taskAffinity.HardWareActivity">
+        </activity>
+        <activity android:name=".activity.WindowActivity"
+            android:configChanges="orientation|screenSize" />
 
         <service
             android:name=".service.TestService"
