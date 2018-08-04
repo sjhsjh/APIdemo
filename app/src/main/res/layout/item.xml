@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.apidemo.view.MyRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/my_relative"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
@@ -7,7 +8,6 @@
         android:id="@+id/itemview"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="#ffffff"
         android:gravity="center_vertical"
         android:textSize="20sp" />
 
@@ -17,4 +17,4 @@
         android:layout_alignParentTop="true"
         android:background="#000000" />
 
-</RelativeLayout>
+</com.example.apidemo.view.MyRelativeLayout>

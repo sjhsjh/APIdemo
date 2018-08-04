@@ -23,7 +23,7 @@ public class DemoAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() { //size为0也行，只是Listview中没有条目
-		NLog.d("sjh0", "getCount");
+		// NLog.d("sjh0", "getCount");
 		return mData.size();
 	}
 

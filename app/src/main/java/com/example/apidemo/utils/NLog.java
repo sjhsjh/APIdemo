@@ -79,7 +79,7 @@ public class NLog {
 
 	//配置项
 	private boolean mLogSwitch = true;							//日志开关
-	private static final int LOG_TYPE = LOG_BOTH_BUFF_SD;			//日志输出类型
+	private static final int LOG_TYPE = LOG_NORMAL;			//日志输出类型 LOG_BOTH_BUFF_SD
 	private static final int LOG_LEVEL_MIN = VERBOSE;			//允许通过的最小日志等级
 	private static final String LOG_DIR_NAME = "debug_log";	//日志输出目录，位于sd卡目录下，根据项目修改
 	private static final String NO_LOG_FILE_NAME = "nolog";		//在日志输出目录下创建这个文件，在当前日志文件超过限制时禁止继续输出

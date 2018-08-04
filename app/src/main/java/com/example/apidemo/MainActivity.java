@@ -77,16 +77,17 @@ public class MainActivity extends BaseActivity {
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
+        // 若itemView实现了Checkable接口，设置该句会改变item的chosen状态，即单击item会回调所有可见itemView的setChecked()。注意CHOICE_MODE_SINGLE无法取消单选。
+        // mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         mListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                NLog.i("sjh0", "onItemClick position is " + position);
 
                 Object activityClass = parent.getItemAtPosition(position); // 根据位置判断跳转哪个activity!!!会调用adapter的getItem().
-                NLog.i("sjh0", "activity Class = " + activityClass.toString());
+                NLog.i("sjh0", "onItemClick position is " + position + "  activity Class = " + activityClass.toString());
 
                 Intent intent = new Intent(MainActivity.this, (Class<?>) activityClass);
                 startActivity(intent);
