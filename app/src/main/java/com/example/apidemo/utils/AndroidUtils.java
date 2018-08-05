@@ -1,5 +1,6 @@
 package com.example.apidemo.utils;
 
+import android.content.Context;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,6 +16,8 @@ public class AndroidUtils {
         return simpledate.format(date);
     }
 
-
+    public static boolean isNightMode(Context context) {
+        return (0x30 & context.getResources().getConfiguration().uiMode) == 32;    // UI_MODE_NIGHT_YES
+    }
 
 }
