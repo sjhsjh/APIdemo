@@ -84,7 +84,6 @@ public class ReferenceActivity extends BaseActivity {
     }
 
 
-
     /**
      * @param outState 保存activity内所有view的信息.
      */

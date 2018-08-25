@@ -3,13 +3,18 @@ package com.example.apidemo;
 import java.util.ArrayList;
 import java.util.List;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import com.example.apidemo.activity.DIYViewActivity;
 import com.example.apidemo.activity.EventDispatchActivity;
+import com.example.apidemo.activity.FunctionActivity;
 import com.example.apidemo.activity.GestureDectorActivity;
 import com.example.apidemo.activity.GsonActivity;
 import com.example.apidemo.activity.HardWareActivity;
@@ -38,6 +43,15 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.listview);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+        }
 
         Intent shortCutIntent = new Intent(MainActivity.this, PowerManagerActivity.class);
         // shortCutIntent.setComponent(new ComponentName("com.example.some3", "com.example.some3.MainActivity"));
@@ -74,6 +88,7 @@ public class MainActivity extends BaseActivity {
         list.add(ReferenceActivity.class);
         list.add(SDActivity.class);
         list.add(MessengerActivity.class);
+        list.add(FunctionActivity.class);
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
@@ -89,12 +104,18 @@ public class MainActivity extends BaseActivity {
                 Object activityClass = parent.getItemAtPosition(position); // 根据位置判断跳转哪个activity!!!会调用adapter的getItem().
                 NLog.i("sjh0", "onItemClick position is " + position + "  activity Class = " + activityClass.toString());
 
-                Intent intent = new Intent(MainActivity.this, (Class<?>) activityClass);
-                startActivity(intent);
-                overridePendingTransition(R.animator.slide_right_in, R.animator.slide_left_out);
+                Intent intent = new Intent(APIDemoApplication.getContext(), (Class<?>) activityClass);
+
+                if(((Class) activityClass).getSimpleName().equals("FunctionActivity")){
+                    startActivity(intent);
+                    overridePendingTransition(R.animator.slide_right_in, R.animator.slide_left_out);    // overridePendingTransition必需紧挨着startActivity()或者finish()函数之后调用
+                }else {
+                    startActivity(intent);
+                }
             }
 
         });
+
 
 
     }
@@ -104,6 +125,9 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
         HardWareUtils.unRegisterBluetoothListener(this);
     }
+
+
+
 
 
 

@@ -1,6 +1,8 @@
 package com.example.apidemo.activity;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
@@ -21,18 +23,21 @@ import com.example.apidemo.R;
  *
  */
 public class PowerManagerActivity extends BaseActivity {
-
+	private static Context context;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.general_layout);
+
+		context = this;
+
 
 		ViewStub viewStub = (ViewStub) findViewById(R.id.viewStub);		// 让ViewStub的内容显示
 		viewStub.inflate();	// or viewStub.setVisibility(View.VISIBLE);
 		// viewStub.setVisibility(View.GONE);	// 竟然还生效
 		TextView inflateViewStub = (TextView) findViewById(R.id.inflate_viewstub);
 		inflateViewStub.setText("I'm viewStub. ");
-		Log.i("sjh2", "viewStub " + viewStub + findViewById(R.id.textview));
+		Log.i("sjh2", "viewStub " + viewStub + findViewById(R.id.textview));		// viewstub内的R.id.textview被 android:inflatedId覆盖了 应该
 		////////////////////////////////////////////////////////////////////////////////////////////
 
 		final PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
