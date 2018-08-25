@@ -1,6 +1,5 @@
 package com.example.apidemo.activity;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,9 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.MainActivity;
 import com.example.apidemo.R;
+import com.example.apidemo.utils.AndroidUtils;
+
 
 public class NotificationActivity extends BaseActivity {
     private static final boolean DEBUG = false;
@@ -63,7 +65,19 @@ public class NotificationActivity extends BaseActivity {
                 }
             }
         });
+
+        final EditText editText2 = (EditText) findViewById(R.id.edittext2);
+        ((Button)findViewById(R.id.button3)).setText("copy edittext text ");
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AndroidUtils.copyText(NotificationActivity.this, editText2.getText().toString());
+            }
+        });
+
     }
+
 
 
 }

@@ -35,6 +35,7 @@ import com.example.apidemo.adapter.DemoAdapter;
 import com.example.apidemo.utils.HardWareUtils;
 import com.example.apidemo.utils.NLog;
 
+
 public class MainActivity extends BaseActivity {
     ListView mListView;
 
@@ -90,34 +91,35 @@ public class MainActivity extends BaseActivity {
         list.add(MessengerActivity.class);
         list.add(FunctionActivity.class);
 
+
+
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
-        // 若itemView实现了Checkable接口，设置该句会改变item的chosen状态，即单击item会回调所有可见itemView的setChecked()。注意CHOICE_MODE_SINGLE无法取消单选。
-        // mListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         mListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                NLog.i("sjh0", "onItemClick position is " + position);
 
                 Object activityClass = parent.getItemAtPosition(position); // 根据位置判断跳转哪个activity!!!会调用adapter的getItem().
-                NLog.i("sjh0", "onItemClick position is " + position + "  activity Class = " + activityClass.toString());
+                NLog.i("sjh0", "activity Class = " + activityClass.toString());
 
-                Intent intent = new Intent(APIDemoApplication.getContext(), (Class<?>) activityClass);
-
-                if(((Class) activityClass).getSimpleName().equals("FunctionActivity")){
-                    startActivity(intent);
-                    overridePendingTransition(R.animator.slide_right_in, R.animator.slide_left_out);    // overridePendingTransition必需紧挨着startActivity()或者finish()函数之后调用
-                }else {
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(MainActivity.this, (Class<?>) activityClass);
+                startActivity(intent);
+                overridePendingTransition(R.animator.slide_right_in, R.animator.slide_left_out);
             }
 
         });
 
 
+    }
 
+
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        NLog.d("sjh7", " main onNewIntent\n" + intent);
     }
 
     @Override

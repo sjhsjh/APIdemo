@@ -1,10 +1,15 @@
 package com.example.apidemo.utils;
 
 import android.app.ActivityManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
-import android.util.Log;
-import com.example.apidemo.R;
+import android.graphics.Bitmap;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -13,6 +18,7 @@ import java.util.Date;
  * Created by jinhui.shao on 2017/1/19.
  */
 public class AndroidUtils {
+    public static final String BITMAP_FOLDER = "bitmap";
 
     public static String debugLog(long receiveTime) {
         SimpleDateFormat simpledate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -33,6 +39,54 @@ public class AndroidUtils {
         NLog.i("sjh8", "isDebug" + ((context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0));
     }
 
+    /**
+     * 将文本拷贝至剪贴板
+     */
+    public static void copyText(Context context, String text) {
+        ClipboardManager clipboardManager = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+//        clipboardManager.setText(text.trim());
+//
+//        clipboardManager.setPrimaryClip(ClipData.newPlainText(null, text));
 
+        ClipData clip = ClipData.newPlainText("simple text copy", text);
+        clipboardManager.setPrimaryClip(clip);
+    }
+
+
+    /**
+     * 保存bitmap至指定文件夹
+     */
+    public static String saveBitmap(Context context, Bitmap bitmap) {
+        if (bitmap == null) {
+            return null;
+        }
+        File folder = context.getExternalFilesDir(BITMAP_FOLDER);
+        if (!folder.exists()) {
+            if (!folder.mkdirs()) {
+                return null;
+            }
+        }
+        String bitmapFileName = System.currentTimeMillis() + ".jpg";
+        // String bitmapFileName = System.currentTimeMillis() + "";
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(folder + "/" + bitmapFileName);
+            boolean successful = bitmap.compress(Bitmap.CompressFormat.JPEG, 75, fos);
+
+            if (successful)
+                return folder.getAbsolutePath() + "/" + bitmapFileName;
+            else
+                return null;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
 }
