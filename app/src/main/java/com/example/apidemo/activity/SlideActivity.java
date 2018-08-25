@@ -29,7 +29,7 @@ public class SlideActivity extends BaseActivity {
 
         MyAsyncTask at = new MyAsyncTask();
         at.execute();
-        at.execute();
+//        at.execute();     //      Caused by: java.lang.IllegalStateException: Cannot execute task: the task is already running.
         HandlerThread h;
         Thread t = new Thread();
         IntentService it ;

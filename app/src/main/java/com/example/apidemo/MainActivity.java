@@ -12,7 +12,6 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import com.arcsoft.sdk_demo.PermissionAcitivity;
 import com.example.apidemo.activity.DIYViewActivity;
 import com.example.apidemo.activity.EventDispatchActivity;
 import com.example.apidemo.activity.FunctionActivity;
@@ -92,7 +91,8 @@ public class MainActivity extends BaseActivity {
         list.add(SDActivity.class);
         list.add(MessengerActivity.class);
         list.add(FunctionActivity.class);
-
+//        list.add(PermissionAcitivity.class);
+        list.add(GridViewActivity.class);
 
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);

@@ -1,1 +1,2 @@
 include ':app', ':statisticslibrary', ':JavaC'
+// include ':app', ':statisticslibrary', ':JavaC', ':arcface'

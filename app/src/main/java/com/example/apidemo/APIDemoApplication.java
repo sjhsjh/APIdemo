@@ -15,6 +15,7 @@ public class APIDemoApplication extends Application{
 
     @Override
     public void onCreate() {
+//        ArcFaceWrapper.getInstance(this);
         super.onCreate();
         mContext = getApplicationContext();
         initStatistics();
