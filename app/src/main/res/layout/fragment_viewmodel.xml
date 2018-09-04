@@ -1,0 +1,27 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/frag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Fragment"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/fragment_set_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="调用AndroidViewModel内的MutableLiveData.postValue()传递对象" />
+
+    <TextView
+        android:id="@+id/fragment_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="data"/>
+
+</LinearLayout>

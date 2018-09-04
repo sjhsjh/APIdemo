@@ -114,7 +114,7 @@
         <activity android:name=".activity.MessengerActivity" />
         <activity android:name=".activity.FunctionActivity" />
         <activity android:name=".activity.GridViewActivity" />
-
+        <activity android:name=".activity.ViewModelActivity" />
 
         <meta-data android:value="58db526f310c935d4f001c2e" android:name="UMENG_APPKEY"/>       <!--  测试key：59420a29a40fa31dad000ce9-->
         <meta-data android:value="my_channel" android:name="UMENG_CHANNEL"/>

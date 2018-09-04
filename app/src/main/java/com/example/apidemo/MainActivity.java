@@ -31,6 +31,7 @@ import com.example.apidemo.activity.SQLActivity;
 import com.example.apidemo.activity.ScrollActivity;
 import com.example.apidemo.activity.SlideActivity;
 import com.example.apidemo.activity.TestServiceActivity;
+import com.example.apidemo.activity.ViewModelActivity;
 import com.example.apidemo.activity.WindowActivity;
 import com.example.apidemo.adapter.DemoAdapter;
 import com.example.apidemo.utils.HardWareUtils;
@@ -93,6 +94,7 @@ public class MainActivity extends BaseActivity {
         list.add(FunctionActivity.class);
 //        list.add(PermissionAcitivity.class);
         list.add(GridViewActivity.class);
+        list.add(ViewModelActivity.class);
 
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);

@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion "25.0.0"
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         applicationId "com.example.apidemo"
@@ -51,7 +51,11 @@ android {
         compile 'com.squareup.retrofit2:converter-gson:2.2.0'
         compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
         //compile(name: 'login-debug', ext: 'aar')
+        // ViewModel and LiveData
+        compile "android.arch.lifecycle:extensions:1.1.0"   // 需要在 repositories 内加上 google()
+        annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
 
     }
+
 }
 

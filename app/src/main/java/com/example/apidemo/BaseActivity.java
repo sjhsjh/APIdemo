@@ -5,7 +5,6 @@ import android.os.Bundle;
 import com.tcl.lockscreen.statistics.StatisticsWrapper;
 
 /**
- * <br>
  * Created  on 2017/3/29.
  */
 public class BaseActivity extends Activity {
