@@ -33,6 +33,7 @@ import com.example.apidemo.activity.SlideActivity;
 import com.example.apidemo.activity.TestServiceActivity;
 import com.example.apidemo.activity.ViewModelActivity;
 import com.example.apidemo.activity.WindowActivity;
+import com.example.apidemo.activity.XmlParseActivity;
 import com.example.apidemo.adapter.DemoAdapter;
 import com.example.apidemo.utils.HardWareUtils;
 import com.example.apidemo.utils.NLog;
@@ -95,6 +96,8 @@ public class MainActivity extends BaseActivity {
 //        list.add(PermissionAcitivity.class);
         list.add(GridViewActivity.class);
         list.add(ViewModelActivity.class);
+        list.add(XmlParseActivity.class);
+
 
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
