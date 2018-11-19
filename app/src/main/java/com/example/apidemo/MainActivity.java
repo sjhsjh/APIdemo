@@ -56,7 +56,7 @@ public class MainActivity extends BaseActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }
-
+        String b = "dev222";
         Intent shortCutIntent = new Intent(MainActivity.this, PowerManagerActivity.class);
         // shortCutIntent.setComponent(new ComponentName("com.example.some3", "com.example.some3.MainActivity"));
 //		shortCutIntent.setAction(Intent.ACTION_MAIN);
