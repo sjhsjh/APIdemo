@@ -1,6 +1,5 @@
 package com.example.apidemo.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.Intent.ShortcutIconResource;
 import android.os.Bundle;

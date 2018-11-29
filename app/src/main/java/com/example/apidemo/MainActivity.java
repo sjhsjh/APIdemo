@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.listview);
-        String a = "dev";
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -56,24 +56,11 @@ public class MainActivity extends BaseActivity {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }
-        
-        Intent shortCutIntent_mas = new Intent(MainActivity.this, PowerManagerActivity.class);
-        // shortCutIntent.setComponent(new ComponentName("com.example.some3", "com.example.some3.MainActivity"));
-//		shortCutIntent.setAction(Intent.ACTION_MAIN);
-//		shortCutIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-//		Intent createShortCutIntent = new Intent("com.android.launcher.action.INSTALL_SHORTCUT");
-//		createShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortCutIntent);
-//		Parcelable parcelableIcon = Intent.ShortcutIconResource.fromContext(this, R.drawable.ic_launcher);
-//		createShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, parcelableIcon);
-//		createShortCutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "快捷方式");
-//		sendBroadcast(createShortCutIntent);
-
 
         HardWareUtils.registerBluetoothListener(this);
 
         List<Object> list = new ArrayList<Object>();
-        // TUDO
+        // todo
         list.add(ResolveInfoActivity.class);
         list.add(PowerManagerActivity.class);
         list.add(EventDispatchActivity.class);
@@ -97,7 +84,6 @@ public class MainActivity extends BaseActivity {
         list.add(GridViewActivity.class);
         list.add(ViewModelActivity.class);
         list.add(XmlParseActivity.class);
-
 
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
@@ -134,10 +120,6 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
         HardWareUtils.unRegisterBluetoothListener(this);
     }
-
-
-
-
 
 
 }
