@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 /**
  * <br> 必须实现Parcelable接口才能被AIDL接口文件
+ * tmp5
  *  2017/2/22.
  */
 public class Book implements Parcelable {
