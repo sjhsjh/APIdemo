@@ -5,4 +5,5 @@ package com.example.apidemo;
  */
 public interface IGSON {
     public void add();
+    //mster1
 }
