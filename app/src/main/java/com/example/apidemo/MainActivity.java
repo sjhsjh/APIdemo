@@ -82,9 +82,9 @@ public class MainActivity extends BaseActivity {
         list.add(FunctionActivity.class);
 //        list.add(PermissionAcitivity.class);
         list.add(GridViewActivity.class);
-        list.add(ViewModelActivity.class);
         list.add(XmlParseActivity.class);
-
+        list.add(ViewModelActivity.class);
+//tmp2
 
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
