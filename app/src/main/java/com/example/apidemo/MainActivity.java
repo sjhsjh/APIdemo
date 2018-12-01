@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity {
         list.add(ViewModelActivity.class);
         list.add(XmlParseActivity.class);
 
-
+// mas3
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
 
