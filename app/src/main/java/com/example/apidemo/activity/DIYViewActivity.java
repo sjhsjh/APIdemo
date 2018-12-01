@@ -19,7 +19,7 @@ import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
 import java.lang.reflect.Method;
 
-public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
+public class DIYViewActivity extends AppCompatActivity {    // BaseActivity tmp6
     private ImageView mImageView;
 
     @Override
