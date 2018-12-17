@@ -26,4 +26,14 @@
         android:text="btn"
          />
 
+    <include
+        layout="@layout/font_family_contrast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/edittext_group"
+        android:layout_alignLeft="@+id/edittext_group"
+        android:layout_alignStart="@+id/edittext_group" />
+
 </RelativeLayout>
