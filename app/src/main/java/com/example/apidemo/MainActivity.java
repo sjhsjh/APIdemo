@@ -30,6 +30,8 @@ import com.example.apidemo.activity.SDActivity;
 import com.example.apidemo.activity.SQLActivity;
 import com.example.apidemo.activity.ScrollActivity;
 import com.example.apidemo.activity.SlideActivity;
+import com.example.apidemo.activity.SocketClientActivity;
+import com.example.apidemo.activity.SocketServerActivity;
 import com.example.apidemo.activity.TestServiceActivity;
 import com.example.apidemo.activity.ViewModelActivity;
 import com.example.apidemo.activity.WindowActivity;
@@ -84,8 +86,9 @@ public class MainActivity extends BaseActivity {
         list.add(GridViewActivity.class);
         list.add(ViewModelActivity.class);
         list.add(XmlParseActivity.class);
+        list.add(SocketClientActivity.class);
+        list.add(SocketServerActivity.class);
 
-// mas3
         DemoAdapter adapter = new DemoAdapter(MainActivity.this, list);
         mListView.setAdapter(adapter);
 

@@ -6,6 +6,10 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -87,6 +91,32 @@ public class AndroidUtils {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 192.168.0.100  --> 192.168.0.104
+     * @return
+     */
+    public static String getLocalIP(Context context) {
+        WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        int ipAddress = wifiInfo.getIpAddress();
+        // NLog.i("sjh", "ipAddress = "+ipAddress);
+        if (ipAddress == 0) return "";
+        return ((ipAddress & 0xff) + "." + (ipAddress >> 8 & 0xff) + "."
+                + (ipAddress >> 16 & 0xff) + "." + (ipAddress >> 24 & 0xff));
+    }
+
+    public static boolean hasNetwork(Context context) {
+        ConnectivityManager connectivity;
+        NetworkInfo activeNetwork;
+        try {
+            connectivity = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            activeNetwork = connectivity.getActiveNetworkInfo();
+        } catch (Exception e) {
+            return false;
+        }
+        return activeNetwork != null && activeNetwork.isConnected();
     }
 
 }
