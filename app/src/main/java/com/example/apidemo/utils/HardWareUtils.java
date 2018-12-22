@@ -5,11 +5,16 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.provider.Settings;
+import android.telephony.TelephonyManager;
+import java.security.MessageDigest;
+import java.util.Locale;
+import java.util.UUID;
 
 /**
  * <br>
- *  2016/10/27.
+ * 2016/10/27.
  */
 public class HardWareUtils {
     private static LocationManager mLocationManager;
@@ -20,19 +25,19 @@ public class HardWareUtils {
         @Override
         public void onChange(boolean selfChange) {
             super.onChange(selfChange);
-            if(mWifiManager != null)
-               NLog.i("sjh1", "WifiState : " + mWifiManager.getWifiState() + " isWifiEnabled : " + mWifiManager.isWifiEnabled());
-            if(mLocationManager != null)
-               NLog.i("sjh1", "gps enabled ?  " +  mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
-            BluetoothAdapter bluetoothAdapter =  BluetoothAdapter.getDefaultAdapter();
-            if (bluetoothAdapter != null){
-               NLog.i("sjh1", "bluetooth enabled ? " + bluetoothAdapter.isEnabled());
+            if (mWifiManager != null)
+                NLog.i("sjh1", "WifiState : " + mWifiManager.getWifiState() + " isWifiEnabled : " + mWifiManager.isWifiEnabled());
+            if (mLocationManager != null)
+                NLog.i("sjh1", "gps enabled ?  " + mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER));
+            BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (bluetoothAdapter != null) {
+                NLog.i("sjh1", "bluetooth enabled ? " + bluetoothAdapter.isEnabled());
             }
             try {
                 int isAirplaneOpen = Settings.System.getInt(mContext.getContentResolver(), Settings.System.AIRPLANE_MODE_ON);
-               NLog.i("sjh1", "Airplane Open ? " + isAirplaneOpen);
+                NLog.i("sjh1", "Airplane Open ? " + isAirplaneOpen);
             } catch (Settings.SettingNotFoundException e) {
-               NLog.e("sjh1", e.getMessage());
+                NLog.e("sjh1", e.getMessage());
             }
         }
     };
@@ -42,55 +47,216 @@ public class HardWareUtils {
      * GPS，蓝牙，数据漫游的开启关闭，会修改系统的数据表，通过监听数据表中数据变化来判断打开，关闭操作。
      * @param context
      */
-    public static void registerGPSListener(Context context){
+    public static void registerGPSListener(Context context) {
         mContext = context.getApplicationContext();
         mLocationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         context.getContentResolver().registerContentObserver(
-            Settings.Secure.getUriFor(Settings.Secure.LOCATION_PROVIDERS_ALLOWED), false, hardWareObserver);
+                Settings.Secure.getUriFor(Settings.Secure.LOCATION_PROVIDERS_ALLOWED), false, hardWareObserver);
     }
 
 
-    public static void unRegisterGPSListener(Context context){
+    public static void unRegisterGPSListener(Context context) {
         mLocationManager = null;
         context.getContentResolver().unregisterContentObserver(hardWareObserver);
 
     }
 
-    public static void registerBluetoothListener(Context context){
+    public static void registerBluetoothListener(Context context) {
         mContext = context.getApplicationContext();
         context.getContentResolver().registerContentObserver(
                 Settings.Secure.getUriFor(Settings.Secure.BLUETOOTH_ON), false, hardWareObserver);
     }
 
 
-    public static void unRegisterBluetoothListener(Context context){
+    public static void unRegisterBluetoothListener(Context context) {
         context.getContentResolver().unregisterContentObserver(hardWareObserver);
 
     }
 
-    public static void registerWifiListener(Context context){
+    public static void registerWifiListener(Context context) {
         mContext = context.getApplicationContext();
-        mWifiManager = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
+        mWifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         context.getContentResolver().registerContentObserver(
-                Settings.Secure.getUriFor(Settings.System.WIFI_ON  ), false, hardWareObserver);// .System.WIFI_ON
+                Settings.Secure.getUriFor(Settings.System.WIFI_ON), false, hardWareObserver);// .System.WIFI_ON
     }
 
 
-    public static void unRegisterWifiListener(Context context){
+    public static void unRegisterWifiListener(Context context) {
         mWifiManager = null;
         context.getContentResolver().unregisterContentObserver(hardWareObserver);
 
     }
 
-    public static void registerAirplaneListener(Context context){
+    public static void registerAirplaneListener(Context context) {
         mContext = context.getApplicationContext();
         context.getContentResolver().registerContentObserver(
                 Settings.System.getUriFor(Settings.System.AIRPLANE_MODE_ON), false, hardWareObserver);// 不能用Settings.System！
     }
 
-    public static void unRegisterAirplaneListener(Context context){
+    public static void unRegisterAirplaneListener(Context context) {
         context.getContentResolver().unregisterContentObserver(hardWareObserver);
 
+    }
+
+    /**
+     * 获得设备硬件标识
+     * imei + android_id + serial + 硬件uuid（自生成）
+     * @return A89FFC4D6277BB4CF4FFFD3B2587E71079BF0AC5
+     */
+    public static String getDeviceId(Context context) {
+        String deviceID = getDeviceID(context);
+        NLog.d("sjh1", "deviceID = " + deviceID);
+
+        String androidID = getAndroidId(context);
+        NLog.d("sjh1", "androidID = " + androidID);
+
+        String serial = getSERIAL();
+        NLog.d("sjh1", "serial = " + serial);
+
+        String uuid = getDeviceUUID().replace("-", "");
+        NLog.d("sjh1", "uuid = " + uuid);
+
+
+        StringBuilder sbDeviceId = new StringBuilder();
+        // 追加imei
+        if (deviceID != null && deviceID.length() > 0) {
+            sbDeviceId.append(deviceID);
+            sbDeviceId.append("|");
+        }
+        // 追加androidid
+        if (androidID != null && androidID.length() > 0) {
+            sbDeviceId.append(androidID);
+            sbDeviceId.append("|");
+        }
+        // 追加serial
+        if (serial != null && serial.length() > 0) {
+            sbDeviceId.append(serial);
+            sbDeviceId.append("|");
+        }
+        // 追加硬件uuid
+        if (uuid != null && uuid.length() > 0) {
+            sbDeviceId.append(uuid);
+        }
+
+        // 生成SHA1，统一DeviceId长度
+        if (sbDeviceId.length() > 0) {
+            try {
+                byte[] hash = getHashByString(sbDeviceId.toString());
+                String sha1 = bytesToHex(hash);
+                if (sha1 != null && sha1.length() > 0) {
+                    //返回最终的DeviceId
+                    return sha1;
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        // 如果以上硬件标识数据均无法获得，则DeviceId默认使用系统随机数，这样保证DeviceId不为空
+        return UUID.randomUUID().toString().replace("-", "");
+    }
+
+
+    /**
+     * 获得设备默认IMEI  (14位)
+     * >=6.0需要获得READ_PHONE_STATE所在权限组的权限，否则返回null
+     * @return 35362607681366
+     */
+    private static String getDeviceID(Context context) {
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            // NLog.d("sjh1", "getImei = " + telephonyManager.getImei());   // nexus null; coolpad: 99000556822530
+
+            return telephonyManager.getDeviceId();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 获得设备的AndroidId（无需权限）(16位)
+     * ps:极个别设备获取不到数据或得到错误数据
+     * @return 4e9366b4167b1dc1
+     */
+    private static String getAndroidId(Context context) {
+        try {
+            return Settings.Secure.getString(context.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 获得设备序列号（无需权限, 长度不定）（如：WTK7N16923005607）, 个别设备无法获
+     * ps:极个别设备获取不到数据
+     * @return 61efe0e1
+     */
+    private static String getSERIAL() {
+        try {
+            return Build.SERIAL;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "";
+    }
+
+    /**
+     * 获得设备硬件uuid（根据硬件相关属性，生成uuid）（无需权限）
+     * 使用硬件信息，计算出一个随机数
+     * @return 000000001f9e1db6ffffffffd0c5b084
+     */
+    private static String getDeviceUUID() {
+        try {
+            String dev = "3883756" +
+                    Build.BOARD.length() % 10 +
+                    Build.BRAND.length() % 10 +
+                    Build.DEVICE.length() % 10 +
+                    Build.HARDWARE.length() % 10 +
+                    Build.ID.length() % 10 +
+                    Build.MODEL.length() % 10 +
+                    Build.PRODUCT.length() % 10 +
+                    Build.SERIAL.length() % 10;
+            return new UUID(dev.hashCode(), Build.SERIAL.hashCode()).toString();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "";
+        }
+    }
+
+    /**
+     * 取SHA1
+     * @param data 数据
+     * @return 对应的hash值
+     */
+    private static byte[] getHashByString(String data) {
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA1");
+            messageDigest.reset();
+            messageDigest.update(data.getBytes("UTF-8"));
+            return messageDigest.digest();
+        } catch (Exception e) {
+            return "".getBytes();
+        }
+    }
+
+    /**
+     * 转16进制字符串
+     * @param data 数据
+     * @return 16进制字符串
+     */
+    private static String bytesToHex(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+        String stmp;
+        for (int n = 0; n < data.length; n++) {
+            stmp = (Integer.toHexString(data[n] & 0xFF));
+            if (stmp.length() == 1)
+                sb.append("0");
+            sb.append(stmp);
+        }
+        return sb.toString().toUpperCase(Locale.CHINA);
     }
 
 

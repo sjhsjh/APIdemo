@@ -3,7 +3,6 @@ package com.example.apidemo.socket;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-
 import com.example.apidemo.utils.AndroidUtils;
 import com.example.apidemo.utils.NLog;
 import java.io.IOException;

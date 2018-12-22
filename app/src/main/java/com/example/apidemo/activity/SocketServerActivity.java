@@ -1,9 +1,5 @@
 package com.example.apidemo.activity;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -11,11 +7,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.example.apidemo.BaseActivity;
-import com.example.apidemo.MainActivity;
 import com.example.apidemo.R;
-import com.example.apidemo.socket.SocketClient;
 import com.example.apidemo.socket.SocketServer;
 import com.example.apidemo.utils.AndroidUtils;
 

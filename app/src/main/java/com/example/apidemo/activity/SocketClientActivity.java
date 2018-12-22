@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.socket.SocketClient;
-import com.example.apidemo.utils.AndroidUtils;
 
 
 public class SocketClientActivity extends BaseActivity {
@@ -84,7 +83,9 @@ public class SocketClientActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        socketClient.destory();
+        if (socketClient != null) {
+            socketClient.destory();
+        }
     }
 
 

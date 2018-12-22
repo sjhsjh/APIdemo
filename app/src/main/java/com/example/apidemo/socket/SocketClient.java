@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-
 import com.example.apidemo.utils.AndroidUtils;
 import com.example.apidemo.utils.NLog;
 import java.io.IOException;
