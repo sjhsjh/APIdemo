@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
 import java.lang.reflect.Method;
@@ -46,6 +47,20 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
                 mImageView.setRotationX(0f);
             }
         });
+
+        ((ReadMoreTextView)findViewById(R.id.read_more)).setText("com.android.calenda111com.android.calenda222com." +
+                "android.calenda333com.android.calenda444com.android.calenda111com.android.calenda222com.android.calenda333com.android.calenda444");
+
+        ((Button)findViewById(R.id.btn)).setText("ReadMoreTextView setText ");
+        findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                ((ReadMoreTextView)findViewById(R.id.read_more)).setText("=======com.android.calenda111com.android.calenda222com." +
+                        "android.calenda333com.android.calenda444com.android.calenda111com.android.calenda222com.android.calenda333com.android.calenda444==");
+            }
+        });
+
 
     }
 

@@ -18,4 +18,7 @@
     <string name="open_flashlight">打开闪光灯</string>
     <string name="close_flashlight">关闭闪光灯</string>
 
+    <string name="show_more">Show More</string>
+    <string name="show_less">Show Less</string>
+
 </resources>

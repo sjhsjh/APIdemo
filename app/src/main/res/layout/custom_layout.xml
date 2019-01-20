@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <com.example.apidemo.view.DIYView
         android:layout_width="wrap_content"
@@ -20,20 +22,33 @@
         android:id="@+id/btn"
         android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="-100dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="-100dp"
         android:minHeight="10dp"
-        android:text="btn"
-         />
+        android:text="btn" />
 
     <include
+        android:id="@+id/font_layout"
         layout="@layout/font_family_contrast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_below="@+id/edittext_group"
-        android:layout_alignLeft="@+id/edittext_group"
-        android:layout_alignStart="@+id/edittext_group" />
+        android:layout_centerVertical="true" />
+
+    <com.borjabravo.readmoretextview.ReadMoreTextView
+        android:id="@+id/read_more"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/font_layout"
+        android:layout_marginRight="180dp"
+        android:fontFamily="sans-serif-light"
+        android:textSize="14sp"
+        android:textStyle="normal"
+        app:colorClickableText="#1dc092"
+        app:trimCollapsedText="@string/show_more"
+        app:trimExpandedText="@string/show_less"
+        app:trimLines="4"
+        app:trimMode="trimModeLine"
+        tools:text="qweqweqweqwewq" />
 
 </RelativeLayout>

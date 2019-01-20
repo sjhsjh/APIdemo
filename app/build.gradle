@@ -33,6 +33,7 @@ android {
         testCompile 'junit:junit:4.12'
         // 依赖了statisticslibrary！！！
         compile project(':statisticslibrary')
+        compile project(':ReadmoreTextview')
 //        compile project(':arcface')
 
         //    compile 'com.android.support:appcompat-v7:23.1.1'
@@ -54,6 +55,7 @@ android {
         // ViewModel and LiveData
         compile "android.arch.lifecycle:extensions:1.1.0"   // 需要在 repositories 内加上 google()
         annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
+       // compile 'com.borjabravo:readmoretextview:2.1.0'   // 不支持布局完成后的setText
 
     }
 
