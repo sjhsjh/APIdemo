@@ -7,6 +7,6 @@ package com.example.apidemo.utils;
 public interface Constant {
 
     public static String ALLOW_SCREENSHOT = "allow_screenshot";
-
+    public static String FIRST_SHOW_PERMISSION_DIALOG = "first_show_permission_dialog_";
 
 }

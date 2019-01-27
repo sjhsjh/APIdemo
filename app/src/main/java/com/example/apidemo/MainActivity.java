@@ -39,6 +39,7 @@ import com.example.apidemo.activity.XmlParseActivity;
 import com.example.apidemo.adapter.DemoAdapter;
 import com.example.apidemo.utils.HardWareUtils;
 import com.example.apidemo.utils.NLog;
+import com.example.apidemo.utils.PermissionUtils;
 
 
 public class MainActivity extends BaseActivity {
@@ -109,7 +110,7 @@ public class MainActivity extends BaseActivity {
 
         });
 
-
+        PermissionUtils.requestForPermissions(this, PermissionUtils.PERMISSIONS);
     }
 
 
