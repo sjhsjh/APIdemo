@@ -43,6 +43,7 @@
         android:layout_marginRight="180dp"
         android:fontFamily="sans-serif-light"
         android:textSize="14sp"
+        android:text="ReadMoreTextView"
         android:textStyle="normal"
         app:colorClickableText="#1dc092"
         app:trimCollapsedText="@string/show_more"

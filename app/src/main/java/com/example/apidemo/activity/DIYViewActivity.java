@@ -48,18 +48,19 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
             }
         });
 
-        ((ReadMoreTextView)findViewById(R.id.read_more)).setText("com.android.calenda111com.android.calenda222com." +
-                "android.calenda333com.android.calenda444com.android.calenda111com.android.calenda222com.android.calenda333com.android.calenda444");
+//        ((ReadMoreTextView) findViewById(R.id.read_more)).setText("He called for joint efforts in implementing the consensus on strengthening " +
+//        "art and cultural exchanges and cooperation in order to consolidate the foundation of goodwill of the people");
 
         ((Button)findViewById(R.id.btn)).setText("ReadMoreTextView setText ");
         findViewById(R.id.btn).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                ((ReadMoreTextView)findViewById(R.id.read_more)).setText("=======com.android.calenda111com.android.calenda222com." +
-                        "android.calenda333com.android.calenda444com.android.calenda111com.android.calenda222com.android.calenda333com.android.calenda444==");
+                ((ReadMoreTextView) findViewById(R.id.read_more)).setText("He called for joint efforts in implementing the consensus on strengthening " +
+                        "art and cultural exchanges and cooperation in order to consolidate the foundation of goodwill of the people");
             }
         });
+
 
 
     }
