@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/relative"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <com.example.apidemo.view.DIYView
@@ -51,5 +51,30 @@
         app:trimLines="4"
         app:trimMode="trimModeLine"
         tools:text="qweqweqweqwewq" />
+
+    <!--宽度固定时，两张图片都是ok的-->
+    <ImageView
+        android:id="@+id/pic_skin"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_long"
+        android:visibility="visible" />
+
+    <!--高度固定时，adjustViewBounds属性无效？-->
+    <ImageView
+        android:id="@+id/pic_skin2"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:src="@drawable/ic_short"
+        android:visibility="gone" />
+<!--    adjutViewBounds作用：当宽是match或具体长度时，若高是wrap，并设置了 android:adjustViewBounds="true"，
+    则图片宽度会等比例伸缩到具体长度，而ImageView的高度则动态变成等比例伸缩后的图片高度！！
+    因此使用场景是：当图片的长宽比例是正确的，设置view的宽度为一个具体值，高为wrap，
+    则view的高度会和图片的高度相等。（但是实测宽是wrap，高度是具体值时该属性无效？）-->
+
 
 </RelativeLayout>

@@ -20,6 +20,7 @@ import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
 import java.lang.reflect.Method;
 
+
 public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
     private ImageView mImageView;
 
@@ -61,7 +62,13 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
             }
         });
 
-
+        final ImageView image = (ImageView) findViewById(R.id.pic_skin);
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NLog.i("sjh4", "width = " + image.getWidth() + " height =  " + image.getHeight());
+            }
+        });
 
     }
 
