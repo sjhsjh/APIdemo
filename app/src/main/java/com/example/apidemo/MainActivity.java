@@ -15,6 +15,7 @@ import android.widget.ListView;
 import com.example.apidemo.activity.DIYViewActivity;
 import com.example.apidemo.activity.EventDispatchActivity;
 import com.example.apidemo.activity.FunctionActivity;
+import com.example.apidemo.activity.GaussActivity;
 import com.example.apidemo.activity.GestureDectorActivity;
 import com.example.apidemo.activity.GridViewActivity;
 import com.example.apidemo.activity.GsonActivity;
@@ -51,19 +52,20 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.listview);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            Window window = getWindow();
+//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.setStatusBarColor(Color.TRANSPARENT);
+//        }
 
         HardWareUtils.registerBluetoothListener(this);
 
         List<Object> list = new ArrayList<Object>();
         // todo
+        list.add(GaussActivity.class);
         list.add(ResolveInfoActivity.class);
         list.add(PowerManagerActivity.class);
         list.add(EventDispatchActivity.class);
