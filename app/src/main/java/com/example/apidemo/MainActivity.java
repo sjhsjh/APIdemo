@@ -65,6 +65,7 @@ public class MainActivity extends BaseActivity {
 
         List<Object> list = new ArrayList<Object>();
         // todo
+        list.add(GsonActivity.class);
         list.add(GaussActivity.class);
         list.add(ResolveInfoActivity.class);
         list.add(PowerManagerActivity.class);
@@ -78,7 +79,7 @@ public class MainActivity extends BaseActivity {
         list.add(NotificationActivity.class);
         list.add(SQLActivity.class);
         list.add(HardWareActivity.class);
-        list.add(GsonActivity.class);
+
         list.add(WindowActivity.class);
         list.add(RxJavaActivity.class);
         list.add(ReferenceActivity.class);

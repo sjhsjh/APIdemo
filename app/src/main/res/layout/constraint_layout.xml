@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btn1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="60dp"
+        android:visibility="visible"
+        android:text="btn1"/>
+
+    <Button
+        android:id="@+id/btn2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="btn2"
+        app:layout_constraintTop_toBottomOf="@+id/btn1"
+
+        app:layout_goneMarginTop="30dp"/>
+
+    <!--ConstraintLayout约束子控件的上下对齐parent的上下即为垂直居中！！-->
+    <!--layout_constraintVertical_bias:
+    取值0~1，代表子控件上方的空隙高度占总的剩余高度的比例，也可理解为上方空隙与下方空隙的高度比例-->
+    <Button
+        android:id="@+id/btn3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="btn3 垂直居中"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+    <Button
+        android:id="@+id/btn4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="btn4 (0dp + 左右都对齐父控件)等价于match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+
+        android:layout_marginTop="60dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="btn5"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintDimensionRatio="W,3:1"
+        app:layout_constraintTop_toBottomOf="@+id/btn4" />
+
+    <TextView
+        android:id="@+id/tv1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="48sp"
+        android:text="baseline对齐"/>
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="@+id/tv1"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv1"
+        android:text="baseline_baseline对齐"/>
+
+    <!--ConstraintLayout内使用边距属性android:layout_marginXXX 时，子控件必须先在布局里约束一个相对位置。
+    且margin只能大于等于0-->
+    <TextView
+        android:id="@+id/tv3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="120dp"
+
+        android:layout_marginTop="200dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="角度定位"/>
+
+    <TextView
+        android:id="@+id/tv4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintCircle="@+id/tv3"
+        app:layout_constraintCircleRadius="50dp"
+        app:layout_constraintCircleAngle="0"
+        android:text="角度定位(中心连线，12点方向为0度，顺时针方向)"/>
+
+
+
+
+</android.support.constraint.ConstraintLayout>

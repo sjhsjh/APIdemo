@@ -1,6 +1,7 @@
 package com.example.apidemo.activity;
 
 import android.os.Bundle;
+import android.view.View;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.IGSON;
@@ -17,7 +18,7 @@ public class GsonActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.news_layout);
+        setContentView(R.layout.constraint_layout);
 
         IGSON ig = new Son();
         Gson gson = new Gson();
@@ -40,6 +41,15 @@ public class GsonActivity extends BaseActivity {
             Register an InstanceCreator with Gson for this type may fix this problem.
             at com.google.gson.internal.ConstructorConstructor$14.construct(ConstructorConstructor.java:226)*/
         }
+
+
+        findViewById(R.id.btn2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.btn1).setVisibility(View.GONE);
+            }
+        });
+
 
     }
 

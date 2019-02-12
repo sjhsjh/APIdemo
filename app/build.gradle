@@ -57,6 +57,8 @@ android {
 //        compile project(':ReadmoreTextview')
 //        compile 'com.borjabravo:readmoretextview:2.1.0'   // 不支持布局完成后的setText
         implementation 'com.github.sjhsjh:ReadMoreTextView:2.1.1.0'
+        implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+
     }
 
 
