@@ -1,7 +1,10 @@
 package com.example.apidemo.activity;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Placeholder;
 import android.view.View;
+import android.widget.Button;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.IGSON;
@@ -43,10 +46,17 @@ public class GsonActivity extends BaseActivity {
         }
 
 
-        findViewById(R.id.btn2).setOnClickListener(new View.OnClickListener() {
+        final Placeholder placeholder = findViewById(R.id.placeholder);
+        final Button btn3 = findViewById(R.id.btn3);
+        btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findViewById(R.id.btn1).setVisibility(View.GONE);
+                if (placeholder.getContent() == null) {
+                    placeholder.setContentId(R.id.btn3);
+                } else {
+                    placeholder.setContentId(-1);
+                    ((ConstraintLayout) findViewById(R.id.constraintLayout)).requestLayout();   // 让之前的mContentView回到原来的位置！
+                }
             }
         });
 

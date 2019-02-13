@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -116,6 +117,56 @@
         android:text="角度定位(中心连线，12点方向为0度，顺时针方向)"/>
 
 
+    <TextView
+        android:id="@+id/tv5"
+        android:layout_width="wrap_content"
+        android:text="TextView5"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/tv6"/>
 
+    <TextView
+        android:id="@+id/tv6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView6666666"
+        app:layout_constraintBottom_toTopOf="@id/btn6"/>
+
+    <android.support.constraint.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Barrier"
+
+        app:barrierDirection="right"
+        app:constraint_referenced_ids="tv5,tv6" />
+
+    <TextView
+        android:id="@+id/tv7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView7在屏障右边"
+        app:layout_constraintBottom_toTopOf="@id/btn6"
+        app:layout_constraintLeft_toRightOf="@+id/barrier" />
+
+    <!--可设成invisible -->
+    <android.support.constraint.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="tv5,tv6" />
+
+    <!--宽高设置成具体值、设置成gone都是无效的.
+    app:content="@+id/btn3" 设置占位符需要填充的控件-->
+    <android.support.constraint.Placeholder
+        android:id="@+id/placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"/>
 
 </android.support.constraint.ConstraintLayout>
