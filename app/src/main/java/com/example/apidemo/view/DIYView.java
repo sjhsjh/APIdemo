@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.View;
 import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
@@ -31,6 +32,14 @@ public class DIYView extends View {
         mPaint.setTextSize((float) 48.0);  //设置字体大小
         mPaint.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL)); // BOLD
       //  mPaint.setAntiAlias(true);   // 设置画笔为无锯齿
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        NLog.w("sjh5", "DIYView event = " + event + "\nisFocused = " + isFocused() + " hasFocus = " + hasFocus());
+        boolean consume = super.dispatchKeyEvent(event);  // 默认false
+        NLog.w("sjh5", "DIYView consume = " + consume);
+        return consume;
     }
 
     /**

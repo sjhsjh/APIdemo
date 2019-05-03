@@ -1,6 +1,5 @@
 package com.example.apidemo.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -8,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
@@ -18,11 +18,35 @@ import android.widget.ImageView;
 import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
+import com.example.apidemo.view.DIYView;
 import java.lang.reflect.Method;
 
 
 public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
     private ImageView mImageView;
+    private DIYView mDIYView;
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        NLog.i("sjh5", "activity event = " + event);
+        boolean consume = super.dispatchKeyEvent(event);
+        NLog.i("sjh5", "activity consume = " + consume);
+        return consume;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        boolean consume = super.onKeyDown(keyCode, event);
+        NLog.d("sjh5", "onKeyDown consume = " + consume);
+        return consume;
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        boolean consume = super.onKeyUp(keyCode, event);
+        NLog.d("sjh5", "onKeyUp consume = " + consume);
+        return consume;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +63,10 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
                 printDeviceDimen();
             }
         });
+        mDIYView = (DIYView) findViewById(R.id.diy_view);
+//        mDIYView.setFocusable(true);
+//        mDIYView.setFocusableInTouchMode(true);
+//        mDIYView.requestFocus();
 
         mImageView = (ImageView) findViewById(R.id.custom_image);
         mImageView.setRotationX(70f);
