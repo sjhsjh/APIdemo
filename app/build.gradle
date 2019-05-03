@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-aspectjx'    // DoraemonKit
 
 android {
     compileSdkVersion 27
@@ -56,7 +57,9 @@ android {
 //        compile 'com.borjabravo:readmoretextview:2.1.0'   // 不支持布局完成后的setText
         implementation 'com.github.sjhsjh:ReadMoreTextView:2.1.1.0'
         implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-
+        // 滴滴开源组件DoraemonKit
+        debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:1.1.5'
+//        debugImplementation 'com.github.didi:DoraemonKit:1.1.7'  // jitpack
     }
 
 

@@ -2,6 +2,7 @@ package com.example.apidemo;
 
 import android.app.Application;
 import android.content.Context;
+import com.didichuxing.doraemonkit.DoraemonKit;
 import com.example.apidemo.utils.CrashHandler;
 import com.example.apidemo.utils.NLog;
 import com.tcl.lockscreen.statistics.StatisticsKind;
@@ -22,6 +23,8 @@ public class APIDemoApplication extends Application{
         initTraceException();
         initCrashHandler();
         initNLog();
+        DoraemonKit.install(this);
+
     }
 
     public static Context getContext(){

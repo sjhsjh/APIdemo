@@ -12,6 +12,9 @@ buildscript {
         // Plugin with id 'com.novoda.bintray-release' not found的解决方法:根目录build.gradle下添加该行代码
         classpath 'com.novoda:bintray-release:0.7.0'
 
+        // DoraemonKit 流量监控功能（可选）
+        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.4'
+
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
