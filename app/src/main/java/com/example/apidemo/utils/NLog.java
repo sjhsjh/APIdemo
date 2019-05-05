@@ -279,7 +279,23 @@ public class NLog {
         return println_native(LOG_ID_MAIN, ERROR, tag, msg + '\n' + getStackTraceString(tr));
     }
 
+
+//	/**
+//	 * 获取当前调用的堆栈信息
+//	 */
+//	public static String getCurrentStackTraceString() {
+//		return Log.getStackTraceString(new Throwable());
+//	}
+//
+//	/**
+//	 * 获取异常的堆栈信息
+//	 */
+//	public static String getStackTraceString(Throwable tr) {
+//		return Log.getStackTraceString(tr);
+//	}
+
     /**
+	 * 来源于Log.getStackTraceString(tr);
      * Handy function to get a loggable stack trace from a Throwable
      * @param tr An exception to log
      */
