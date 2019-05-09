@@ -1,8 +1,6 @@
 package com.example.apidemo.activity;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;

@@ -84,7 +84,7 @@ public class ShellUtils {
      * execute shell command
      * 
      * @param command command
-     * @param isRoot whether need to run with root
+     * @param isRoot whether need to run with root 。是否以root权限执行
      * @param isNeedResultMsg whether need result msg
      * @return
      * @see ShellUtils#execCommand(String[], boolean, boolean)
