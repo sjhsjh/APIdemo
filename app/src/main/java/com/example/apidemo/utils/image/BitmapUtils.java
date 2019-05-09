@@ -1,4 +1,4 @@
-package com.example.apidemo.utils;
+package com.example.apidemo.utils.image;
 
 import android.app.Activity;
 import android.graphics.Bitmap;

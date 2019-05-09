@@ -1,7 +1,6 @@
 package com.example.apidemo.activity;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
@@ -14,7 +13,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
-import com.example.apidemo.utils.BitmapUtils;
+import com.example.apidemo.utils.image.BitmapUtils;
 
 /**
  * Created by Administrator on 2019/2/12.
