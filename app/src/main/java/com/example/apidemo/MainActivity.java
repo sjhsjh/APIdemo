@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import com.didichuxing.doraemonkit.DoraemonKit;
 import com.example.apidemo.activity.DIYViewActivity;
 import com.example.apidemo.activity.EventDispatchActivity;
 import com.example.apidemo.activity.FunctionActivity;
@@ -62,8 +63,10 @@ public class MainActivity extends BaseActivity {
 //        }
 
         HardWareUtils.registerBluetoothListener(this);
+        DoraemonKit.hide();
 
         List<Object> list = new ArrayList<Object>();
+        list.add(DoraemonKit.class);
         // todo
         list.add(GsonActivity.class);
         list.add(GaussActivity.class);
@@ -101,14 +104,22 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                NLog.i("sjh0", "onItemClick position is " + position);
+                NLog.d("sjh0", "onItemClick position is " + position);
+                if(position == 0){
+                    if(!DoraemonKit.isShow()){
+                        DoraemonKit.show();
+                    }else {
+                        DoraemonKit.hide();
+                    }
+                }else {
+                    Object activityClass = parent.getItemAtPosition(position); // 根据位置判断跳转哪个activity!!!会调用adapter的getItem().
+                    NLog.d("sjh0", "activity Class = " + activityClass.toString());
 
-                Object activityClass = parent.getItemAtPosition(position); // 根据位置判断跳转哪个activity!!!会调用adapter的getItem().
-                NLog.i("sjh0", "activity Class = " + activityClass.toString());
+                    Intent intent = new Intent(MainActivity.this, (Class<?>) activityClass);
+                    startActivity(intent);
+                    overridePendingTransition(R.animator.slide_right_in, R.animator.slide_left_out);
+                }
 
-                Intent intent = new Intent(MainActivity.this, (Class<?>) activityClass);
-                startActivity(intent);
-                overridePendingTransition(R.animator.slide_right_in, R.animator.slide_left_out);
             }
 
         });
