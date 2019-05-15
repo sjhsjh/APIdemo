@@ -33,8 +33,7 @@ android {
         testCompile 'junit:junit:4.12'
 /*        compileSdkVersion升级28时，编译报错：junit.framework.Assert不存在。
         原因：Assert类在新版本中从junit.framework中移除，移到org.junit中。
-        解决办法：build.gradle中添加compile files("libs/junit-4.12.jar")*/
-        compile files('libs/junit-4.12.jar')
+        解决办法：libs中增加junit包，build.gradle中添加compile files("libs/junit-4.12.jar")*/
 
         compile project(':statisticslibrary')
 //        compile project(':arcface')
@@ -64,7 +63,7 @@ android {
         // 滴滴开源组件DoraemonKit
         debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:1.1.6'
 //        debugImplementation 'com.github.didi:DoraemonKit:1.1.7'  // jitpack
-        implementation 'com.github.chrisbanes:PhotoView:2.3.0'  // 需要compileSdkVersion 28
+        implementation 'com.github.chrisbanes:PhotoView:2.1.3'  // 2.3.0版本需要compileSdkVersion 28，且编译运行时报错Multiple dex
 
 
     }
