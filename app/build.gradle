@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'android-aspectjx'    // DoraemonKit
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     buildToolsVersion '26.0.2'
 
     defaultConfig {
@@ -31,7 +31,11 @@ android {
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
         testCompile 'junit:junit:4.12'
-        // 依赖了statisticslibrary！！！
+/*        compileSdkVersion升级28时，编译报错：junit.framework.Assert不存在。
+        原因：Assert类在新版本中从junit.framework中移除，移到org.junit中。
+        解决办法：build.gradle中添加compile files("libs/junit-4.12.jar")*/
+        compile files('libs/junit-4.12.jar')
+
         compile project(':statisticslibrary')
 //        compile project(':arcface')
 
@@ -60,6 +64,9 @@ android {
         // 滴滴开源组件DoraemonKit
         debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:1.1.6'
 //        debugImplementation 'com.github.didi:DoraemonKit:1.1.7'  // jitpack
+        implementation 'com.github.chrisbanes:PhotoView:2.3.0'  // 需要compileSdkVersion 28
+
+
     }
 
 

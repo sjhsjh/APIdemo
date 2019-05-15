@@ -3,8 +3,7 @@ package com.example.apidemo.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * @date 2016/6/30
