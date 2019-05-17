@@ -36,7 +36,7 @@ public class GestureDectorActivity extends BaseActivity{
         }
 
         /**
-         * （e为down事件）onDown后TAP_TIMEOUT（100ms）内无up和move事件则触发！
+         * （e为down事件）onDown后TAP_TIMEOUT（100ms）内无up和move事件则触发！（注意有move则不触发）
          * 如果用户按下屏幕后没有立即松开或拖动会调用此方法,事件调用顺序为onDown--->onShowPress.
          */
         public void onShowPress(MotionEvent e) {
@@ -45,7 +45,7 @@ public class GestureDectorActivity extends BaseActivity{
         }
 
         /**
-         * （e为up事件）onDown后TAP_TIMEOUT + LONGPRESS_TIMEOUT（100 + 500ms）内up并且之前无move则触发！！
+         * （e为up事件）onDown后TAP_TIMEOUT + LONGPRESS_TIMEOUT（100 + 500ms）内up并且之前up之前无move则触发！！（注意有move则不触发）
          * 如果用户按下屏幕后没有移动并且立即松开会调用此方法,
          * 如果点击一下快速抬起则事件调用顺序为onDown-->onSingleTapUp-->onSingleTapUpConfirmed,
          * 如果稍微慢点点击抬起则事件调用顺序为onDown-->onShowPress-->onSingleTapUp-->onSingleTapUpConfirmed.
@@ -57,7 +57,7 @@ public class GestureDectorActivity extends BaseActivity{
         }
 
         /**
-         *  （e为down事件）onDown后TAP_TIMEOUT + LONGPRESS_TIMEOUT（100 + 500ms）内无up和move事件则触发！！
+         *  （e为down事件）onDown后TAP_TIMEOUT + LONGPRESS_TIMEOUT（100 + 500ms）内无up和move事件则触发！！（注意有move则不触发）
          *  mHandler.sendEmptyMessageAtTime(LONG_PRESS, mCurrentDownEvent.getDownTime() + TAP_TIMEOUT + LONGPRESS_TIMEOUT);
          *  如果用户按下屏幕后没有松开或拖动会调用此方法,事件调用顺序为onDown-->onShowPress-->onLongPress.
          */
@@ -90,10 +90,10 @@ public class GestureDectorActivity extends BaseActivity{
 
     private class MyDoubleTapListener implements GestureDetector.OnDoubleTapListener {
         /**
-         * e为down事件，注意它是down后延时触发！！因为它与onDoubleTap是互斥的，因此使用于判断双击动作的时候，而onSingleTapUp则是up触发，更广泛使用
+         * e为down事件，注意它是down后延时触发！！因为它与onDoubleTap是互斥的，因此使用于判断双击动作的时候，而onSingleTapUp则是up触发，更广泛使用。
          * down后DOUBLE_TAP_TIMEOUT（300ms）时判断是否已经up，若是则触发，否则不触发。
          * 当用户按下屏幕后并快速抬起时调用并在之后短时间没有二次点击,主要是用来确认用户该次点击是onSingleTap而不是onDoubleTap.
-         * 事件调用顺序为:onDownn-->onSingleTap-->onSingleTapConfirmed.MotionEvent e
+         * 事件调用顺序为:onDownn-->onSingleTap-->onSingleTapConfirmed.
          */
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
@@ -113,7 +113,7 @@ public class GestureDectorActivity extends BaseActivity{
         }
 
         /*
-         * 从双击动作的down开始，到下一个up之间所有的down,up和move事件！
+         * 从双击动作的第2个down开始，到第2个up之间所有的down,up和move事件！
          * 当用户双击屏幕间,触发的触摸事件,包含down,up和move事件,事件封装在参数MotionEvent中.
          */
         @Override

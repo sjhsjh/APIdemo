@@ -191,7 +191,7 @@ public class StickyLayout extends LinearLayout{
     }
 
     /**
-     * 需重载computeScroll来使用
+     * 需重载view的computeScroll来使用（draw中调用computeScroll）
      * @param yVelocity
      */
     private void fling(int yVelocity) {

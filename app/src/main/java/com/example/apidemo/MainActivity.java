@@ -30,6 +30,7 @@ import com.example.apidemo.activity.ResolveInfoActivity;
 import com.example.apidemo.activity.RxJavaActivity;
 import com.example.apidemo.activity.SDActivity;
 import com.example.apidemo.activity.SQLActivity;
+import com.example.apidemo.activity.ScaleActivity;
 import com.example.apidemo.activity.ScrollActivity;
 import com.example.apidemo.activity.SlideActivity;
 import com.example.apidemo.activity.SocketClientActivity;
@@ -68,6 +69,7 @@ public class MainActivity extends BaseActivity {
         List<Object> list = new ArrayList<Object>();
         list.add(DoraemonKit.class);
         // todo
+        list.add(ScaleActivity.class);
         list.add(GsonActivity.class);
         list.add(GaussActivity.class);
         list.add(ResolveInfoActivity.class);
