@@ -15,6 +15,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.Scroller;
 import android.widget.Toast;
@@ -55,6 +56,7 @@ public class ScaleActivity extends BaseActivity {
     private int mMinVelocity;
     private boolean mIsDragging;
     private Handler handler;
+    private int mActivePointerId = 0;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -124,27 +126,31 @@ public class ScaleActivity extends BaseActivity {
             }
 
         });
+        // 多点触摸代码适用于单点触摸的情况
         imageView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                NLog.w("sjh2", " event.getAction() " + event.getAction());
+                NLog.d("sjh2", " event.getAction() " + event.getAction());
 
+                int currentPointerIndex = event.findPointerIndex(mActivePointerId);
                 boolean handled = false;
                 velocityTrackerAddMovement(event);
 
-                switch (event.getAction()){
+                switch (event.getActionMasked()){
                     case MotionEvent.ACTION_DOWN :
-                        mLastX = event.getX();
-                        mLastY = event.getY();
+                        mActivePointerId = event.getPointerId(0);  // 第一根手指的id
+                        currentPointerIndex = event.findPointerIndex(mActivePointerId);
+                        mLastX = event.getX(currentPointerIndex);
+                        mLastY = event.getY(currentPointerIndex);
                         mIsDragging = false;
                         mScroller.forceFinished(true);
 
                         break;
                     case MotionEvent.ACTION_MOVE :
-                        float dx = event.getX() - mLastX;
-                        float dy = event.getY() - mLastY;
-                        NLog.v("sjh2", " event.getX() " + event.getX());
-                        /************************************************ drag ************************************************************/
+                        float dx = event.getX(currentPointerIndex) - mLastX;
+                        float dy = event.getY(currentPointerIndex) - mLastY;
+                        NLog.v("sjh2", " event.getX(currentPointerIndex) " + event.getX(currentPointerIndex));
+                        /************************************************ drag。 因为scale后能drag，drag后能scale，因此drag需要多点触摸的处理************************************************************/
                         if (!mIsDragging) {
                             if (Math.sqrt((dx * dx) + (dy * dy)) >= mTouchSlop) {
                                 mIsDragging = true;
@@ -155,8 +161,8 @@ public class ScaleActivity extends BaseActivity {
                             imageView.setImageMatrix(matrix);
                             updateMatrixBound();
 
-                            mLastX = event.getX();
-                            mLastY = event.getY();
+                            mLastX = event.getX(currentPointerIndex);
+                            mLastY = event.getY(currentPointerIndex);
                         }
                         /************************************************ drag ************************************************************/
                         break;
@@ -181,6 +187,23 @@ public class ScaleActivity extends BaseActivity {
                         } else if (getScale() < 1) {
 //                            animateZoom(1, rect.centerX(), rect.centerY());
                             animateZoom(1, imageView.getLeft() + imageView.getWidth() / 2, imageView.getTop() + imageView.getHeight() / 2);
+                        }
+                        break;
+                    case MotionEvent.ACTION_POINTER_UP :
+                        // active手指离开时使用另一只手指作为active手指
+                        // 获取某一根手指抬起时的索引
+                        final int pointerIndex = event.getActionIndex();
+                        // 根据索引获取id
+                        final int pointerId = event.getPointerId(pointerIndex);
+                        NLog.e("sjh1", "ACTION_POINTER_UP pointerIndex " + pointerIndex + " pointerId = " + pointerId);
+
+                        if (pointerId == mActivePointerId) {// 如果是抬起的是第一根手指
+                            // 那么对应获取第二点
+                            final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
+                            mActivePointerId = event.getPointerId(newPointerIndex);// 将id指向第二根手指
+                            // 获取第二根手指的当前坐标
+                            mLastX = event.getX(newPointerIndex);
+                            mLastY = event.getY(newPointerIndex);
                         }
                         break;
                 }
@@ -229,12 +252,13 @@ public class ScaleActivity extends BaseActivity {
 
     private void animateZoom(float targetScale, final float focusX, final float focusY) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(imageView, "abc", getScale(), targetScale);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
 //                matrix.setScale((float) animation.getAnimatedValue(), (float) animation.getAnimatedValue(), focusX, focusY);  // xx
                 matrix.postScale((float) animation.getAnimatedValue() / getScale(), (float) animation.getAnimatedValue() / getScale(), focusX, focusY);
-                NLog.e("sjh1", "===" + animation.getAnimatedValue());
+                NLog.i("sjh1", "getAnimatedValue=" + animation.getAnimatedValue());
                 imageView.setImageMatrix(matrix);
                 updateMatrixBound();
             }
