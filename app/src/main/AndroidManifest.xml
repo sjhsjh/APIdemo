@@ -38,6 +38,15 @@
         android:supportsRtl="true"
         tools:replace="name, icon, label, theme"
         android:theme="@style/AppTheme">
+
+        <!-- [ADMOB_APP_ID]，在application 标签内-->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8415538412403902~6854902093"/>
+        <!--<meta-data-->
+            <!--android:name="com.google.android.gms.ads.AD_MANAGER_APP"-->
+            <!--android:value="true"/>-->
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

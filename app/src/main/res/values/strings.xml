@@ -21,4 +21,9 @@
     <string name="show_more">Show More</string>
     <string name="show_less">Show Less</string>
 
+    <string name="admod_appid">ca-app-pub-8415538412403902~6854902093</string>
+    <string name="banner_ad_unit_id">ca-app-pub-8415538412403902/4769517009</string>    <!--test banner id : ca-app-pub-3940256099942544/6300978111  -->
+    <string name="interstitial_unit_id">ca-app-pub-8415538412403902/3731057063</string>   <!--test fullscreen id : ca-app-pub-3940256099942544/1033173712 -->
+
+
 </resources>
