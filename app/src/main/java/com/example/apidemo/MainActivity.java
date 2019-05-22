@@ -3,15 +3,15 @@ package com.example.apidemo;
 import java.util.ArrayList;
 import java.util.List;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.os.Build;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import com.crashlytics.android.Crashlytics;
 import com.didichuxing.doraemonkit.DoraemonKit;
 import com.example.apidemo.activity.DIYViewActivity;
 import com.example.apidemo.activity.EventDispatchActivity;
@@ -40,6 +40,7 @@ import com.example.apidemo.activity.ViewModelActivity;
 import com.example.apidemo.activity.WindowActivity;
 import com.example.apidemo.activity.XmlParseActivity;
 import com.example.apidemo.adapter.DemoAdapter;
+import com.example.apidemo.firebase.Usage;
 import com.example.apidemo.utils.HardWareUtils;
 import com.example.apidemo.utils.NLog;
 import com.example.apidemo.utils.PermissionUtils;
@@ -110,6 +111,9 @@ public class MainActivity extends BaseActivity {
                 if(position == 0){
                     if(!DoraemonKit.isShow()){
                         DoraemonKit.show();
+                        // firebase 统计
+                        Usage.pv("event_test","test_value");
+                        Crashlytics.logException(new Exception("测试crash"));
                     }else {
                         DoraemonKit.hide();
                     }
