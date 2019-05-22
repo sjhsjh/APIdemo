@@ -4,6 +4,10 @@ buildscript {
     repositories {
         google()
         jcenter()
+        // firebase Crashlytics
+        maven {
+            url 'https://maven.fabric.io/public'
+        }
         // Android Studio错误 Failed to resolve: junit:junit:4.12解决方案：
         // maven { url 'http://repo1.maven.org/maven2' }
     }
@@ -14,6 +18,10 @@ buildscript {
 
         // DoraemonKit 流量监控功能（可选）
         classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.4'
+        // firebase
+        classpath 'com.google.gms:google-services:4.2.0'
+        // firebase Crashlytics
+        classpath 'io.fabric.tools:gradle:1.26.1'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
