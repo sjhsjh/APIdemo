@@ -15,8 +15,6 @@
     <!--<uses-permission android:name="com.huawei.launcher3.permission.READ_SETTINGS" />-->
     <!--<uses-permission android:name="com.huawei.launcher3.permission.WRITE_SETTINGS" />-->
 
-
-
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -27,8 +25,6 @@
 
     <uses-feature android:name="android.hardware.camera2"/>
     <uses-feature android:name="android.hardware.autofocus" />
-
-
 
     <application
         android:name=".APIDemoApplication"
@@ -153,6 +149,7 @@
         <activity android:name=".activity.SocketServerActivity" />
         <activity android:name=".activity.GaussActivity" />
         <activity android:name=".activity.ScaleActivity" />
+        <activity android:name=".activity.ADActivity" />
 
 
         <meta-data android:value="58db526f310c935d4f001c2e" android:name="UMENG_APPKEY"/>       <!--  测试key：59420a29a40fa31dad000ce9-->

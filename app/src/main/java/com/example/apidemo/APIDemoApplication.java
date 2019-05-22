@@ -3,6 +3,7 @@ package com.example.apidemo;
 import android.app.Application;
 import android.content.Context;
 import com.didichuxing.doraemonkit.DoraemonKit;
+import com.example.apidemo.manager.ADManager;
 import com.example.apidemo.utils.CrashHandler;
 import com.example.apidemo.utils.NLog;
 import com.tcl.lockscreen.statistics.StatisticsKind;
@@ -24,6 +25,7 @@ public class APIDemoApplication extends Application{
         initCrashHandler();
         initNLog();
         DoraemonKit.install(this);
+        ADManager.getInstance().initAD(mContext);
 
     }
 
