@@ -21,14 +21,25 @@ public class ADActivity extends BaseActivity {
 
         mAdView = findViewById(R.id.adView);
 
-        ((Button) findViewById(R.id.btn1)).setText("loadADToADView");
-        findViewById(R.id.btn1).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.btn0)).setText("loadADToADView 0");
+        findViewById(R.id.btn0).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 ADManager.getInstance().loadADToADView(mAdView, TAG);
 
                 View view = ADManager.getInstance().getBannerADViewAndLoad(ADActivity.this, R.string.banner_ad_unit_id, TAG);
+                ((FrameLayout) ADActivity.this.findViewById(R.id.root)).addView(view);
+            }
+        });
+
+        ((Button) findViewById(R.id.btn1)).setText("loadADToADView 1");
+        findViewById(R.id.btn1).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                View view = ADManager.getInstance().getBannerADViewAndLoad(ADActivity.this, R.string.banner_ad_unit_id_2, TAG);
                 ((FrameLayout) ADActivity.this.findViewById(R.id.root)).addView(view);
             }
         });

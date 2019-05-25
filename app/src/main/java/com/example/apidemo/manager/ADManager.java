@@ -55,7 +55,6 @@ public class ADManager {
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                // todo 加统计
                 // Code to be executed when an ad finishes loading.
                 Toast.makeText(adView.getContext(), "onAdLoaded()", Toast.LENGTH_SHORT).show();
                 NLog.w(TAG, "onAdLoaded");
@@ -64,6 +63,7 @@ public class ADManager {
             @Override
             public void onAdFailedToLoad(int errorCode) {
                 // Code to be executed when an ad request fails.
+                Toast.makeText(adView.getContext(), "onAdFailedToLoad errorCode = " + errorCode, Toast.LENGTH_SHORT).show();
                 NLog.w(TAG, "onAdFailedToLoad errorCode = " + errorCode);
             }
 
@@ -120,7 +120,6 @@ public class ADManager {
             interstitialAd.setAdListener(new AdListener() {
                 @Override
                 public void onAdLoaded() {
-                    // todo 加统计
                     // Code to be executed when an ad finishes loading.
                     Toast.makeText(context, "onAdLoaded()", Toast.LENGTH_SHORT).show();
                     NLog.w(TAG, "onAdLoaded");
@@ -129,6 +128,7 @@ public class ADManager {
                 @Override
                 public void onAdFailedToLoad(int errorCode) {
                     // Code to be executed when an ad request fails.
+                    Toast.makeText(context, "onAdFailedToLoad errorCode = " + errorCode, Toast.LENGTH_SHORT).show();
                     NLog.w(TAG, "onAdFailedToLoad errorCode = " + errorCode);
                 }
 
