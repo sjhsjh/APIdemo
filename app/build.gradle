@@ -70,6 +70,7 @@ android {
         implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
         // admob
         implementation 'com.google.firebase:firebase-ads:17.2.0'
+//        implementation 'com.github.sjhsjh:Permission:1.0.2'  // 权限库
 
 
     }

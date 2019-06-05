@@ -36,6 +36,12 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true" />
 
+    <com.example.apidemo.view.MySurfaceView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/font_layout"
+        android:layout_below="@+id/font_layout" />
+
     <com.borjabravo.readmoretextview.ReadMoreTextView
         android:id="@+id/read_more"
         android:layout_width="match_parent"
