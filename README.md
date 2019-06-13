@@ -8,7 +8,7 @@
 
 
 
-![device-WindowActivity](//wx4.sinaimg.cn/wap360/828f12d0gy1g3ziyxtj1gj20u01hcjv4.jpg)![device-NewsActivity](//wx1.sinaimg.cn/wap360/828f12d0gy1g3ziza1s63j20u01hcmzj.jpg)
+![device-WindowActivity](//wx4.sinaimg.cn/wap360/828f12d0gy1g3ziyxtj1gj20u01hcjv4.jpg)![device-NewsActivity](https://ws1.sinaimg.cn/wap360/828f12d0gy1g3ziza1s63j20u01hcmzj.jpg)
 
 
 
