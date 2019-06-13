@@ -123,8 +123,10 @@ public class WindowActivity extends BaseActivity {
                 WindowManager.LayoutParams.TYPE_SYSTEM_ERROR, // WindowManager.LayoutParams.TYPE_APPLICATION,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED,
                 PixelFormat.TRANSPARENT);
-        // FLAG_NOT_TOUCH_MODAL把该window区域外的事件交还给其他Window处理
+        // FLAG_NOT_TOUCH_MODAL把该window区域外的事件交还给其他Window处理;一般来说，都需要开启此标记，否则其它 WIndow 将无法接收到单击事件.
         // 不设置FLAG_NOT_FOCUSABLE返回键无效了;设置FLAG_NOT_FOCUSABLE了里面的button也能响应;？？
+        // FLAG_NOT_FOCUSABLE下，Window 不会获取焦点，此标记会同时启用 FLAG_NOT_TOUCH_MODAL，注释上虽然说该模式下不会接收触摸事件，但是实验证明，它还是可以接收到触摸事件的.
+        // FLAG_NOT_TOUCHABLE模式下，Window 不会接收任何的触摸事件，它会将触摸事件传递给下层的具有焦点的 Window
         // 设置TYPE_APPLICATION + FLAG_SHOW_WHEN_LOCKED且无overlay权限时window所在的activity也显示在锁屏上了
         // TYPE_SYSTEM_ERROR + overlay权限即可在锁屏上显示window；
         layoutParams.gravity = Gravity.LEFT | Gravity.TOP;

@@ -12,7 +12,7 @@ import android.widget.HorizontalScrollView;
 import com.example.apidemo.utils.NLog;
 
 /**
- * <br>
+ * <br> 外部拦截
  * Created by jinhui.shao on 2017/8/22.
  */
 public class MyHorizontalScrollView extends HorizontalScrollView{
