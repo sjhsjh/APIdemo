@@ -4,11 +4,9 @@
 
 
 ##### 部分应用截图：
-![device-Mainactivity](//ws1.sinaimg.cn/wap360/828f12d0gy1g3ziwxd2gqj20u01hcmz9.jpg)![device-photoview](//wx3.sinaimg.cn/wap360/828f12d0gy1g3zi1xr7ooj20u01hcn09.jpg)
+![device-Mainactivity](https://wx1.sinaimg.cn/wap360/828f12d0gy1g3zjch7poaj20u01hcmz9.jpg)![device-photoview](https://wx4.sinaimg.cn/wap360/828f12d0gy1g3zjcyvfzcj20u01hcn09.jpg)
 
-
-
-![device-WindowActivity](//wx4.sinaimg.cn/wap360/828f12d0gy1g3ziyxtj1gj20u01hcjv4.jpg)![device-NewsActivity](https://ws1.sinaimg.cn/wap360/828f12d0gy1g3ziza1s63j20u01hcmzj.jpg)
+![device-WindowActivity](https://wx2.sinaimg.cn/wap360/828f12d0gy1g3zjdp65k4j20u01hcjv4.jpg)![device-NewsActivity](https://ws1.sinaimg.cn/wap360/828f12d0gy1g3ziza1s63j20u01hcmzj.jpg)
 
 
 
