@@ -1,6 +1,6 @@
 package com.example
 
-object ObjectClass{
+object ObjectClass {
     const val User = "user"     // public static final
     @JvmField
     var User2 = "user2"        // public static
@@ -8,5 +8,4 @@ object ObjectClass{
     fun print() {
         println("ObjectClass print")
     }
-
 }

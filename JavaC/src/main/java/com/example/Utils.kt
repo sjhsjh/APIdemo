@@ -1,8 +1,8 @@
 package com.example
 
-class Utils(){
+class Utils() {
 
-     object asd{
+    object asd {
         val TAG_NOT_CONST = "tag_not_const"
         const val TAG_CONST = "tag_const"
 
@@ -14,7 +14,5 @@ class Utils(){
         fun invokeNonStaticMethod(): String {
             return "invokeNonStaticMethod"
         }
-
     }
-
 }
