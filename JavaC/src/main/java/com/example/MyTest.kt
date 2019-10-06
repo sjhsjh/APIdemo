@@ -42,6 +42,7 @@ fun main(args: Array<String>) {
 
     Utils.TAG_CONST
     Utils.TAG_NOT_CONST
+    Utils.invokeNonStaticMethod()
 
     ObjectClass.print()
 

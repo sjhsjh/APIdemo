@@ -8,28 +8,34 @@ import java.util.Random;
 
 public class MyClass {
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
-        Utils.TAG_CONST
-        Utils.TAG_NOT_CONST
-        Utils.Companion.getTAG_NOT_CONST();
-        Utils.Companion.invokeNonStaticMethod();   // without @JvmStatic
-        Utils.invokeNonStaticMethod();             // with @JvmStatic. 加上@JvmStatic修饰静态方法可以让java文件调用时省去Companion
 
-        ObjectClass.INSTANCE.print();
+        kotlinStaticTest();
+    }
+
+    private static void kotlinStaticTest() {
+        // Utils.TAG_CONST
+        // Utils.TAG_NOT_CONST
+        // Utils.invokeStaticMethod();
+        // Utils.invokeNonStaticMethod();  // with @JvmStatic. 加上@JvmStatic修饰静态方法可以让java文件调用时省去Companion
+        //
+        // Utils.comObj.TAG_CONST
+        Utils.comObj.getTAG_NOT_CONST();
+        Utils.comObj.getQqq();
+        Utils.comObj.invokeStaticMethod();
+        Utils.comObj.invokeNonStaticMethod();      // without @JvmStatic
+
+
+        // ObjectClass.print(); // with @JvmStatic.
+        ObjectClass.INSTANCE.print(); // without @JvmStatic
         System.out.println(ObjectClass.INSTANCE);
-        System.out.println(ObjectClass.INSTANCE);
-
-        // Utils.asd.INSTANCE.non_static()
-        Utils.asd.invokeStaticMethod();
 
         System.out.println(ObjectClass.User);
         System.out.println(ObjectClass.User2);
-
-
     }
 
-    private void usefulApi() {
+    private static void usefulApi() {
         Random r1 = new Random();
         for (int i = 0; i < 10; i++) {
             System.out.println("===" + r1.nextInt(7));   // 0~6
@@ -45,7 +51,7 @@ public class MyClass {
         System.out.println(String.join("", lis));
     }
 
-    private void collectionDelete() {
+    private static void collectionDelete() {
         // 不要在 foreach 循环里进行元素的 remove/add 操作。
         // 倒序遍历删除优点：删除元素后不影响待遍历的元素的位置。
         List<Integer> list2 = new ArrayList<Integer>();

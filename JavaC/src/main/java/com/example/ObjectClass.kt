@@ -5,6 +5,7 @@ object ObjectClass {
     @JvmField
     var User2 = "user2"        // public static
 
+//    @JvmStatic
     fun print() {
         println("ObjectClass print")
     }
