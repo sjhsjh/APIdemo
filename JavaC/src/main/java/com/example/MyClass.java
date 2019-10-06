@@ -27,7 +27,7 @@ public class MyClass {
         Utils.comObj.invokeNonStaticMethod();      // without @JvmStatic
 
 
-        // ObjectClass.print(); // with @JvmStatic.
+        // ObjectClass.print();  // with @JvmStatic.
         ObjectClass.INSTANCE.print(); // without @JvmStatic
         System.out.println(ObjectClass.INSTANCE);
 
