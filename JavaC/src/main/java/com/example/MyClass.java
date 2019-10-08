@@ -10,7 +10,7 @@ public class MyClass {
 
     public static void main(String[] args) {
 
-
+        // usefulApi();
         kotlinStaticTest();
     }
 
@@ -49,6 +49,17 @@ public class MyClass {
         }
         // list<String>转字符串，list的内容以指定符号进行拼接!!
         System.out.println(String.join("", lis));
+
+        // List转换为Array:
+        ArrayList<String> list0 = new ArrayList<String>();
+        list0.add("aa");
+        list0.add("bb");
+        String[] array0 = new String[list0.size()];
+        list0.toArray(array0);  // !!
+        // String[] array2 = (String[]) (list0.toArray());     // xx. Object[] 数组不能强转成String[]数组;
+        // 数组转List:
+        String[] array1 = {"a", "b", "c"};
+        List list1 = Arrays.asList(array1);
     }
 
     private static void collectionDelete() {
@@ -85,4 +96,18 @@ public class MyClass {
         }
         System.out.println(list3);
     }
+}
+
+abstract class Base {
+    String str = this.toString();
+    int code = cal();
+    abstract int cal();
+}
+
+class Son extends Base {
+    @Override
+    int cal() {
+        return 110;
+    }
+    // System.out.println(new Son().code); // java ok, kotlin incorrect.
 }
