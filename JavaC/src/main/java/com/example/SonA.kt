@@ -8,5 +8,15 @@ class SonA(var x: Int) : MyObjectA(x) {
 
     override fun plus() {
         super.plus()
+        println("SonA plus.")
     }
+
+    inner class Filler {
+        fun drawAndFill() {
+            println("drawAndFill")
+            super@SonA.plus() // 调用父类的plus实现
+        }
+    }
+
+
 }

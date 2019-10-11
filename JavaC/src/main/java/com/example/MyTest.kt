@@ -9,6 +9,13 @@ fun main(args: Array<String>) {
     var obj2 = SonA(8)
     println(obj2.memberUse)
 
+//    SonA.Filler()
+
+//    println("=====str:======" + obj.str)
+//    println("===========" + obj.bar.javaClass)
+//    println("======bar:=====" + obj.bar)
+//    println("======foo:=====" + obj.foo)
+
     println(a)
     println("==== ${a - 2}")
     println("==== ${MyObjectA(8)}")

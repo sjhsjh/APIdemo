@@ -111,3 +111,7 @@ class Son extends Base {
     }
     // System.out.println(new Son().code); // java ok, kotlin incorrect.
 }
+
+abstract class Grandson extends Son {
+    abstract int cal();
+}
