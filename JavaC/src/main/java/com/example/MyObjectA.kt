@@ -1,6 +1,11 @@
 package com.example
 
 open class MyObjectA(var member: Int) {  // 1、参数默认public；主构造函数的参数可以设置默认值
+    class Inner private constructor(a: Int) {
+
+    }
+
+    internal var internalVar = 6    // 相同模块内可见
     open var memberUse = member  // 可以使用主构造函数的变量
     /******************************************************************************************/
     // 实例初始化顺序：主构造函数 -> 初始化块和属性初始化 -> 次级构造函数

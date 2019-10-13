@@ -8,6 +8,10 @@ fun main(args: Array<String>) {
     var obj = MyObjectA(8, 9)
     var obj2 = SonA(8)
     println(obj2.memberUse)
+    println(obj2.toString2())
+
+    obj2.result = "i am result."
+    println(obj2.result)
 
 //    SonA.Filler()
 
@@ -15,6 +19,8 @@ fun main(args: Array<String>) {
 //    println("===========" + obj.bar.javaClass)
 //    println("======bar:=====" + obj.bar)
 //    println("======foo:=====" + obj.foo)
+    println("\n\n\n")
+
 
     println(a)
     println("==== ${a - 2}")

@@ -1,6 +1,9 @@
+import com.example.MyObjectA
 import java.util.Arrays
 
 fun main(args: Array<String>) {
+	MyObjectA(1).internalVar = 22
+
 
 	out@ for (x in 0..10) {
 		for (y in 1..9) {
