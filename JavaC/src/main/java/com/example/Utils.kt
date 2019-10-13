@@ -1,6 +1,6 @@
 package com.example
 
-class Utils() {
+class Utils {
 
     // 是非静态内部类（普通内部类）。但外部类拥有同名的public static对象。
     // 引用外部类时就生成该内部类对象并用静态变量保存。
@@ -18,6 +18,10 @@ class Utils() {
         fun invokeNonStaticMethod(): String {
             return "invokeNonStaticMethod"
         }
+    }
+
+    constructor() {
+
     }
 
     fun test() {
