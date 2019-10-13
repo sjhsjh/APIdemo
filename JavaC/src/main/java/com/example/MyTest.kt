@@ -19,9 +19,15 @@ fun main(args: Array<String>) {
 //    println("===========" + obj.bar.javaClass)
 //    println("======bar:=====" + obj.bar)
 //    println("======foo:=====" + obj.foo)
+
+    var bean1 = UserBean("sjh1", 11)
+    var bean2 = UserBean("sjh1", 11)
+    println(bean1)
+    println(bean2)
+    println(bean1.equals(bean2))
+    println((bean1 == bean2))
+
     println("\n\n\n")
-
-
     println(a)
     println("==== ${a - 2}")
     println("==== ${MyObjectA(8)}")
