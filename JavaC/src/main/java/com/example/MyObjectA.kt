@@ -1,13 +1,8 @@
 package com.example
 
 open class MyObjectA(var member: Int) {  // 1、参数默认public；主构造函数的参数可以设置默认值
-    class Inner private constructor(a: Int) {
-
-    }
-
-    internal var internalVar = 6    // 相同模块内可见
     open var memberUse = member  // 可以使用主构造函数的变量
-    
+
     /****************************************** Constructor ************************************/
     // 实例初始化顺序：主构造函数 -> 初始化块和属性初始化 -> 次级构造函数
     // 在实例初始化期间，初始化块按照它们出现在类体中的顺序执行，与属性初始化器交织在一起。
@@ -36,38 +31,13 @@ open class MyObjectA(var member: Int) {  // 1、参数默认public；主构造�
     /****************************************** Constructor ************************************/
 
     override fun toString(): String {
-        return super.toString() + "member = " + member
+        return super.toString() + " member = " + member
     }
 
     open fun plus(){
         println("MyObjectA plus.")
     }
 
-    /************************************* Getters 与 Setters ********************************/
-    var str: String = "init"
-        get() = field
-        set(value) {
-            field = "my value is " + value
-        }
 
-    val eee
-        get() = 3
-    var ddd = 1
-        get() = 3 + field
-
-
-    private var prix = 3
-    var pubx = 4
-
-
-    val foo = calcValue("foo")         // 对象创建时调用一次calcValue()
-    val bar
-        get() = calcValue("bar")   // 每次引用时都调用calcValue()。get()的返回相当于定义了变量的类型。
-
-    private fun calcValue(name: String): Int {
-        println("Calculating $name")
-        return 222
-    }
-    /************************************* Getters 与 Setters ********************************/
 
 }

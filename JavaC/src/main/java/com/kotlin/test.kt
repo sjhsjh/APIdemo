@@ -1,8 +1,8 @@
-import com.example.MyObjectA
+import com.example.MyObjectB
 import java.util.Arrays
 
 fun main(args: Array<String>) {
-	MyObjectA(1).internalVar = 22
+	MyObjectB(1).internalVar = 22
 
 
 	out@ for (x in 0..10) {

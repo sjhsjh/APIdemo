@@ -11,25 +11,35 @@ class SonA(var x: Int) : MyObjectA(x) {
         println("SonA plus.")
     }
 
-    inner class Filler {
-        fun drawAndFill() {
-            println("drawAndFill")
-            super@SonA.plus() // 调用父类的plus实现
+    /************************************* 嵌套类与内部类 ********************************/
+    class NestClass private constructor(a: Int) {
+
+    }
+
+    inner class InnerClass {
+        fun printInnerClass() {
+            println("printInnerClass")
+//            plus()
+            super@SonA.plus() // 调用外部类的父类plus的实现
         }
     }
+
+    /************************************* 嵌套类与内部类 ********************************/
+
 
     // 扩展函数的调用是以表达式的类型决定的!
     fun testExtendFunction() {
         printClassName(Rectangle())
     }
 
+    // 扩展属性
 //    var result = "result"
 
-    fun printStr(str:String) {
+    fun printStr(str: String) {
         println("test run. str = " + str)
     }
-
 }
+
 
 /******************************************* 扩展属性 ***********************************************/
 public var SonA.result: String
@@ -44,7 +54,6 @@ fun SonA?.toString2(): String {
     // 空检测之后，“this”会自动转换为非空类型，所以下面的 toString() 解析为 Any 类的成员函数
     return "扩展函数 " + toString()
 }
-
 
 /******************************************* 扩展函数 ***********************************************/
 open class Shape
