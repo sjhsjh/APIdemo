@@ -9,9 +9,11 @@ fun main(args: Array<String>) {
 //    println(sonA.memberUse)
 //    sonA.InnerClass().printInnerClass()
 //    println("==== ${MyObjectA(8)}")
+
+
+
+
     println("\n\n\n")
-
-
     var a: Int = 5_2
     var b: Byte = 114 ?: 2
 
@@ -47,13 +49,20 @@ private fun demo() {
     var c = 4f
     var d = 5.0
 
-    // data class
-    var bean1 = UserBean("sjh1", 11)
-    var bean2 = UserBean("sjh1", 11)
-    println(bean1)
-    println(bean2)
-    println(bean1.equals(bean2))
-    println((bean1 == bean2))
+    // enum class
+    var color: Color = Color.RED
+    println(color.rgb)
+    color.getColor()
+    Color.BLUE.getColor()
+
+    println(Color.BLUE.ordinal) // 2
+    println(Color.BLUE > Color.RED)
+
+    var array:Array<Color> = Color.values()
+    println(array[0])
+
+    var col: Color  = Color.valueOf("GREEN")  // 大小写必须匹配
+    println(col)
 
     // “==”与“===”
     var str1: String = String(StringBuilder("xyz"))
@@ -72,6 +81,14 @@ private fun demo() {
 
     for (i in 4 downTo 10) print(i) // 不报错但不执行循环体
     for (i in 12 until 4) print(i)  // 不报错但不执行循环体
+
+    // data class
+    var bean1 = UserBean("sjh1", 11)
+    var bean2 = UserBean("sjh1", 11)
+    println(bean1)
+    println(bean2)
+    println(bean1.equals(bean2))
+    println((bean1 == bean2))
 
     // 构造函数
     var myObjectA = MyObjectA(8, 9)
