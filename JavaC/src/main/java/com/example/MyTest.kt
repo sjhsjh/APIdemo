@@ -13,28 +13,37 @@ fun main(args: Array<String>) {
 
 
 
-    println("\n\n\n")
-    var a: Int = 5_2
-    var b: Byte = 114 ?: 2
-
-    var str3: String = if (b > 100) {
-        ">100"
-        "111"
-        var aa = "222"
-        aa
-    } else if (b > 50) ">50"
-    else "<50"
-    println(str3)
-
+    // object
+    ObjectClass.print()
+    // companion object
     Utils.TAG_CONST
     Utils.TAG_NOT_CONST
+    // kotlin文件中“Utils”实际上引用的是Utils.comObj对象！！MyClass 等于 MyClass.Companion
+    Utils.comObj.invokeNonStaticMethod()
     Utils.invokeNonStaticMethod()
-    ObjectClass.print()
+    val companionObj1 = Utils.comObj
+    val companionObj2 = Utils
+    println("Utils.comObj === " + companionObj1 + "\nUtils === " + companionObj2)
+
+
+//    println("\n\n\n")
+//    var a: Int = 5_2
+//    var b: Byte = 114 ?: 2
+//
+//    var str3: String = if (b > 100) {
+//        ">100"
+//        "111"
+//        var aa = "222"
+//        aa
+//    } else if (b > 50) ">50"
+//    else "<50"
+//    println(str3)
+
 
     // 函数形参默认值
-    defaultParam(1) // 11
-    defaultParam(1, 2)  // 3
-    defaultParam(1, 2, true)    // 3
+//    defaultParam(1) // 11
+//    defaultParam(1, 2)  // 3
+//    defaultParam(1, 2, true)    // 3
 }
 
 
@@ -107,6 +116,34 @@ private fun demo() {
     println("扩展函数 : " + sonA.toString2())
     sonA.result = "i am result."
     println("扩展属性 : " + sonA.result)
+
+    // 对象表达式
+    var count = 0
+    val anonymous = object {    // 相当于new Object() 并重写对应的属性和方法。变量的父类是Any
+        var x: Int = 0
+        override fun toString(): String {
+            return "我是匿名对象"
+        }
+
+        fun getIncreaseCount(): Int {
+//            sonA = SonA(99)     // kotlin匿名内部类中访问局部变量时无需加final修饰，变量能改变值。java需要！！
+            return ++count
+        }
+    }
+    println("getIncreaseCount = " + anonymous.getIncreaseCount() + " count = " + count)
+    println(anonymous)
+
+
+    val ab = object : MyObjectB(1), ILog {
+        override fun printB() {
+            super.printB()
+        }
+
+        override fun log() {
+        }
+    }
+    println("匿名内部类的javaClass = " + ab) // com.example.MyTestKt$main$ab$1@6e0be858。文件名$方法名$变量名$1
+
 }
 
 /**
@@ -124,3 +161,6 @@ fun optionParam(vararg args: Int) {
 }
 
 
+interface ILog {
+    fun log()
+}
