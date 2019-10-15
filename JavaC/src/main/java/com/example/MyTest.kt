@@ -41,11 +41,29 @@ fun main(args: Array<String>) {
 
 
     // 函数形参默认值
+//    defaultParam(a = 1, b = 2, normal = true) // 使用命名参数(形参变量名)来调用函数！！！
 //    defaultParam(1) // 11
 //    defaultParam(1, 2)  // 3
 //    defaultParam(1, 2, true)    // 3
+//    B().foo()   // BBB i = 10!!!
+
+    // 命名参数
+    // 所有位置参数都要放在第一个命名参数之前。调用方法时所有非命名参数(隐式声明)必须全部在所有命名参数(显式声明)前面！使用默认值后面的参数都要显式声明。
+    // 理解：如果不使用默认值，则直接传入参数(隐式声明)；一旦有一个参数使用默认值，则参数的位置发生变化，则该参数后面的参数都必须使用命名参数(显式声明)
+    namedParameter("", aa = false, bb = false, cc = false, word='e')
+
+    optionalParam(1, 2, 3)
+    intAndInteger()
 }
 
+
+fun namedParameter(
+    str: String,
+    aa: Boolean = true,
+    bb: Boolean = true,
+    cc: Boolean = false,
+    word: Char
+) {/*……*/}
 
 private fun demo() {
     // 基本类型
@@ -155,12 +173,71 @@ fun defaultParam(a: Int, b: Int = 10, normal: Boolean = true) {
     println(a + b)
 }
 
-// 可变数量的参数args, 是数组
-fun optionParam(vararg args: Int) {
-    println(args[0])
+// 可变数量的参数vararg
+// IntArray类型(即int[3])或Array <Any>类型，不是Array<Int> 类型
+fun optionalParam(vararg intArray: Int) {
+    println(intArray[0])
+    println(intArray.javaClass)   // class [I
 }
 
+// kotlin内的int 与 Integer：
+fun intAndInteger(): Int {
+    var a = 1               // unbox
+    var b: Int? = 2         // box
+    println(a.javaClass)    // int
+    println(b?.javaClass)   // int  （没装箱吧？）
+
+    var objArray = Array(3, { 111 })
+    println(
+        "=====objArray[0].javaClass=======" + objArray[0].javaClass)  // 1、坑:Array<Int>把元素取出来就成了基本类型！！get和set操作的都是基本类型。
+    println("=====objArray.javaClass=======" + objArray.javaClass)        // class [Ljava.lang.Integer;
+
+    var intArray = IntArray(5, { it + 10 })
+    println(intArray.javaClass)   // class [I
+    for (x in intArray) {
+        objArray[0] = x
+    }
+
+    var objArray2: Array<Any>
+    objArray2 = arrayOf(A(), 11, "22")   // Object[3]
+    objArray2[1] = 99                    // Array<Any>数组元素赋值时也会自动装箱
+
+//    val one: Integer = 1 // error: "The integer literal does not conform to the expected type Integer"
+//    val one2: Int = Int(1) // error: "Cannot access '<init>': it is private in 'Int'
+//    val two2: Integer = Integer.valueOf(22)   // 2、坑:提示valueOf返回 “Int！”？？
+    val two: Integer = Integer(2)
+    println(two.javaClass)   // Integer!!!
+
+    val three: Any = 3         // Any被赋值成基本类型时会自动装箱
+    println(three.javaClass)   // Integer!!!
+
+    when (three) {
+        is Int -> println("is Int")            // true    3、坑:实际对象为Integer的Any对象的is Int和is Integer都为true！！
+        is Integer -> println("is Integer")    // true
+        else -> println("is other")
+    }
+
+    return a
+}
+
+// 单表达式函数不写返回类型时，其返回类型是单表达式的返回类型，并不一定都是返回void！ 当返回值类型可由编译器推断时，显式声明返回类型是可选的。
+fun fun1(x: Int) = x * 2 // 省略 :Int
+fun fun2(x: Int) = println()  // 省略 :Unit
 
 interface ILog {
     fun log()
+}
+
+
+open class A {
+    open fun foo(i: Int = 10) {
+        println("AAA  i = " + i)
+    }
+}
+
+class B : A() {
+    // 重写的方法的所有参数都不能有默认值。重写方法的形参的默认参数与基类变量默认值相同！！覆盖方法总是使用与基类型方法相同的默认参数值。
+    override fun foo(i: Int) {
+        println("BBB i = " + i)
+    }
 }
