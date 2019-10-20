@@ -2,17 +2,67 @@ package com.example
 
 import java.lang.StringBuilder
 
+fun <T, R> Collection<T>.fold(
+    initial: R,
+    combine: (acc: R, nextElement: T) -> R
+): R {
+    var accumulator: R = initial
+    for (element: T in this) {
+//        accumulator = combine(accumulator, element)
+         combine.invoke(accumulator, element)
+    }
+    return accumulator
+}
+
+
 fun main(args: Array<String>) {
 
-    var sonA = SonA(8)
-    println("\n")
+    val items = listOf(1, 2, 3, 4, 5)
+// Lambdas 表达式是花括号括起来的代码块。
+    items.fold(0, {
+        // 如果一个 lambda 表达式有参数，前面是参数，后跟“->”
+        acc: Int, i: Int ->
+        print("acc = $acc, i = $i, ")
+        val result = acc + i
+        println("result = $result")
+        // lambda 表达式中的最后一个表达式是返回值：
+        result
+//        return@fold
+    })
+//    items.fold(0,null)
+
+// lambda 表达式的参数类型是可选的，如果能够推断出来的话：
+    val joinedToString = items.fold("Elements:", { acc, i -> acc + " " + i })
+// 函数引用也可以用于高阶函数调用：
+    val product = items.fold(1, Int::times)
+
+    //
+    var objB = MyObjectB(6)
+    var (num, name) = objB     // 将objB对象解构给2个变量
+    var (_, name2) = objB      //  不需要解构的变量使用“_”来占位
+    println(num)
+    println(name)
+
+    var map = HashMap<String, String>()
+    for((key, value) in map){   // 解构
+
+    }
+
+
+//    demo2()
+
+//    println("\n\n\n")
+//    var sonA = SonA(8)
+//    println("\n")
 //    println(sonA.memberUse)
 //    sonA.InnerClass().printInnerClass()
 //    println("==== ${MyObjectA(8)}")
 
 
 
+}
 
+private fun demo2() {
     // object
     ObjectClass.print()
     // companion object
@@ -25,45 +75,70 @@ fun main(args: Array<String>) {
     val companionObj2 = Utils
     println("Utils.comObj === " + companionObj1 + "\nUtils === " + companionObj2)
 
-
-//    println("\n\n\n")
-//    var a: Int = 5_2
-//    var b: Byte = 114 ?: 2
-//
-//    var str3: String = if (b > 100) {
-//        ">100"
-//        "111"
-//        var aa = "222"
-//        aa
-//    } else if (b > 50) ">50"
-//    else "<50"
-//    println(str3)
-
-
     // 函数形参默认值
-//    defaultParam(a = 1, b = 2, normal = true) // 使用命名参数(形参变量名)来调用函数！！！
-//    defaultParam(1) // 11
-//    defaultParam(1, 2)  // 3
-//    defaultParam(1, 2, true)    // 3
-//    B().foo()   // BBB i = 10!!!
+    defaultParam(a = 1, b = 2, normal = true) // 使用命名参数(形参变量名)来调用函数！！！
+    defaultParam(1) // 11
+    defaultParam(1, 2)  // 3
+    defaultParam(1, 2, true)    // 3
+    B().foo()   // BBB i = 10!!!
 
     // 命名参数
     // 所有位置参数都要放在第一个命名参数之前。调用方法时所有非命名参数(隐式声明)必须全部在所有命名参数(显式声明)前面！使用默认值后面的参数都要显式声明。
     // 理解：如果不使用默认值，则直接传入参数(隐式声明)；一旦有一个参数使用默认值，则参数的位置发生变化，则该参数后面的参数都必须使用命名参数(显式声明)
-    namedParameter("", aa = false, bb = false, cc = false, word='e')
+    namedParameter("", aa = false, bb = false, cc = false, word = 'e')
 
     optionalParam(1, 2, 3)
     intAndInteger()
+
+    var result = { base: Int ->
+        var a = base * 10
+        a      // lambda表达式的返回值
+    }(8)    // 这样result 就得到lambda表达式的返回值。
+    println(result)
+
+
+    // 匿名函数与lambda表达式，两者类型都是Function2<java.lang.Integer, java.lang.Integer, java.lang.Integer>
+    var anoFunction = fun(x: Int, y: Int): Int {
+        return x + y
+    }
+    var lambdaFunction = { x: Int, y: Int -> x + y }
+    println("anoFunction = " + anoFunction(2, 4))
+    println("lambdaFunction = " + lambdaFunction(3, 5))
+
+
+    // 每个lambda表达式or匿名函数都持有同一闭包下所有变量的一份副本！！！
+    fun makeList(str: String): () -> List<String> {
+        var list = mutableListOf<String>()
+        fun add(): List<String> {
+            list.add(str)
+            return list
+        }
+        return ::add
+    }
+    val add1 = makeList("111")  // 同一个函数实现访问同一份变量副本
+    println(add1())             // [111]
+    println(add1())             // [111, 111]
+
+    val add2 = makeList("111")
+    println(add2())             // [111]
+    println(add2())             // [111, 111]
+
+
+    // 函数声明与函数实现，与接口很相似！！
+    var test: (Int) -> Int = ::fun1
+    var test2 = ::fun1  // 函数引用
+    var test3: (Int) -> Int = { x -> x * 2 }
+    println(fun1(5))
+    println(test(5))
+    println(test3(5))
+    println(test.javaClass)
+
+    // 将类的方法赋值给变量
+    val plusFunction0 = MyObjectB::plus
+    val plusFunction: (MyObjectB, Int) -> Int = MyObjectB::plus  // javaClass = class com.example.MyTestKt$main$plus$1
+    println(plusFunction(MyObjectB(100), 5))
+
 }
-
-
-fun namedParameter(
-    str: String,
-    aa: Boolean = true,
-    bb: Boolean = true,
-    cc: Boolean = false,
-    word: Char
-) {/*……*/}
 
 private fun demo() {
     // 基本类型
@@ -75,6 +150,13 @@ private fun demo() {
     println(b.toString())
     var c = 4f
     var d = 5.0
+
+    var str3: String = if (b > 100) {
+        var aa = ">100"     // 这条表达式返回值是Unit！
+        aa
+    } else if (b > 50) ">50"
+    else "<50"
+    println(str3)
 
     // enum class
     var color: Color = Color.RED
@@ -164,6 +246,7 @@ private fun demo() {
 
 }
 
+
 /**
  * fun defaultParam(a: Int = 10, b: Int)
  * defaultParam(b = 1)  // 使用默认值 a = 10
@@ -179,6 +262,14 @@ fun optionalParam(vararg intArray: Int) {
     println(intArray[0])
     println(intArray.javaClass)   // class [I
 }
+
+fun namedParameter(
+    str: String,
+    aa: Boolean = true,
+    bb: Boolean = true,
+    cc: Boolean = false,
+    word: Char
+) {/*……*/}
 
 // kotlin内的int 与 Integer：
 fun intAndInteger(): Int {

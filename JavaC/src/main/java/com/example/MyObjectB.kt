@@ -2,6 +2,16 @@ package com.example
 
 open class MyObjectB(var member: Int) {
     internal var internalVar = 6    // 相同模块内可见
+    var num1 = 1
+    var name = "name"
+
+    operator fun component1(): Int {    // 必须用operator修饰
+        return num1
+    }
+
+    operator fun component2(): String {
+        return name
+    }
 
     override fun toString(): String {
         return super.toString() + " member = " + member
@@ -11,7 +21,9 @@ open class MyObjectB(var member: Int) {
         println("MyObjectB printB.")
     }
 
-
+    fun plus(i: Int) : Int{
+        return i + 10
+    }
 
     /************************************* Getters 与 Setters ********************************/
     var str: String = "init"
