@@ -36,7 +36,7 @@ open class MyObjectB(var member: Int) {
         get() = 3
     var ddd = 1
         get() = 3 + field
-
+        private set // 将setter方法改为private
 
     private var prix = 3
     var pubx = 4

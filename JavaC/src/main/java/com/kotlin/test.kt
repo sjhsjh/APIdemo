@@ -139,7 +139,8 @@ fun printCollection() {
 	for(entry in map1.entries){
 		println("key = " + entry.key + " value = " + entry.value)
 	}
-	
+	for ((key, value) in map1) {   // 解构。Map.Entry内含componentN方法
+	}
 	
 }
 

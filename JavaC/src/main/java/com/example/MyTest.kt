@@ -36,17 +36,7 @@ fun main(args: Array<String>) {
 // 函数引用也可以用于高阶函数调用：
     val product = items.fold(1, Int::times)
 
-    //
-    var objB = MyObjectB(6)
-    var (num, name) = objB     // 将objB对象解构给2个变量
-    var (_, name2) = objB      //  不需要解构的变量使用“_”来占位
-    println(num)
-    println(name)
 
-    var map = HashMap<String, String>()
-    for((key, value) in map){   // 解构
-
-    }
 
 
 //    demo2()
@@ -138,6 +128,19 @@ private fun demo2() {
     val plusFunction: (MyObjectB, Int) -> Int = MyObjectB::plus  // javaClass = class com.example.MyTestKt$main$plus$1
     println(plusFunction(MyObjectB(100), 5))
 
+    // componentN方法与解构。解构作用：将对象的成员变量快速定义为N个变量。
+    // entry可被解构为(key, value)。data class成员也被自动解构。
+    var objB = MyObjectB(6)
+    var (num, name) = objB     // 将objB对象解构给2个变量
+    var (_, name2) = objB      //  不需要解构的变量使用“_”来占位
+    println("num = " + num)
+    println("name = " + name)
+
+    var pair = Pair<String, Int>("one", 1)  // 任意两种类型组合成了一种新类型
+    var (fir, sec) = pair                   // " (fir, sec)"是一个它们所属的对象
+    println("fir = " + fir + " sec = " + sec)
+    val triple = Triple<String, Int, Boolean>("two", 2, true)
+
 }
 
 private fun demo() {
@@ -198,6 +201,8 @@ private fun demo() {
     println(bean2)
     println(bean1.equals(bean2))
     println((bean1 == bean2))
+    var (name, age) = bean1
+    println("name = " + name + " age = " + age)
 
     // 构造函数
     var myObjectA = MyObjectA(8, 9)
