@@ -87,6 +87,17 @@ private fun demo2() {
     println(result)
 
 
+    // lambda 表达式使用
+    val sum: (q: Int, w: Int) -> Int = { x, y: Int -> x + y }
+    val sum2: (Int) -> Int = { y: Int -> 3 * y }
+//    ints.filter { it > 0 } // 这个字面值是“(it: Int) -> Boolean”类型的
+//    ints.filter { (it: Int) -> it > 0 } // 这个字面值是“(it: Int) -> Boolean”类型的
+    lambdaFunction { y -> 2 * y }
+    lambdaFunction { it: Int -> it * 3 }
+    lambdaFunction { it -> it * 4 }
+    lambdaFunction { it * 5 }
+
+
     // 匿名函数与lambda表达式，两者类型都是Function2<java.lang.Integer, java.lang.Integer, java.lang.Integer>
     var anoFunction = fun(x: Int, y: Int): Int {
         return x + y
@@ -314,6 +325,10 @@ fun intAndInteger(): Int {
     }
 
     return a
+}
+
+fun lambdaFunction(sum2: (Int) -> Int) {
+    println(sum2(7))   // Function1<java.lang.Integer, java.lang.Integer>
 }
 
 // 单表达式函数不写返回类型时，其返回类型是单表达式的返回类型，并不一定都是返回void！ 当返回值类型可由编译器推断时，显式声明返回类型是可选的。
