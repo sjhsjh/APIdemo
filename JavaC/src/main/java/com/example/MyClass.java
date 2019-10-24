@@ -60,6 +60,12 @@ public class MyClass {
         // 数组转List:
         String[] array1 = {"a", "b", "c"};
         List list1 = Arrays.asList(array1);
+
+
+        // kotlin文件内调用扩展函数：对象.扩展方法()。sonA.toString2()
+        // java文件内调用扩展函数：“文件名+Kt”.扩展方法(对象)。SonAKt.toString2(sonA)
+        SonA sonA = new SonA(99);
+        System.out.println("\n" + SonAKt.toString2(sonA));
     }
 
     private static void collectionDelete() {

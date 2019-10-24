@@ -48,9 +48,9 @@ public var SonA.result: String
 
 /******************************************* 扩展函数 ***********************************************/
 // 扩展函数。定义在任意class外部！！这里可以是xxx.toString2()
-fun SonA?.toString2(): String {
+fun SonA?.toString2(): String { // 用“?.”定义为可空类型扩展方法！对象为null时仍然会执行函数体！
     // this 关键字在扩展函数内部对应到接收者对象（即传过来的在点符号前的对象）
-    if (this == null) return "null"
+    if (this == null) return "my null"
     // 空检测之后，“this”会自动转换为非空类型，所以下面的 toString() 解析为 Any 类的成员函数
     return "扩展函数 " + toString()
 }
