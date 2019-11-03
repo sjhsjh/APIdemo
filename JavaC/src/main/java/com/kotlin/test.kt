@@ -64,7 +64,8 @@ fun printArray() {
 	println(Arrays.toString(arr7))
 	println(arr7.contentToString())
 	println(arr1.javaClass)
-	println(arr7.indices)    // 返回数组索引区间对象！！如0..4，常用于遍历
+	println(arr7.indices)    // 返回数组索引区间对象IntRange！！如0..4，常用于遍历
+	println(3 until 6)
 	println(arr7.lastIndex)    // 返回数组最后的索引，一般是arr7.size - 1
 
 	// 数组常用api
@@ -78,6 +79,19 @@ fun printArray() {
 	var arr10 = arr3 + arr9        // 数组可以直接相加、不可以相减！！
 	println(Arrays.toString(arr10))
 
+	// 遍历
+	for(item in arr10){
+		print(item.toString() + " ")
+	}
+	println()
+	for(i in arr10.indices){	// indices是和“1 until 3”都是区间对象IntRange
+		print(arr10[i].toString() + " ")
+	}
+	println()
+	for(i in 1 until 3){
+		print(i.toString() + " ")
+	}
+	println()
 }
 
 fun printCollection() {
@@ -97,12 +111,21 @@ fun printCollection() {
 	// list、set和map都能相加减（因为具有operator修饰的plus和minus方法）！！而数组只能相加不能相减！！（相加是所有元素合并（元素可重复），相减是减去公共元素）
 	var list5 = list4 + list1
 
-
 	println(list1.subList(0, 2))    // 返回指定区间的子list，左闭右开
 	println(list2)
 	println(list3)
 	println(list4)
 	println("list5 = " + list5 + "\n")
+
+	// 遍历
+	for(item in list4){		// 只遍历元素
+		print(item.toString() + " ")
+	}
+	println()
+	for(i in list4.indices){	// 同时遍历索引和元素。indices是和“1 until 3”都是区间对象IntRange
+		print(list4[i].toString() + " ")
+	}
+	println()
 
 	// 创建set
 	var set1 = setOf(1, 2)           // 不可变集合(Collections$SingletonSet)
@@ -139,7 +162,11 @@ fun printCollection() {
 	for(entry in map1.entries){
 		println("key = " + entry.key + " value = " + entry.value)
 	}
+	for (item in map1) {
+		println(item)
+	}
 	for ((key, value) in map1) {   // 解构。Map.Entry内含componentN方法
+		println("key = " + key + " value = " + value)
 	}
 	
 }
@@ -149,15 +176,12 @@ fun printFunction() {
 	
 }
 
-
-
-public class MyClass2 {
+class MyClass2 {
 	open var bufferingTimes: Int = 10
 
-	fun plus():Unit {
+	fun plus(): Unit {
 		var bb: Int = 2999999
 		val bb2: String
-
 	}
 
 

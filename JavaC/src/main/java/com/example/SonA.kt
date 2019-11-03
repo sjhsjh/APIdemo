@@ -67,3 +67,11 @@ fun printClassName(s: Shape) {
     println(s.getName())        // Shape!!
 }
 /****************************************************************************************************/
+sealed class Sjh {
+    abstract fun asd()
+}
+
+open class SjhSon : Sjh() {
+    override fun asd() {
+    }
+}

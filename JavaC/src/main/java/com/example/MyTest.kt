@@ -260,6 +260,7 @@ private fun demo() {
     }
     println("匿名内部类的javaClass = " + ab) // com.example.MyTestKt$main$ab$1@6e0be858。文件名$方法名$变量名$1
 
+    (ab as java.lang.Object).wait()    // 一定要在kotlin内使用wait方法时就这样强转
 }
 
 
@@ -313,7 +314,8 @@ fun intAndInteger(): Int {
 //    val one2: Int = Int(1) // error: "Cannot access '<init>': it is private in 'Int'
 //    val two2: Integer = Integer.valueOf(22)   // 2、坑:提示valueOf返回 “Int！”？？
     val two: Integer = Integer(2)
-    println(two.javaClass)   // Integer!!!
+    println(two.javaClass)      // Integer!!!
+    println(two::class.java)    // kotlin获取对象的class的两种方法
 
     val three: Any = 3         // Any被赋值成基本类型时会自动装箱
     println(three.javaClass)   // Integer!!!
@@ -352,3 +354,7 @@ class B : A() {
         println("BBB i = " + i)
     }
 }
+//class Ss:Sjh(){   // 密封类的直接子类必须跟密封类在同一文件中
+//    override fun asd() {
+//    }
+//}

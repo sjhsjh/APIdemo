@@ -6,6 +6,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import kotlin.jvm.JvmClassMappingKt;
+import kotlin.reflect.KClass;
+
 public class MyClass {
 
     public static void main(String[] args) {
@@ -26,13 +29,15 @@ public class MyClass {
         Utils.comObj.invokeStaticMethod();
         Utils.comObj.invokeNonStaticMethod();      // without @JvmStatic
 
-
         // ObjectClass.print();  // with @JvmStatic.
         ObjectClass.INSTANCE.print(); // without @JvmStatic
         System.out.println(ObjectClass.INSTANCE);
 
         System.out.println(ObjectClass.User);
         System.out.println(ObjectClass.User2);
+
+        // java中获取kotlin中的KClass
+        KClass kClass = JvmClassMappingKt.getKotlinClass(  Utils.comObj.getQqq().getClass());
     }
 
     private static void usefulApi() {
