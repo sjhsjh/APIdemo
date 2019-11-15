@@ -63,10 +63,10 @@ fun printArray() {
 	println(Arrays.toString(arr5))
 	println(Arrays.toString(arr7))
 	println(arr7.contentToString())
-	println(arr1.javaClass)
-	println(arr7.indices)    // 返回数组索引区间对象IntRange！！如0..4，常用于遍历
+	println(arr1.javaClass)      // class [LMyClass2;
+	println(arr7.indices)     	 // 返回数组索引区间对象IntRange！！如0..4，常用于遍历
 	println(3 until 6)
-	println(arr7.lastIndex)    // 返回数组最后的索引，一般是arr7.size - 1
+	println(arr7.lastIndex)  	 // 返回数组最后的索引，一般是arr7.size - 1
 
 	// 数组常用api
 	println(arr7.find({ it > 12 })) // 查找第一个符合条件的元素，13

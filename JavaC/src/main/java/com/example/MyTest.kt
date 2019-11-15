@@ -2,53 +2,47 @@ package com.example
 
 import java.lang.StringBuilder
 
-fun <T, R> Collection<T>.fold(
-    initial: R,
-    combine: (acc: R, nextElement: T) -> R
-): R {
-    var accumulator: R = initial
-    for (element: T in this) {
-//        accumulator = combine(accumulator, element)
-         combine.invoke(accumulator, element)
-    }
-    return accumulator
-}
-
-
 fun main(args: Array<String>) {
 
-    val items = listOf(1, 2, 3, 4, 5)
-// Lambdas 表达式是花括号括起来的代码块。
-    items.fold(0, {
-        // 如果一个 lambda 表达式有参数，前面是参数，后跟“->”
-        acc: Int, i: Int ->
-        print("acc = $acc, i = $i, ")
-        val result = acc + i
-        println("result = $result")
-        // lambda 表达式中的最后一个表达式是返回值：
-        result
-//        return@fold
-    })
-//    items.fold(0,null)
+    val c = MyClass::class
+    println("====" + c)         // kotlin的class对象KClass：class com.example.MyClass (Kotlin reflection is not available)
+    println("====" + c.java)    // java的class对象：class com.example.MyClass
+    println("====" + c.java.kotlin)     // kClass.java获取java的class对象，javaClass.kotlin 获取kotlin的KClass对象！
 
-// lambda 表达式的参数类型是可选的，如果能够推断出来的话：
-    val joinedToString = items.fold("Elements:", { acc, i -> acc + " " + i })
-// 函数引用也可以用于高阶函数调用：
-    val product = items.fold(1, Int::times)
+    val d = MyClass()
+    println("====" + d.javaClass)
 
+    // kotlin集合的filter方法，将集合的item用lambda表达式进行过滤，只留下执行lambda表达式返回true的元素
+    fun isOdd(x: Int) = x % 2 != 0
+    val numbers = listOf(1, 2, 3)
+    println(numbers.filter(::isOdd))   // [1, 3]
+
+    val matches: (Regex, CharSequence) -> Boolean = Regex::matches
+    val numberRegex = "\\d+".toRegex()
+    val list = listOf("abc", "124", "a70")
+    println(list.filter(numberRegex::matches))  // 某个对象的方法
+    println(list.filter({
+        numberRegex.matches(it)     // 注意不需要return！！
+    }))
+
+    // kotlin集合的map方法，将集合的item批量处理成一个list
+    val strs = listOf("a", "bc", "def")
+    println(strs.map(String::length))   // [1, 2, 3]
+
+    // kotlin集合的forEach方法,对集合的每个item都进行某些处理
+    strs.forEach {
+        println(it)
+    }
 
 
 
 //    demo2()
-
 //    println("\n\n\n")
 //    var sonA = SonA(8)
 //    println("\n")
 //    println(sonA.memberUse)
 //    sonA.InnerClass().printInnerClass()
 //    println("==== ${MyObjectA(8)}")
-
-
 
 }
 
@@ -97,7 +91,6 @@ private fun demo2() {
     lambdaFunction { it -> it * 4 }
     lambdaFunction { it * 5 }
 
-
     // 匿名函数与lambda表达式，两者类型都是Function2<java.lang.Integer, java.lang.Integer, java.lang.Integer>
     var anoFunction = fun(x: Int, y: Int): Int {
         return x + y
@@ -133,6 +126,23 @@ private fun demo2() {
     println(test(5))
     println(test3(5))
     println(test.javaClass)
+
+    val items = listOf(1, 2, 3, 4, 5)
+    // Lambda 表达式是花括号括起来的代码块。
+    items.fold(0, { acc: Int, i: Int ->
+
+        print("acc = $acc, i = $i, ")
+        val result = acc + i
+        println("result = $result")
+        // lambda 表达式中的最后一个表达式是返回值：
+        result
+//        return@fold
+    })
+    // lambda 表达式的参数类型是可选的，如果能够推断出来的话：
+    val joinedToString = items.fold("Elements:", { acc, i -> acc + " " + i })
+    // 函数引用也可以用于高阶函数调用：
+    val product = items.fold(1, Int::times)
+
 
     // 将类的方法赋值给变量
     val plusFunction0 = MyObjectB::plus
@@ -358,3 +368,15 @@ class B : A() {
 //    override fun asd() {
 //    }
 //}
+
+fun <T, R> Collection<T>.fold(
+    initial: R,
+    combine: (acc: R, nextElement: T) -> R
+): R {
+    var accumulator: R = initial
+    for (element: T in this) {
+//        accumulator = combine(accumulator, element)
+        combine.invoke(accumulator, element)
+    }
+    return accumulator
+}
