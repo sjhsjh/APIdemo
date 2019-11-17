@@ -5,7 +5,17 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'org.jetbrains.kotlin:kotlin-reflect:1.3.41' // kotlin反射的依赖
+    // 协程
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
 }
+
+kotlin{
+    experimental {  // 协程
+        coroutines 'enable'
+    }
+}
+
 buildscript {
     ext.kotlin_version = '1.3.50'
     repositories {
