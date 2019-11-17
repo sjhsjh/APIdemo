@@ -4,13 +4,6 @@ import java.lang.StringBuilder
 
 fun main(args: Array<String>) {
 
-    val c = MyClass::class
-    println("====" + c)         // kotlin的class对象KClass：class com.example.MyClass (Kotlin reflection is not available)
-    println("====" + c.java)    // java的class对象：class com.example.MyClass
-    println("====" + c.java.kotlin)     // kClass.java获取java的class对象，javaClass.kotlin 获取kotlin的KClass对象！
-
-    val d = MyClass()
-    println("====" + d.javaClass)
 
     // kotlin集合的filter方法，将集合的item用lambda表达式进行过滤，只留下执行lambda表达式返回true的元素
     fun isOdd(x: Int) = x % 2 != 0
@@ -324,11 +317,21 @@ fun intAndInteger(): Int {
 //    val one2: Int = Int(1) // error: "Cannot access '<init>': it is private in 'Int'
 //    val two2: Integer = Integer.valueOf(22)   // 2、坑:提示valueOf返回 “Int！”？？
     val two: Integer = Integer(2)
-    println(two.javaClass)      // Integer!!!
-    println(two::class.java)    // kotlin获取对象的class的两种方法
+    println(two.javaClass)      // Integer!!!   kotlin获取对象的class的方法①
+    println(two::class.java)    // kotlin获取对象的class的方法②
+    println(Int::class.java)
 
     val three: Any = 3         // Any被赋值成基本类型时会自动装箱
     println(three.javaClass)   // Integer!!!
+
+    // kotlin的class对象KClass：class com.example.MyClass (Kotlin reflection is not available)
+    println("====" + MyClass::class)
+    println("====" + MyClass()::class)
+
+    val c = MyClass::class
+    println("====" + c.java)         // java的class对象：class com.example.MyClass
+    println("====" + c.java.kotlin)  // kClass.java获取java的class对象，javaClass.kotlin 获取kotlin的KClass对象！
+
 
     when (three) {
         is Int -> println("is Int")            // true    3、坑:实际对象为Integer的Any对象的is Int和is Integer都为true！！
