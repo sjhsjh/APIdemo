@@ -1,14 +1,16 @@
 package com.example
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.lang.StringBuilder
 
-
 fun main(args: Array<String>) {
-
 
     // kotlin集合的filter方法，将集合的item用lambda表达式进行过滤，只留下执行lambda表达式返回true的元素
     fun isOdd(x: Int) = x % 2 != 0
@@ -23,7 +25,7 @@ fun main(args: Array<String>) {
         numberRegex.matches(it)     // 注意不需要return！！
     }))
 
-    // kotlin集合的map方法，将集合的item批量处理成一个list
+    // kotlin集合的map方法，将集合的item批量处理成另一种类型的值的list
     val strs = listOf("a", "bc", "def")
     println(strs.map(String::length))   // [1, 2, 3]
 
@@ -33,16 +35,7 @@ fun main(args: Array<String>) {
     }
 
 
-
-    GlobalScope.launch { // 在后台启动一个新的协程并继续
-        delay(1000L)
-        println("World!")
-    }
-    println("Hello,") // 主线程中的代码会立即执行
-    runBlocking {     // 但是这个表达式阻塞了主线程
-        delay(2000L)  // ……我们延迟 2 秒来保证 JVM 的存活
-    }
-
+    coroutines()
 
 //    demo2()
 //    println("\n\n\n")
@@ -51,6 +44,50 @@ fun main(args: Array<String>) {
 //    println(sonA.memberUse)
 //    sonA.InnerClass().printInnerClass()
 //    println("==== ${MyObjectA(8)}")
+}
+
+private fun coroutines() {
+    val job: Job = GlobalScope.launch { // 在后台启动一个新的协程并继续
+        println("==launch 1==" + Thread.currentThread().name)  // DefaultDispatcher-worker-1
+        delay(1000L)
+        println("==launch 2==" + Thread.currentThread().name)  // DefaultDispatcher-worker-4
+        withContext(Dispatchers.IO) {
+            println("==launch 3==" + Thread.currentThread().name)
+        }
+    }
+//    job.join()    // 作用类似Thread.join()
+//    job.cancel()
+    val deferred = GlobalScope.async {
+        5 * 5
+        println("==async==" + Thread.currentThread().name)  // DefaultDispatcher-worker-3
+    }
+    runBlocking {
+        println(deferred.await())   // await:返回协程执行的结果。只能在协程内使用。
+    }
+
+    println("Hello,") // 主线程中的代码会立即执行
+    runBlocking {     // runBlocking代码块是同步的代码
+        delay(2000L)  // runBlocking里加delay()可以阻塞当前的线程，等价于Thread.sleep()
+        withContext(Dispatchers.IO) {
+
+        }
+        println("==runBlocking==" + Thread.currentThread().name)  // main!!!
+    }
+
+
+    for (i in 1..1_00_00L)
+        GlobalScope.launch {
+            val c = Thread.currentThread().name // delay前后使用同一个线程？？
+            delay(1000L)
+            val d = Thread.currentThread().name
+            if (!c.equals(d)) {
+                println("==========================,")
+            }
+        }
+
+
+//    Thread.sleep(2000)
+    println("Stop")
 
 }
 
@@ -199,10 +236,10 @@ private fun demo() {
     println(Color.BLUE.ordinal) // 2
     println(Color.BLUE > Color.RED)
 
-    var array:Array<Color> = Color.values()
+    var array: Array<Color> = Color.values()
     println(array[0])
 
-    var col: Color  = Color.valueOf("GREEN")  // 大小写必须匹配
+    var col: Color = Color.valueOf("GREEN")  // 大小写必须匹配
     println(col)
 
     // “==”与“===”
