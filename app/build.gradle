@@ -5,6 +5,15 @@ android {
     compileSdkVersion 28
     buildToolsVersion '26.0.2'
 
+    signingConfigs {
+        release {
+            storeFile file('..\\keystore\\release\\smart_sign.jks')
+            storePassword 'aq18z0'
+            keyAlias = 'smart-camera'
+            keyPassword 'z191817h'
+        }
+    }
+
     defaultConfig {
         applicationId "com.example.apidemo"
         minSdkVersion 16
@@ -13,11 +22,13 @@ android {
         versionName "1.0"
         multiDexEnabled true
     }
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("boolean", "IS_DEBUG", "false")
+            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
@@ -31,6 +42,7 @@ android {
             dirs 'libs'
         }
     }
+
     lintOptions {
         abortOnError false
         // Returns whether lint should check for fatal errors during release builds. Default is true. If issues with severity "fatal" are found, the release build is aborted.
@@ -73,7 +85,7 @@ android {
         implementation 'com.android.support.constraint:constraint-layout:1.1.3'
         // 滴滴开源组件DoraemonKit
         debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:1.1.6'
-        releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:1.1.6'
+        releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:1.1.6' // release版空实现
 //        debugImplementation 'com.github.didi:DoraemonKit:1.1.7'  // jitpack
         implementation 'com.github.chrisbanes:PhotoView:2.1.3'  // 2.3.0版本需要compileSdkVersion 28，且编译运行时报错Multiple dex
         // firebase
