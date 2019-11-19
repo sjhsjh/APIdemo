@@ -6,13 +6,14 @@ import com.didichuxing.doraemonkit.DoraemonKit;
 import com.example.apidemo.manager.ADManager;
 import com.example.apidemo.utils.CrashHandler;
 import com.example.apidemo.utils.NLog;
+import com.squareup.leakcanary.LeakCanary;
 import com.tcl.lockscreen.statistics.StatisticsKind;
 import com.tcl.lockscreen.statistics.StatisticsWrapper;
 
 /**
  * Created on 2017/3/29.
  */
-public class APIDemoApplication extends Application{
+public class APIDemoApplication extends Application {
     private static Context mContext;
 
     @Override
@@ -26,10 +27,10 @@ public class APIDemoApplication extends Application{
         initNLog();
         DoraemonKit.install(this);
         ADManager.getInstance().initAD(mContext);
-
+        initLeakCanary();
     }
 
-    public static Context getContext(){
+    public static Context getContext() {
         return mContext;
     }
 
@@ -38,18 +39,29 @@ public class APIDemoApplication extends Application{
         StatisticsWrapper.getInstance().addStatisitcs(StatisticsKind.STATISTICS_UMENG);
     }
 
-    private void initTraceException(){
+    private void initTraceException() {
         StatisticsWrapper.getInstance().initTraceException(true);
     }
 
-    private void initCrashHandler(){
+    private void initCrashHandler() {
         CrashHandler crashHandler = new CrashHandler();
         crashHandler.init(getApplicationContext());
     }
 
-    private void initNLog(){
+    private void initNLog() {
         NLog.setLogDirPath(android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/APIDemoLog");
         // android.os.Environment.getExternalStorageDirectory().getAbsolutePath()  getExternalFilesDir(null).getPath()
     }
 
+    private void initLeakCanary() {
+        NLog.i("sjh1", "initLeakCanary IS_DEBUG = " + BuildConfig.IS_DEBUG);
+        if (BuildConfig.IS_DEBUG) {
+            if (LeakCanary.isInAnalyzerProcess(this)) {
+                // This process is dedicated to LeakCanary for heap analysis.
+                // You should not init your app in this process.
+                return;
+            }
+            LeakCanary.install(this);
+        }
+    }
 }
