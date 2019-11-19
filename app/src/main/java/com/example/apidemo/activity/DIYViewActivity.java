@@ -175,7 +175,7 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
         } catch (Exception e ){
             e.printStackTrace();
         }
-        NLog.i("sjh0", "全屏高度：===============================================\n1、dm.heightPixels " + dm4.heightPixels);
+        NLog.w("sjh0", "全屏高度：===============================================\n1、dm.heightPixels " + dm4.heightPixels);
 
         Point point = new Point();// 方法2
         wm.getDefaultDisplay().getRealSize(point);
