@@ -53,7 +53,7 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_layout);
 
-        ViewTreeObserver viewTreeObserver  = findViewById(R.id.relative).getViewTreeObserver();
+        ViewTreeObserver viewTreeObserver = findViewById(R.id.relative).getViewTreeObserver();
         viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
             @Override

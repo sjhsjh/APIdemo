@@ -17,11 +17,13 @@ import com.example.apidemo.R;
  * 所以推荐是用WindowFlagWindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON。
  * 使用方法是： 在Activity中： getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
  *  甚至可以在布局中添加这个属性：android:keepScreenOn=”true”
- * @author jinhui.shao
+ * @author shao
  *
  */
 public class PowerManagerActivity extends BaseActivity {
 	private static Context context;
+
+	// @SuppressLint("WrongViewCast")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -45,25 +47,25 @@ public class PowerManagerActivity extends BaseActivity {
 
 		Log.i("sjh2", "not interactive");
 
-		((Button)findViewById(R.id.button1)).setText("acquire wakelock");
+		((Button) findViewById(R.id.button1)).setText("acquire wakelock");
 		findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				wakeLock.acquire(); //可以申请多个wakeLock
 			}
 		});
-		
-		((Button)findViewById(R.id.button2)).setText("release wakelock");
+
+		((Button) findViewById(R.id.button2)).setText("release wakelock");
 		findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				wakeLock.release();
 			}
 		});
-		
-		((Button)findViewById(R.id.button3)).setText("tudo ");
+
+		((Button) findViewById(R.id.button3)).setText("tudo ");
 		findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
 			
 			@Override

@@ -14,7 +14,6 @@ import com.example.apidemo.utils.NLog;
 import com.example.apidemo.view.ChildView;
 import com.example.apidemo.view.MyHorizontalScrollView;
 import java.util.ArrayList;
-import android.app.Activity;
 
 public class EventDispatchActivity extends BaseActivity {
     private MyHorizontalScrollView mScrollView;
@@ -27,7 +26,7 @@ public class EventDispatchActivity extends BaseActivity {
         setContentView(R.layout.event_dispatch);
         mScrollView = (MyHorizontalScrollView) findViewById(R.id.scrollview);
         mChildView = (ChildView) findViewById(R.id.childview);
-        mListView = (ListView)findViewById(R.id.listview1);
+        mListView = (ListView) findViewById(R.id.listview1);
 
         WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm2 = new DisplayMetrics();
@@ -41,7 +40,7 @@ public class EventDispatchActivity extends BaseActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-     //   NLog.i("sjh1", "activity dispatchTouchEvent. " + event.getAction());
+        //   NLog.i("sjh1", "activity dispatchTouchEvent. " + event.getAction());
 //        NLog.d("sjh1", "first child text : " + ((TextView)((RelativeLayout)(mListView).getChildAt(0)).getChildAt(0)).getText()
 //         + "  ===  " + ((TextView)((RelativeLayout)(mListView.getAdapter().getView(10, null, null))).getChildAt(0)).getText()); // getScrollY 0
         return super.dispatchTouchEvent(event);
@@ -53,10 +52,10 @@ public class EventDispatchActivity extends BaseActivity {
     public View getViewByPosition(int pos, ListView listView) {
         final int firstPosition = listView.getFirstVisiblePosition();
         // getChildCount（）  返回的是显示在屏幕上可见的item的数量(包含显示不玩全的)
-        final int lastPosition = firstPosition + listView.getChildCount() -1;
-        if(pos < firstPosition || pos > lastPosition) {
+        final int lastPosition = firstPosition + listView.getChildCount() - 1;
+        if (pos < firstPosition || pos > lastPosition) {
             return listView.getAdapter().getView(pos, null, listView);
-        }else{
+        } else {
             final int childIndex = pos - firstPosition;
             return listView.getChildAt(childIndex);
         }
@@ -73,7 +72,7 @@ public class EventDispatchActivity extends BaseActivity {
         }
         int firstVisiblePosition = mListView.getFirstVisiblePosition();
         int top = c.getTop();
-        return -top + firstVisiblePosition * c.getHeight() ;
+        return -top + firstVisiblePosition * c.getHeight();
     }
 
     @Override
@@ -103,8 +102,6 @@ public class EventDispatchActivity extends BaseActivity {
 
 
     }
-
-
 
 
 }
