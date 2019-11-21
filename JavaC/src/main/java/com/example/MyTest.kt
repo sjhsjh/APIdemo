@@ -1,42 +1,29 @@
 package com.example
 
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.setMain
 import kotlinx.coroutines.withContext
 import java.lang.StringBuilder
 
 fun main(args: Array<String>) {
 
-    // kotlin集合的filter方法，将集合的item用lambda表达式进行过滤，只留下执行lambda表达式返回true的元素
-    fun isOdd(x: Int) = x % 2 != 0
-    val numbers = listOf(1, 2, 3)
-    println(numbers.filter(::isOdd))   // [1, 3]
-
-    val matches: (Regex, CharSequence) -> Boolean = Regex::matches
-    val numberRegex = "\\d+".toRegex()
-    val list = listOf("abc", "124", "a70")
-    println(list.filter(numberRegex::matches))  // 某个对象的方法
-    println(list.filter({
-        numberRegex.matches(it)     // 注意不需要return！！
-    }))
-
-    // kotlin集合的map方法，将集合的item批量处理成另一种类型的值的list
-    val strs = listOf("a", "bc", "def")
-    println(strs.map(String::length))   // [1, 2, 3]
-
-    // kotlin集合的forEach方法,对集合的每个item都进行某些处理
-    strs.forEach {
-        println(it)
-    }
-
 
     coroutines()
 
+//    collectionApi()
 //    demo2()
 //    println("\n\n\n")
 //    var sonA = SonA(8)
@@ -46,49 +33,203 @@ fun main(args: Array<String>) {
 //    println("==== ${MyObjectA(8)}")
 }
 
-private fun coroutines() {
-    val job: Job = GlobalScope.launch { // 在后台启动一个新的协程并继续
-        println("==launch 1==" + Thread.currentThread().name)  // DefaultDispatcher-worker-1
+fun coroutines() {
+    // https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-test
+    Dispatchers.setMain(newSingleThreadContext("MyMain"))   // java程序setMain之后Dispatchers.Main才能用！！！
+
+    val job: Job = GlobalScope.launch{
+        // 在后台启动一个新的协程并继续
+        println("==launch 1==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // DefaultDispatcher-worker-1
         delay(1000L)
-        println("==launch 2==" + Thread.currentThread().name)  // DefaultDispatcher-worker-4
-        withContext(Dispatchers.IO) {
-            println("==launch 3==" + Thread.currentThread().name)
+        launch(Dispatchers.Main) {
+            println("==launch 4==" + Thread.currentThread().name + "————" + coroutineContext[Job])
+        }
+        println(
+            "==launch 2==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // DefaultDispatcher-worker-4
+        // withContext的返回值是lambda表达式内最后一条表达式的值！
+        var x = withContext(Dispatchers.Main) {
+            println("==launch 3==" + Thread.currentThread().name + "————" + coroutineContext[Job])
+            5
         }
     }
 //    job.join()    // 作用类似Thread.join()
 //    job.cancel()
-    val deferred = GlobalScope.async {
+    val deferred = GlobalScope.async(CoroutineName("myCoroutineName")) {
+        delay(100L)
+        println(
+            "==async==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // DefaultDispatcher-worker-3
         5 * 5
-        println("==async==" + Thread.currentThread().name)  // DefaultDispatcher-worker-3
     }
+
     runBlocking {
-        println(deferred.await())   // await:返回协程执行的结果。只能在协程内使用。
+        println(deferred.await())   // await:返回协程执行的结果。只能在协程内使用。await返回值是async的返回值.await会等待对应的async执行完毕
     }
 
-    println("Hello,") // 主线程中的代码会立即执行
-    runBlocking {     // runBlocking代码块是同步的代码
+
+    runBlocking {
+        // runBlocking代码块是同步的代码
+        launch(Dispatchers.Main) {
+            // 运行在父协程的上下文中，即 runBlocking 主协程
+            println("main runBlocking      :  ${Thread.currentThread().name + "————" + coroutineContext[Job]}")
+        }
+
+        println(deferred.await())   // ???
         delay(2000L)  // runBlocking里加delay()可以阻塞当前的线程，等价于Thread.sleep()
-        withContext(Dispatchers.IO) {
-
-        }
-        println("==runBlocking==" + Thread.currentThread().name)  // main!!!
+//        withContext(Dispatchers.IO) {
+//
+//        }
+        println("==runBlocking==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // main!!!
     }
 
+    // runBlocking可以阻塞等待它内部的所有协程完成。
+//    runBlocking {
+//        println("==runBlocking=888=" + Thread.currentThread().name + "————" + coroutineContext[Job])
+//        launch { // 在 runBlocking 作用域中启动一个新协程。runBlocking内使用launch类似 handler.postDelay.
+//            delay(1000L)
+//            println("==runBlocking=999=" + Thread.currentThread().name + "————" + coroutineContext[Job]) // main???
+//        }
+//        println("Hello=====00======")
+//    }
 
-    for (i in 1..1_00_00L)
-        GlobalScope.launch {
-            val c = Thread.currentThread().name // delay前后使用同一个线程？？
-            delay(1000L)
-            val d = Thread.currentThread().name
-            if (!c.equals(d)) {
-                println("==========================,")
-            }
+    println("Hello========\n\n")
+//    runBlocking { // this: CoroutineScope
+//        launch {
+//            println("gggggggggggg Task from runBlocking")
+//            delay(200L)
+//            println("444 Task from runBlocking" + Thread.currentThread().name + "————" + coroutineContext[Job])
+//        }
+//        coroutineScope { // 创建一个协程作用域,类似runBlocking？？？
+//            launch {
+//                delay(500L)
+//                println("33 Task from nested launch" + Thread.currentThread().name + "————" + coroutineContext[Job])
+//            }
+//            delay(100L)
+//            println("11 Task from coroutine scope" + Thread.currentThread().name + "————" + coroutineContext[Job]) // 这一行会在内嵌 launch 之前输出
+//        }
+//
+//        println("Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
+//    }
+
+    CoroutineScope(Dispatchers.Main).launch {
+        launch {
+            delay(500L)
+            println("33 Task from nested launch " + Thread.currentThread().name + "————" + coroutineContext[Job])
         }
+        delay(100L)
+        println(
+            "11 Task from coroutine scope " + Thread.currentThread().name + "————" + coroutineContext[Job]) // 这一行会在内嵌 launch 之前输出
+    }
+    println("Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
 
 
-//    Thread.sleep(2000)
+//    runBlocking{
+//        // 启动一个协程来处理某种传入请求（request）
+//        val request = launch {
+//            repeat(3) { i ->
+//                // 启动少量的子作业
+//                launch {
+//                    delay((i + 1) * 200L) // 延迟 200 毫秒、400 毫秒、600 毫秒的时间
+//                    println("Coroutine $i is done")
+//                }
+//            }
+//            println("request: I'm done and I don't explicitly join my children that are still active")
+//        }
+////        request.join() // 等待请求的完成，包括其所有子协程
+//        println("Now processing of the request is complete")
+//    }
+
+
+    // delay挂起前后使用不同的线程！！！
+//    for (i in 1..1_00L)
+//        GlobalScope.launch {
+//            val c = Thread.currentThread().name + "————" + coroutineContext[Job]
+//            delay(1000L)
+//            val d = Thread.currentThread().name + "————" + coroutineContext[Job]
+//            if (!c.equals(d)) {
+//                println("=====!c.equals(d)=======")
+//            }
+//        }
+
+
+    // 网络请求，并return请求结果
+//    GlobalScope.launch(Dispatchers.Main) {
+//        // 两个withContext(Dispatchers.IO)实现异步任务串行!!!!!!!
+//        val result1 = withContext(Dispatchers.IO) {
+//            delay(2000L)
+//            println("result 1")
+//        }
+//        val result2 = withContext(Dispatchers.IO) {
+//            delay(100L)
+//            println("result 2")
+//        }
+//        println("world======updateUI(result)======")// 更新UI
+//    }
+
+    // 两个都运行在主线程内的协程,父协程优先执行.
+    GlobalScope.launch(Dispatchers.Main) {
+        var x = 0
+        launch(Dispatchers.Main) {
+//            delay(1000L)
+            println("==launch Main 2== x = $x  " + Thread.currentThread().name + "————" + coroutineContext[Job])
+        }
+//        delay(1000L)
+        for (i in 0..100_0000L) {
+            x++
+        }
+        println("==launch Main 1==" + Thread.currentThread().name + "————" + coroutineContext[Job])
+    }
+    println("==launch Main 0==")
+
+
+    println("Hello===2=====\n\n")
+
+
+//    val mainScope = MainScope()
+//    mainScope.launch {  }
+//    mainScope.cancel()
+
+    Thread.sleep(3000)
     println("Stop")
+}
 
+private fun collectionApi() {
+    // 过滤。kotlin集合的filter方法，将集合的item用lambda表达式进行过滤，只留下执行lambda表达式返回true的元素
+    fun isOdd(x: Int) = x % 2 != 0
+
+    val numbers = listOf(1, 2, 3, 4, 5)
+    println(numbers.filter(::isOdd))   // [1, 3, 5]
+
+    val matches: (Regex, CharSequence) -> Boolean = Regex::matches
+    val numberRegex = "\\d+".toRegex()
+    val list = listOf("abc", "124", "a70")
+    println(list.filter(numberRegex::matches))  // 某个对象的方法
+    println(list.filter({
+        numberRegex.matches(it)     // 注意不需要return！！
+    }))
+
+    // 映射。kotlin集合的map方法，将集合的item批量处理成另一种类型的值的list
+    val strs = listOf("a", "bc", "def")
+    println(strs.map(String::length))   // [1, 2, 3]
+
+    // kotlin集合的forEach方法,对集合的每个item都进行某些处理
+    strs.forEach {
+        println(it)
+    }
+    val list2 = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
+
+    // count
+    val count = list2.map { it + 2 }.count { it % 2 == 0 }
+    println("count = " + count)
+
+    // first方法找不到会抛异常
+    list2.firstOrNull()
+    println(list2.firstOrNull {
+        it % 5 == 0
+    })
+
+    // asSequence 懒处理. map filter等返回Sequence的都是中间操作！！！都存在遍历操作。asSequence可以将它们合并起来,只存在一次遍历,提升性能
+    val list3 = list2.asSequence().map { it + 2 }.filter { it % 2 == 0 }.toList()
+    println(list3)
 }
 
 private fun demo2() {
@@ -154,6 +295,7 @@ private fun demo2() {
         }
         return ::add
     }
+
     val add1 = makeList("111")  // 同一个函数实现访问同一份变量副本
     println(add1())             // [111]
     println(add1())             // [111, 111]
@@ -206,7 +348,6 @@ private fun demo2() {
     var (fir, sec) = pair                   // " (fir, sec)"是一个它们所属的对象
     println("fir = " + fir + " sec = " + sec)
     val triple = Triple<String, Int, Boolean>("two", 2, true)
-
 }
 
 private fun demo() {
@@ -318,7 +459,6 @@ private fun demo() {
     (ab as java.lang.Object).wait()    // 一定要在kotlin内使用wait方法时就这样强转
 }
 
-
 /**
  * fun defaultParam(a: Int = 10, b: Int)
  * defaultParam(b = 1)  // 使用默认值 a = 10
@@ -341,7 +481,8 @@ fun namedParameter(
     bb: Boolean = true,
     cc: Boolean = false,
     word: Char
-) {/*……*/}
+) {/*……*/
+}
 
 // kotlin内的int 与 Integer：
 fun intAndInteger(): Int {
@@ -400,12 +541,12 @@ fun lambdaFunction(sum2: (Int) -> Int) {
 
 // 单表达式函数不写返回类型时，其返回类型是单表达式的返回类型，并不一定都是返回void！ 当返回值类型可由编译器推断时，显式声明返回类型是可选的。
 fun fun1(x: Int) = x * 2 // 省略 :Int
+
 fun fun2(x: Int) = println()  // 省略 :Unit
 
 interface ILog {
     fun log()
 }
-
 
 open class A {
     open fun foo(i: Int = 10) {

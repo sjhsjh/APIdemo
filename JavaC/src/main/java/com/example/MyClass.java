@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
 import kotlin.jvm.JvmClassMappingKt;
 import kotlin.reflect.KClass;
 
@@ -38,6 +37,13 @@ public class MyClass {
 
         // java中获取kotlin中的KClass
         KClass kClass = JvmClassMappingKt.getKotlinClass(  Utils.comObj.getQqq().getClass());
+
+        // interface Source<T> {
+        //     T nextT();
+        // }
+        // void demo(Source<? extends Object> strs) {
+        //     Source<Object> objects = strs; // ！！！在 Java 中不允许
+        // }
     }
 
     private static void usefulApi() {
