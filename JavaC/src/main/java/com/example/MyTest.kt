@@ -1,21 +1,21 @@
 package com.example
 
-import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.async
 import kotlinx.coroutines.CoroutineStart
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.withContext
 import java.lang.StringBuilder
 
 fun main(args: Array<String>) {
@@ -37,78 +37,64 @@ fun coroutines() {
     // https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-test
     Dispatchers.setMain(newSingleThreadContext("MyMain"))   // java程序setMain之后Dispatchers.Main才能用！！！
 
-    val job: Job = GlobalScope.launch{
-        // 在后台启动一个新的协程并继续
-        println("==launch 1==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // DefaultDispatcher-worker-1
-        delay(1000L)
-        launch(Dispatchers.Main) {
-            println("==launch 4==" + Thread.currentThread().name + "————" + coroutineContext[Job])
-        }
-        println(
-            "==launch 2==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // DefaultDispatcher-worker-4
-        // withContext的返回值是lambda表达式内最后一条表达式的值！
-        var x = withContext(Dispatchers.Main) {
-            println("==launch 3==" + Thread.currentThread().name + "————" + coroutineContext[Job])
-            5
-        }
-    }
-//    job.join()    // 作用类似Thread.join()
-//    job.cancel()
-    val deferred = GlobalScope.async(CoroutineName("myCoroutineName")) {
-        delay(100L)
-        println(
-            "==async==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // DefaultDispatcher-worker-3
-        5 * 5
-    }
-
-    runBlocking {
-        println(deferred.await())   // await:返回协程执行的结果。只能在协程内使用。await返回值是async的返回值.await会等待对应的async执行完毕
-    }
-
-
-    runBlocking {
-        // runBlocking代码块是同步的代码
-        launch(Dispatchers.Main) {
-            // 运行在父协程的上下文中，即 runBlocking 主协程
-            println("main runBlocking      :  ${Thread.currentThread().name + "————" + coroutineContext[Job]}")
-        }
-
-        println(deferred.await())   // ???
-        delay(2000L)  // runBlocking里加delay()可以阻塞当前的线程，等价于Thread.sleep()
-//        withContext(Dispatchers.IO) {
-//
+//    val job: Job = GlobalScope.launch {
+//        // 在后台启动一个新的协程并继续
+//        println(
+//            "==launch 1==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // DefaultDispatcher-worker-1
+//        delay(1000L)
+//        launch(Dispatchers.Main) {
+//            println("==launch 4==" + Thread.currentThread().name + "————" + coroutineContext[Job])
 //        }
-        println("==runBlocking==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // main!!!
-    }
+//        println(
+//            "==launch 2==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // DefaultDispatcher-worker-4
+//        // withContext的返回值是lambda表达式内最后一条表达式的值！
+//        var x = withContext(Dispatchers.Main) {
+//            println("==launch 3==" + Thread.currentThread().name + "————" + coroutineContext[Job])
+//            5
+//        }
+//    }
+////    job.join()    // 作用类似Thread.join()
+////    job.cancel()
 
-    // runBlocking可以阻塞等待它内部的所有协程完成。
+//    val deferred = GlobalScope.async(CoroutineName("myCoroutineName")) {
+//        delay(100L)
+//        println(
+//            "==async==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // DefaultDispatcher-worker-3
+//        5 * 5
+//    }
+////    GlobalScope.launch(Dispatchers.Main) {
+////        println("xxx await = " + deferred.await())
+////    }
 //    runBlocking {
-//        println("==runBlocking=888=" + Thread.currentThread().name + "————" + coroutineContext[Job])
-//        launch { // 在 runBlocking 作用域中启动一个新协程。runBlocking内使用launch类似 handler.postDelay.
-//            delay(1000L)
-//            println("==runBlocking=999=" + Thread.currentThread().name + "————" + coroutineContext[Job]) // main???
-//        }
-//        println("Hello=====00======")
+//        println("await = " + deferred.await())   // await:返回协程执行的结果。只能在协程内使用。await返回值是async的返回值.await会等待对应的async执行完毕
 //    }
 
-    println("Hello========\n\n")
-//    runBlocking { // this: CoroutineScope
-//        launch {
-//            println("gggggggggggg Task from runBlocking")
-//            delay(200L)
-//            println("444 Task from runBlocking" + Thread.currentThread().name + "————" + coroutineContext[Job])
-//        }
-//        coroutineScope { // 创建一个协程作用域,类似runBlocking？？？
-//            launch {
-//                delay(500L)
-//                println("33 Task from nested launch" + Thread.currentThread().name + "————" + coroutineContext[Job])
-//            }
-//            delay(100L)
-//            println("11 Task from coroutine scope" + Thread.currentThread().name + "————" + coroutineContext[Job]) // 这一行会在内嵌 launch 之前输出
+
+//    runBlocking {
+//        launch(Dispatchers.Main) {
+//            // 加了Dispatchers.Main就是MyMain，不加打印就是main
+//            println("==main runBlocking 1.5   :  ${Thread.currentThread().name + "————" + coroutineContext[Job]}")
 //        }
 //
-//        println("Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
+//        println("==runBlocking 1 ==" + Thread.currentThread().name + "————" + coroutineContext[Job])
+//        delay(2000L)  // runBlocking里加delay()可以阻塞当前的线程，等价于Thread.sleep()
+//        withContext(Dispatchers.IO) {
+//            println("==withContext IO  1.8  :  ${Thread.currentThread().name + "————" + coroutineContext[Job]}")
+//        }
+//        println("==runBlocking 2 ==" + Thread.currentThread().name + "————" + coroutineContext[Job])  // main!!!
 //    }
+
+//    // runBlocking可以阻塞等待它内部的所有协程完成。
+//    runBlocking {
+//        println("==runBlocking 11 " + Thread.currentThread().name + "————" + coroutineContext[Job])
+//        launch {
+//            // 在 runBlocking 作用域中启动一个新协程。runBlocking内使用launch类似 handler.postDelay.
+//            delay(1000L)
+//            println("==runBlocking 33 " + Thread.currentThread().name + "————" + coroutineContext[Job]) // main
+//        }
+//        println("==runBlocking 22 " + Thread.currentThread().name + "————" + coroutineContext[Job])
+//    }
+//    println("Hello========\n\n")
 
     CoroutineScope(Dispatchers.Main).launch {
         launch {
@@ -119,12 +105,32 @@ fun coroutines() {
         println(
             "11 Task from coroutine scope " + Thread.currentThread().name + "————" + coroutineContext[Job]) // 这一行会在内嵌 launch 之前输出
     }
-    println("Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
+    println("Coroutine scope is over")
+
+//    runBlocking {
+//        launch {
+//            println("gggggggggggg Task from runBlocking")
+//            delay(200L)
+//            println("444 Task from runBlocking" + Thread.currentThread().name + "————" + coroutineContext[Job])
+//        }
+//        coroutineScope {
+//            // 创建一个协程作用域,类似runBlocking？？？
+//            launch {
+//                delay(500L)
+//                println("33 Task from nested launch" + Thread.currentThread().name + "————" + coroutineContext[Job])
+//            }
+//            delay(100L)
+//            println(
+//                "11 Task from coroutine scope" + Thread.currentThread().name + "————" + coroutineContext[Job]) // 这一行会在内嵌 launch 之前输出
+//        }
+//
+//        println("Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
+//    }
 
 
-//    runBlocking{
+//    runBlocking {
 //        // 启动一个协程来处理某种传入请求（request）
-//        val request = launch {
+//        val jobRequest = launch {
 //            repeat(3) { i ->
 //                // 启动少量的子作业
 //                launch {
@@ -132,11 +138,12 @@ fun coroutines() {
 //                    println("Coroutine $i is done")
 //                }
 //            }
-//            println("request: I'm done and I don't explicitly join my children that are still active")
+//            println("11  request: I'm done and I don't explicitly join my children that are still active")
 //        }
-////        request.join() // 等待请求的完成，包括其所有子协程
-//        println("Now processing of the request is complete")
+//        jobRequest.join() // 阻塞等待请求的完成，包括其所有子协程
+//        println("33 Now processing of the request is complete")
 //    }
+    println("Hello========\n\n")
 
 
     // delay挂起前后使用不同的线程！！！
@@ -167,11 +174,21 @@ fun coroutines() {
 
     // 两个都运行在主线程内的协程,父协程优先执行.
     GlobalScope.launch(Dispatchers.Main) {
+        println("==launch Main 0.5==" + Thread.currentThread().name + "————" + coroutineContext[Job])
+        runBlocking {
+            println("==launch Main 0.6==" + Thread.currentThread().name + "————" + coroutineContext[Job])
+        }
         var x = 0
         launch(Dispatchers.Main) {
-//            delay(1000L)
+            //            delay(1000L)
             println("==launch Main 2== x = $x  " + Thread.currentThread().name + "————" + coroutineContext[Job])
         }
+
+//        var xx = withContext(Dispatchers.Main) {
+//            println("==withContext Main==" + Thread.currentThread().name + "————" + coroutineContext[Job])
+//            5
+//        }
+
 //        delay(1000L)
         for (i in 0..100_0000L) {
             x++
@@ -191,6 +208,7 @@ fun coroutines() {
     Thread.sleep(3000)
     println("Stop")
 }
+
 
 private fun collectionApi() {
     // 过滤。kotlin集合的filter方法，将集合的item用lambda表达式进行过滤，只留下执行lambda表达式返回true的元素
