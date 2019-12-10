@@ -6,6 +6,12 @@ class SonA(var x: Int) : MyObjectA(x) {
 
     override var memberUse = x + 1000  // 属性也能被覆盖！！相同类型才能覆盖
 
+    init {
+        println("6、父类的“初始化块和属性初始化”全部执行完才到子类的")
+    }
+
+    val sonATemp = "7、父类的“初始化块和属性初始化”全部执行完才到子类的".also(::println)
+
     override fun plus() {
         super.plus()
         println("SonA plus.")
