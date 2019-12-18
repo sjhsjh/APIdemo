@@ -10,10 +10,58 @@ import kotlin.reflect.KClass;
 
 public class MyClass {
 
+    //用动物，猫，加菲猫的继承关系说明extends与super在集合中的意义
+    private static void genericity() {
+        // List<Animal> animal = new ArrayList<Animal>();        //动物
+        // List<Cat> cat = new ArrayList<Cat>();                 //猫
+        // List<Garfield> garfield = new ArrayList<Garfield>();  //加菲猫
+        //
+        // animal.add(new Animal());
+        // cat.add(new Cat());
+        // garfield.add(new Garfield());
+        //
+        // //下行编译出错。只能赋值Cat或Cat子类集合
+        // List<? extends Cat> extendsCatFromAnimal = animal;
+        // List<? extends Cat> extendsCatFromCat = cat;
+        // List<? extends Cat> extendsCatFromGarfield = garfield;
+        //
+        // List<? super Cat> superCatFromAnimal = animal;
+        // List<? super Cat> superCatFromCat = cat;
+        // //下行编译出错。只能赋值Cat或着Cat父类集合
+        // List<? super Cat> superCatFromGarfield = garfield;
+        //
+        // //第三段：测试add方法
+        // //下面三行中所有的<? extends T>都无法进行add操作，编译出错
+        // extendsCatFromCat.add(new Animal());
+        // extendsCatFromCat.add(new Cat());// 就算传入上限父类型都有可能跟存储的子类型类型冲突!!!!
+        // extendsCatFromCat.add(new Garfield());
+        //
+        // //下行编译出错。只能添加Cat或者Cat的子类集合。
+        // superCatFromCat.add(new Animal());
+        // superCatFromCat.add(new Cat());
+        // superCatFromCat.add(new Garfield());
+        // superCatFromAnimal.add(new Garfield());
+        //
+        // //第四段：测试get方法
+        // //以下extends操作能够返回元素
+        // Animal catExtends3 = extendsCatFromCat.get(0);  // 能保证取出来是上限类型!!!!
+        // Object catExtends2 = extendsCatFromCat.get(0);
+        // Cat catExtends1 = extendsCatFromCat.get(0);
+        // //下行编译错误。虽然Cat集合从Garfield赋值而来，但类型擦除后，是不知道的; 需要强转
+        // Garfield cat2 = extendsCatFromGarfield.get(0);   // (Garfield) extendsCatFromGarfield.get(0); // ok
+        //
+        // //所有的super操作能够返回元素，但是泛型丢失，只能返回object对象
+        // Object object1 = superCatFromCat.get(0);
+        // Animal object = superCatFromCat.get(0);
+        // Cat object3 = superCatFromCat.get(0);
+    }
+
+
     public static void main(String[] args) {
+        genericity();
 
         // usefulApi();
-        kotlinStaticTest();
+        // kotlinStaticTest();
     }
 
     private static void kotlinStaticTest() {
@@ -131,4 +179,20 @@ class Son extends Base {
 
 abstract class Grandson extends Son {
     abstract int cal();
+}
+
+
+class Animal {
+    public void aaa() {
+    };
+}
+
+class Cat extends Animal {
+    public void ccc() {
+    };
+}
+
+class Garfield extends Cat {
+    public void ggg() {
+    };
 }
