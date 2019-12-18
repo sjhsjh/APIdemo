@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'android-aspectjx'    // DoraemonKit
 apply plugin: 'io.fabric'           // firebase Crashlytics
 android {
     compileSdkVersion 28
@@ -34,6 +33,7 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("boolean", "IS_DEBUG", "true")
+            apply plugin: 'android-aspectjx'    // DoraemonKit
         }
     }
 
@@ -85,9 +85,10 @@ android {
         implementation 'com.github.sjhsjh:ReadMoreTextView:2.1.1.0'
         implementation 'com.android.support.constraint:constraint-layout:1.1.3'
         // 滴滴开源组件DoraemonKit
-        debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:1.1.6'
-        releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:1.1.6' // release版空实现
-//        debugImplementation 'com.github.didi:DoraemonKit:1.1.7'  // jitpack
+        debugImplementation 'com.github.sjhsjh.DoraemonKit:doraemonkit:2.0.0.3'     // 自定义
+//        debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:1.1.6'
+        releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:2.0.2' // release版空实现
+
         implementation 'com.github.chrisbanes:PhotoView:2.1.3'  // 2.3.0版本需要compileSdkVersion 28，且编译运行时报错Multiple dex
         // firebase
         implementation 'com.google.firebase:firebase-core:16.0.9'
