@@ -369,6 +369,8 @@ private fun demo2() {
 }
 
 private fun demo() {
+    var sonA0 = SonA(100, "sona") // 查看父类子类的初始化顺序
+
     // 基本类型
     var a: Int = 5_2
     println("a = " + a)

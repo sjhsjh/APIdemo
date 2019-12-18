@@ -1,16 +1,23 @@
 package com.example
 
-class SonA(var x: Int) : MyObjectA(x) {
+class SonA(var x: Int = 60.also { println("3、SonA 主构造.") }) : MyObjectA(110, "myobjecta") {
 
-//    constructor(i: Int) : super(i)
+    //    constructor(i: Int) : super(i)
+    companion object {
+        val sonStatic: String = "2、SonA static".also(::println)
+    }
 
     override var memberUse = x + 1000  // 属性也能被覆盖！！相同类型才能覆盖
 
     init {
-        println("6、父类的“初始化块和属性初始化”全部执行完才到子类的")
+        println("10、父类的“初始化块和属性初始化”全部执行完才到子类的")
     }
 
-    val sonATemp = "7、父类的“初始化块和属性初始化”全部执行完才到子类的".also(::println)
+    val sonATemp = "11、父类的“初始化块和属性初始化”全部执行完才到子类的".also(::println)
+
+    constructor(x: Int, str: String) : this() {
+        println("12、SonA 次级构造 ")
+    }
 
     override fun plus() {
         super.plus()

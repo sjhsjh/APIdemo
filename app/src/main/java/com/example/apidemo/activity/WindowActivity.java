@@ -129,6 +129,7 @@ public class WindowActivity extends BaseActivity {
         // FLAG_NOT_TOUCHABLE模式下，Window 不会接收任何的触摸事件，它会将触摸事件传递给下层的具有焦点的 Window
         // 设置TYPE_APPLICATION + FLAG_SHOW_WHEN_LOCKED且无overlay权限时window所在的activity也显示在锁屏上了
         // TYPE_SYSTEM_ERROR + overlay权限即可在锁屏上显示window；
+        // FLAG_NOT_TOUCHABLE	窗口不接受任何触摸事件。 FLAG_NOT_FOCUSABLE貌似会不响应返回键+整个窗口接收事件。貌似不能窗口部分区域接收事件其他区域交给其他window处理。
         layoutParams.gravity = Gravity.LEFT | Gravity.TOP;
         layoutParams.y = 100;
     }
