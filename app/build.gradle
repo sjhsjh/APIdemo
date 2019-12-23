@@ -85,7 +85,7 @@ android {
         implementation 'com.github.sjhsjh:ReadMoreTextView:2.1.1.0'
         implementation 'com.android.support.constraint:constraint-layout:1.1.3'
         // 滴滴开源组件DoraemonKit
-        debugImplementation 'com.github.sjhsjh.DoraemonKit:doraemonkit:2.0.0.3'     // 自定义
+        debugImplementation 'com.github.sjhsjh.DoraemonKit:doraemonkit:2.0.0.4'     // 自定义
 //        debugImplementation 'com.didichuxing.doraemonkit:doraemonkit:1.1.6'
         releaseImplementation 'com.didichuxing.doraemonkit:doraemonkit-no-op:2.0.2' // release版空实现
 
