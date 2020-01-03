@@ -118,26 +118,24 @@ fun coroutines() {
 //    }
 //    println("CoroutineScope is over")
 
-//    runBlocking {
+//    GlobalScope.launch {
 //        launch {
-//            println("gggggggggggg Task from runBlocking")
 //            delay(200L)
-//            println("444 Task from runBlocking" + Thread.currentThread().name + "————" + coroutineContext[Job])
-//        }
-//        coroutineScope {
-//            // 创建一个协程作用域,类似runBlocking？？？
-//            launch {
-//                delay(500L)
-//                println("33 Task from nested launch" + Thread.currentThread().name + "————" + coroutineContext[Job])
-//            }
-//            delay(100L)
-//            println(
-//                "11 Task from coroutine scope" + Thread.currentThread().name + "————" + coroutineContext[Job]) // 这一行会在内嵌 launch 之前输出
+//            println("2、Task from runBlocking  " + Thread.currentThread().name + "————" + coroutineContext[Job])
 //        }
 //
-//        println("Coroutine scope is over") // 这一行在内嵌 launch 执行完毕后才输出
+//        coroutineScope {
+//            // 创建新的协程作用范围
+//            launch {
+//                delay(500L)
+//                println("3、Task from nested launch")
+//            }
+//
+//            delay(100L)
+//            println("1、Task from coroutine scope") // 在嵌套的 launch 之前, 这一行会打印
+//        }
+//        println("4、Coroutine scope is over") // 直到嵌套的 launch 运行结束后, 这一行才会打印
 //    }
-
 
 //    runBlocking {
 //        // 启动一个协程来处理某种传入请求（request）
