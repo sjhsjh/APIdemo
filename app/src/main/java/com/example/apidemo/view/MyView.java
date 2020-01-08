@@ -49,8 +49,8 @@ public class MyView extends RelativeLayout {
                 break;
             case MotionEvent.ACTION_UP:
                 mVelocityTracker.computeCurrentVelocity(1000, mMaxVelocity);  // 设置units的值为1000，意思为一秒时间内运动了多少个像素,最大为mMaxVelocity
-                int YVelocity = (int)mVelocityTracker.getYVelocity();
-                if(Math.abs(YVelocity) > mMinVelocity){
+                int YVelocity = (int) mVelocityTracker.getYVelocity();   // 向下为正数！！
+                if (Math.abs(YVelocity) > mMinVelocity) {
                     fling(YVelocity);
                 }
                 releaseVelocityTracker();

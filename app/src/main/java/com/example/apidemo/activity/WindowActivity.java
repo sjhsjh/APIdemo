@@ -74,7 +74,7 @@ public class WindowActivity extends BaseActivity {
     private void initWindow(){
         mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
         linearLayout = new LinearLayout(this);
-        Button windowBtn = new Button(this);  // Button竟然自带padding！！mWindowBtn.setPadding(0, 0, 0, 0);则出现文字拉长但是灰色按钮背景不变长。
+        final Button windowBtn = new Button(this);  // Button竟然自带padding！！mWindowBtn.setPadding(0, 0, 0, 0);则出现文字拉长但是灰色按钮背景不变长。
         windowBtn.setText("windowBtn");
         windowBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +115,8 @@ public class WindowActivity extends BaseActivity {
                     default:
                         break;
                 }
+
+                getCoordinate(windowBtn);
                 return false;
             }
         });
@@ -150,7 +152,18 @@ public class WindowActivity extends BaseActivity {
 
     }
 
+    private void getCoordinate(Button windowBtn) {
+        int[] location = new int[2];
+        linearLayout.getLocationOnScreen(location);
+        int x = location[0];    // view在其整个屏幕上的坐标位置,含顶部通知栏
+        int y = location[1];
+        NLog.d("sjh7", "getLocationOnScreen x = " + x + " y = " + y);
 
-
+        int[] location2 = new int[2];
+        windowBtn.getLocationInWindow(location2);
+        int x2 = location2[0];  // view在其当前窗口中的坐标位置！
+        int y2 = location2[1];
+        NLog.i("sjh7", "getLocationInWindow x2 = " + x2 + " y2 = " + y2);
+    }
 
 }

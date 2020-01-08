@@ -111,13 +111,14 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
     }
 
     private void printDeviceDimen(){
+        NLog.w("sjh0", "全屏高度 = statusBarHeight + 应用区域 + navigationBarHeight");
         boolean hasMenuKey = ViewConfiguration.get(DIYViewActivity.this).hasPermanentMenuKey();    // 判断是否有物理的菜单键。即是否有导航栏。
         NLog.i("sjh0", "是否有物理的菜单键 hasMenuKey = " + hasMenuKey);
 
         // 状态栏高度
         int resourceId2 = getResources().getIdentifier("status_bar_height","dimen", "android");
         int statusBarHeight1 = getResources().getDimensionPixelSize(resourceId2);
-        NLog.i("sjh0", "statusBarHeight1 = " + statusBarHeight1);
+        NLog.w("sjh0", "statusBarHeight1 = " + statusBarHeight1);
 
         // 状态栏高度(需要onMeasure之后执行)
         Rect frame = new Rect();
@@ -128,14 +129,14 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
         // 导航栏高度 （注意：此方法不会检查导航栏是否存在，直接返回xml中的数值。所以可能手机没有显示导航栏，但是高度依然返回）
         int resourceId = getResources().getIdentifier("navigation_bar_height","dimen", "android");
         int navigationBarHeight = getResources().getDimensionPixelSize(resourceId);
-        NLog.i("sjh0", "if naticigationBar exists, navigationBarHeight = " + navigationBarHeight);
+        NLog.w("sjh0", "if naticigationBar exists, navigationBarHeight = " + navigationBarHeight);
 
         WindowManager wm = (WindowManager) DIYViewActivity.this.getSystemService(Context.WINDOW_SERVICE);
         // 应用区域，全屏减去导航栏、状态栏(需要onMeasure之后执行才得到正确值)
         Rect outRect = new Rect();
         getWindow().getDecorView().getWindowVisibleDisplayFrame(outRect);
         System.out.println("top:"+outRect.top +" ; left: "+outRect.left) ;
-        NLog.i("sjh0", "应用区域 outRect.height() " + outRect.height());
+        NLog.w("sjh0", "应用区域 outRect.height() " + outRect.height());
 
         // 应用程序标题栏高度(需要onMeasure之后执行)
         int titleBarHeight = getWindow().findViewById(Window.ID_ANDROID_CONTENT).getTop();
@@ -149,7 +150,7 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
         // 有导航栏时全屏减去导航栏，无导航栏时等于全屏
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics(); // 方法1
         int mHeightPixels = displayMetrics.heightPixels;
-        NLog.i("sjh0", "有导航栏时全屏减去导航栏，无导航栏时等于全屏:\n1、mHeightPixels = " + mHeightPixels);
+        NLog.i("sjh0", "有导航栏时全屏减去导航栏，无导航栏时等于全屏: 1、mHeightPixels = " + mHeightPixels);
 
         DisplayMetrics dm2 = new DisplayMetrics();     // 方法2!!
         wm.getDefaultDisplay().getMetrics(dm2);
@@ -175,7 +176,7 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
         } catch (Exception e ){
             e.printStackTrace();
         }
-        NLog.w("sjh0", "全屏高度：===============================================\n1、dm.heightPixels " + dm4.heightPixels);
+        NLog.w("sjh0", "全屏高度：==============================1、dm.heightPixels " + dm4.heightPixels);
 
         Point point = new Point();// 方法2
         wm.getDefaultDisplay().getRealSize(point);
