@@ -130,6 +130,17 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
         return mChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow, type);
     }
 
+    // 自行重载两个fling方法，否则使用父类的fling方法（sdk这套嵌套滑动默认不开启）
+    @Override
+    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
+        return mChildHelper.dispatchNestedPreFling(velocityX, velocityY);
+    }
+
+    @Override
+    public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
+        return mChildHelper.dispatchNestedFling(velocityX, velocityY, consumed);
+    }
+
 
     private void flingWithNestedDispatch(int velocityY) {
         final int scrollY = getScrollY();
