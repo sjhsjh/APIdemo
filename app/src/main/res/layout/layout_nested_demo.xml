@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.apidemo.view.NestParentView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#20ff0000"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/iv_head"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/splash" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="#654321"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="TextView"
+        android:textSize="20sp" />
+
+    <com.example.apidemo.view.NestChildView
+        android:layout_width="match_parent"
+        android:layout_height="600dp"
+        android:background="#2000ff00">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1000dp"
+            android:lineSpacingExtra="10dp"
+            android:text="@string/large_text"
+            android:textSize="40sp" />
+
+    </com.example.apidemo.view.NestChildView>
+
+</com.example.apidemo.view.NestParentView>

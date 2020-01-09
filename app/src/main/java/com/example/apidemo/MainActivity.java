@@ -23,6 +23,7 @@ import com.example.apidemo.activity.GridViewActivity;
 import com.example.apidemo.activity.GsonActivity;
 import com.example.apidemo.activity.HardWareActivity;
 import com.example.apidemo.activity.MessengerActivity;
+import com.example.apidemo.activity.NestScrollActivity;
 import com.example.apidemo.activity.NewsActivity;
 import com.example.apidemo.activity.NotificationActivity;
 import com.example.apidemo.activity.PowerManagerActivity;
@@ -70,6 +71,7 @@ public class MainActivity extends BaseActivity {
 
         List<Object> list = new ArrayList<Object>();
         list.add(DoraemonKit.class);
+        list.add(NestScrollActivity.class);
         // todo
         list.add(ADActivity.class);
         list.add(ScaleActivity.class);
@@ -79,6 +81,7 @@ public class MainActivity extends BaseActivity {
         list.add(PowerManagerActivity.class);
         list.add(EventDispatchActivity.class);
         list.add(GestureDectorActivity.class);
+
         list.add(SlideActivity.class);
         list.add(ScrollActivity.class);
         list.add(NewsActivity.class);

@@ -182,7 +182,8 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
         wm.getDefaultDisplay().getRealSize(point);
         NLog.i("sjh0", "2、point.y " + point.y);
 
-        NLog.w("sjh0", "分辨率： " + dm4.heightPixels + " * " + dm4.widthPixels + " density = " + dm4.density);
+        NLog.w("sjh0", "分辨率： " + dm4.heightPixels + " * " + dm4.widthPixels + " density = " + dm4.density
+            + "   屏幕尺寸： " + dm4.heightPixels / dm4.density + "dp * " + dm4.widthPixels / dm4.density + "dp");
     }
 
 }
