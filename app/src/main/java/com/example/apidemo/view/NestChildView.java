@@ -191,7 +191,7 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
         final boolean canFling = (scrollY > 0 || velocityY < 0)
                 && (scrollY < ViewUtils.getScrollRange(this) || velocityY > 0);
         if (!dispatchNestedPreFling(0, velocityY)) {
-            dispatchNestedFling(0, velocityY, canFling);
+            dispatchNestedFling(0, velocityY, canFling);    // todo
             fling(velocityY);
         }
     }
@@ -202,7 +202,7 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
      */
     private void fling(int yVelocity) {
         if (getChildCount() > 0) {
-            mScroller.fling(0, getScrollY(), 0, -yVelocity, 0, 0, 0, ViewUtils.getScrollRange(this));
+            mScroller.fling(0, getScrollY(), 0, -yVelocity, 0, 0, 0, ViewUtils.getScrollRange(this) * 9);
             // invalidate();
 
             // TYPE_TOUCH的Up相当于这里TYPE_NON_TOUCH的Down了！！！
@@ -213,7 +213,7 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
             //         0, 0, // minX ~ maxX
             //         Integer.MIN_VALUE, Integer.MAX_VALUE, // minY ~ maxY、、
             //         0, 0); // overscroll
-            mLastFlingY = getScrollY(); // 相当于down时记录y坐标
+            mLastFlingY = getScrollY(); // 相当于down时记录y坐标 todo
             ViewCompat.postInvalidateOnAnimation(this);
         }
     }
@@ -230,12 +230,12 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
             if (dispatchNestedPreScroll(0, deltaY, mScrollConsumed, null, ViewCompat.TYPE_NON_TOUCH)) {
                 deltaY -= mScrollConsumed[1];
             }
-            NLog.i("sjh6", "==deltaY2==" + deltaY);
+            NLog.v("sjh6", "==deltaY2==" + deltaY);
             if (deltaY != 0) {
                 // ② child滑动
                 /****限制child内容移动的边界***/
                 final int oldY = getScrollY();
-                final int rangeY = ViewUtils.getScrollRange(this);
+                final int rangeY = ViewUtils.getScrollRange(this);  // 2.75 * 400 = 1100
                 final int top = rangeY;      // can change    向上为正
                 final int bottom = 0;        // can change
 
@@ -245,12 +245,16 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
                 } else if (newScrollY > top) {
                     newScrollY = top;
                 }
+                NLog.i("sjh6", "==newScrollY==" + newScrollY);
                 scrollTo(0, newScrollY);
                 /****限制child内容移动的边界***/
 
                 // ③ parent再滑动
                 final int childConsumedY = getScrollY() - oldY;
                 final int unconsumedY = deltaY - childConsumedY;
+                if (unconsumedY > 0) {
+                    NLog.w("sjh6", "==unconsumedY==" + unconsumedY);
+                }
                 if (dispatchNestedScroll(0, childConsumedY, 0, unconsumedY, null,
                         ViewCompat.TYPE_NON_TOUCH)) {
 

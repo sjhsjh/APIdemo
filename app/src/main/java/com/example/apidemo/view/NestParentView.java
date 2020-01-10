@@ -104,7 +104,7 @@ public class NestParentView extends LinearLayout implements NestedScrollingParen
     @Override
     public void onNestedScroll(@NonNull View target, int dxConsumed, int dyConsumed, int dxUnconsumed, int dyUnconsumed,
                                int type) {
-        if (dyUnconsumed > 0 && getScrollY() < mHeadHeight * 3      // 手指上滑. 0~ 3 * mHeadHeight
+        if (dyUnconsumed > 0 && getScrollY() < mHeadHeight * 1.5    // 手指上滑. 0~ 1.5 * mHeadHeight
                 || dyUnconsumed < 0 && getScrollY() > 0) {          // 手指下滑
             NLog.i("sjh7", "onNestedScroll====dyUnconsumed==" + dyUnconsumed);
 
