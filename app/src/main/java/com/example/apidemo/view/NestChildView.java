@@ -190,8 +190,8 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
         final int scrollY = getScrollY();
         final boolean canFling = (scrollY > 0 || velocityY < 0)
                 && (scrollY < ViewUtils.getScrollRange(this) || velocityY > 0);
-        if (!dispatchNestedPreFling(0, velocityY)) {
-            dispatchNestedFling(0, velocityY, canFling);    // todo
+        if (!dispatchNestedPreFling(0, velocityY)) {        // 这两个fling方法都没有回传消费距离，剩余速度。
+            dispatchNestedFling(0, velocityY, canFling);
             fling(velocityY);
         }
     }
@@ -202,18 +202,18 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
      */
     private void fling(int yVelocity) {
         if (getChildCount() > 0) {
-            mScroller.fling(0, getScrollY(), 0, -yVelocity, 0, 0, 0, ViewUtils.getScrollRange(this) * 9);
-            // invalidate();
-
             // TYPE_TOUCH的Up相当于这里TYPE_NON_TOUCH的Down了！！！
             startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL, ViewCompat.TYPE_NON_TOUCH);
+            // 提供带方向的速度、起始位置、上下边界，然后mScroller就能提供一段范围的y值！！！模拟出手指move滑动的deltaY。
+            // 这里的startY其实不是getScrollY()，但是computeScroll只需要deltaY值，因此startY是多少都没关系了。
+            mScroller.fling(0, getScrollY(), 0, -yVelocity, 0, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
             // mScroller.fling(getScrollX(), getScrollY(), // start
             //         0, -yVelocity, // velocities
             //         0, 0, // minX ~ maxX
-            //         Integer.MIN_VALUE, Integer.MAX_VALUE, // minY ~ maxY、、
+            //         Integer.MIN_VALUE, Integer.MAX_VALUE, // minY ~ maxY
             //         0, 0); // overscroll
-            mLastFlingY = getScrollY(); // 相当于down时记录y坐标 todo
+            mLastFlingY = getScrollY(); // 相当于down时记录y坐标，保持跟mScroller.fling的startY相等即可。
             ViewCompat.postInvalidateOnAnimation(this);
         }
     }
@@ -230,7 +230,7 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
             if (dispatchNestedPreScroll(0, deltaY, mScrollConsumed, null, ViewCompat.TYPE_NON_TOUCH)) {
                 deltaY -= mScrollConsumed[1];
             }
-            NLog.v("sjh6", "==deltaY2==" + deltaY);
+            NLog.v("sjh6", "==after PreScrol deltaY==" + deltaY);
             if (deltaY != 0) {
                 // ② child滑动
                 /****限制child内容移动的边界***/

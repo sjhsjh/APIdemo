@@ -135,7 +135,7 @@ public class NestParentView extends LinearLayout implements NestedScrollingParen
     }
 
     /**
-     * 嵌套滑动fling需要fling两段距离，从scroller无法获取在临界位置的速度，因此fling无法传递。xxx   // todo
+     * 嵌套滑动fling需要fling两段距离，从scroller无法获取在第二段距离的初始速度，因此fling无法传递。fling只能  // todo xxx
      */
     @Override
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
