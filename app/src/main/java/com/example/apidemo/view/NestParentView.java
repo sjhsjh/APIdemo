@@ -135,14 +135,16 @@ public class NestParentView extends LinearLayout implements NestedScrollingParen
     }
 
     /**
-     * 嵌套滑动fling需要fling两段距离，从scroller无法获取在第二段距离的初始速度，因此fling无法传递。fling只能  // todo xxx
+     * 嵌套滑动fling需要fling两段距离，从scroller无法获取在第二段距离的初始速度，无法只fling给定距离的一部分，
+     * 因此fling无法传递。一次fling只能一次性fling指定距离，同时消耗掉全部速度。
      */
     @Override
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed) {
+        // fling无法传递，这里是仅仅在parent Or child的一处处理fling
         // if (!consumed) {
         //     flingWithNestedDispatch((int) velocityY);
         //     return true;
-        // }    // todo
+        // }
         return super.onNestedFling(target, velocityX, velocityY, consumed); // false
     }
 

@@ -71,8 +71,8 @@ public class MainActivity extends BaseActivity {
 
         List<Object> list = new ArrayList<Object>();
         list.add(DoraemonKit.class);
-        list.add(NestScrollActivity.class);
         // todo
+        list.add(NestScrollActivity.class);
         list.add(ADActivity.class);
         list.add(ScaleActivity.class);
         list.add(GsonActivity.class);

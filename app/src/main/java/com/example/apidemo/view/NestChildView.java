@@ -15,6 +15,7 @@ import com.example.apidemo.ViewUtils;
 import com.example.apidemo.utils.NLog;
 
 /**
+ * 多点触摸、mTouchSlop 未处理
  * @date 2020/1/9
  */
 public class NestChildView extends LinearLayout implements NestedScrollingChild2 {
@@ -191,7 +192,7 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
         final boolean canFling = (scrollY > 0 || velocityY < 0)
                 && (scrollY < ViewUtils.getScrollRange(this) || velocityY > 0);
         if (!dispatchNestedPreFling(0, velocityY)) {        // 这两个fling方法都没有回传消费距离，剩余速度。
-            dispatchNestedFling(0, velocityY, canFling);
+            dispatchNestedFling(0, velocityY, canFling);    // parent Or child二选一处理fling
             fling(velocityY);
         }
     }
@@ -218,6 +219,9 @@ public class NestChildView extends LinearLayout implements NestedScrollingChild2
         }
     }
 
+    /**
+     * 核心：使用该方法来进行一次fling，用mScroller算出的y值模拟手指滑动的同一套ViewCompat.TYPE_TOUCH 来处理嵌套fling！！！！
+     */
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {  // 返回值为boolean，true说明滚动尚未完成，false说明滚动已经完成。
