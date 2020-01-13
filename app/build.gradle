@@ -62,8 +62,14 @@ android {
 //        compile project(':arcface')
 //        compile project(':JavaC')
 
-        compile 'com.android.support:appcompat-v7:24.2.0'
-        compile 'com.android.support:recyclerview-v7:24.0.0'
+//        compile 'com.android.support:appcompat-v7:24.2.0'
+//        compile 'com.android.support:recyclerview-v7:24.2.0'
+//        compile 'com.android.support:design:24.2.0'
+
+        implementation 'com.android.support:appcompat-v7:27.1.1'
+        implementation 'com.android.support:recyclerview-v7:27.1.1'
+        implementation 'com.android.support:design:27.1.1'
+
         compile 'com.google.code.gson:gson:2.8.0'
         // rxjava
         compile 'io.reactivex.rxjava2:rxjava:2.1.0'
