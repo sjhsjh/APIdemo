@@ -27,7 +27,7 @@ public class APIDemoApplication extends Application {
         initNLog();
         DoraemonKit.install(this);
         ADManager.getInstance().initAD(mContext);
-        initLeakCanary();
+        // initLeakCanary();
     }
 
     public static Context getContext() {

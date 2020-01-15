@@ -14,6 +14,8 @@ import android.widget.ListView;
 import com.crashlytics.android.Crashlytics;
 import com.didichuxing.doraemonkit.DoraemonKit;
 import com.example.apidemo.activity.ADActivity;
+import com.example.apidemo.activity.AppBarActivity;
+import com.example.apidemo.activity.CoordinatorActivity;
 import com.example.apidemo.activity.DIYViewActivity;
 import com.example.apidemo.activity.EventDispatchActivity;
 import com.example.apidemo.activity.FunctionActivity;
@@ -72,6 +74,8 @@ public class MainActivity extends BaseActivity {
         List<Object> list = new ArrayList<Object>();
         list.add(DoraemonKit.class);
         // todo
+        list.add(CoordinatorActivity.class);
+        list.add(AppBarActivity.class);
         list.add(NestScrollActivity.class);
         list.add(ADActivity.class);
         list.add(ScaleActivity.class);
