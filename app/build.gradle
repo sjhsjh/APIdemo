@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'           // firebase Crashlytics
 android {
     compileSdkVersion 28
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '28.0.3'
 
     signingConfigs {
         release {
@@ -62,13 +62,9 @@ android {
 //        compile project(':arcface')
 //        compile project(':JavaC')
 
-//        compile 'com.android.support:appcompat-v7:24.2.0'
-//        compile 'com.android.support:recyclerview-v7:24.2.0'
-//        compile 'com.android.support:design:24.2.0'
-
         implementation 'com.android.support:appcompat-v7:27.1.1'
         implementation 'com.android.support:recyclerview-v7:27.1.1'
-        implementation 'com.android.support:design:27.1.1'
+        implementation 'com.android.support:design:27.1.1'      // CoordinatorLayout与AppBarLayout
 
         compile 'com.google.code.gson:gson:2.8.0'
         // rxjava
