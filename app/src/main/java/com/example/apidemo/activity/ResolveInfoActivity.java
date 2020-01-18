@@ -127,12 +127,12 @@ public class ResolveInfoActivity extends BaseActivity {
 			}
 		});
 
-		((Button)findViewById(R.id.button6)).setText("tudo ");
+		((Button)findViewById(R.id.button6)).setText("openApp2 : calendar ");
 		findViewById(R.id.button6).setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-
+				openApp2("com.android.calendar");
 			}
 		});
 	}
@@ -194,7 +194,21 @@ public class ResolveInfoActivity extends BaseActivity {
 		}
 		
 	}
-	
+
+	private PackageManager mPackageManager;
+
+	private void openApp2(String packageName) {
+		if (mPackageManager == null) {
+			mPackageManager = getPackageManager();
+		}
+		Intent intent = mPackageManager.getLaunchIntentForPackage(packageName);
+		if (intent == null) {
+			Toast.makeText(ResolveInfoActivity.this, packageName + " not found", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+		startActivity(intent);
+	}
 	
 	private void setIcon(Drawable drawable){
 		if(drawable != null){

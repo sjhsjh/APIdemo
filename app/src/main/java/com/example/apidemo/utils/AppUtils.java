@@ -28,6 +28,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
@@ -510,6 +511,18 @@ public final class AppUtils {
         //如果已经分出大小，则直接返回，如果未分出大小，则再比较位数，有子版本的为大；
         diff = (diff != 0) ? diff : versionArray1.length - versionArray2.length;
         return diff;
+    }
+
+    /**
+     * 调起软件安装程序安装apk
+     * Caused by: android.os.FileUriExposedException: file:///storage/emulated/0/app-release.apk exposed beyond app through Intent.getData()
+     */
+    public static void autoInstall(Context context) {
+        String apkPath = Environment.getExternalStorageDirectory() + "/app-release.apk";
+        Uri uri = Uri.fromFile(new File(apkPath));
+        Intent localIntent = new Intent(Intent.ACTION_VIEW);
+        localIntent.setDataAndType(uri, "application/vnd.android.package-archive");
+        context.startActivity(localIntent);
     }
 
 }
