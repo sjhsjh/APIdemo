@@ -14,6 +14,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Toast;
+import com.example.apidemo.utils.AndroidUtils;
 import com.example.apidemo.utils.NLog;
 import java.util.List;
 
@@ -177,9 +178,7 @@ public class BackgroundUtil {
 
             return packageName.equals(foreground);
         } else {
-            Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
+            AndroidUtils.goAccessibilityServiceSettings(context);
 //            Toast.makeText(context, "请开启无障碍功能", Toast.LENGTH_SHORT).show();
             return false;
         }

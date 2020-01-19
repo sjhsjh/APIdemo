@@ -27,5 +27,6 @@
 
 
 <!-- typeAllMask是设置响应事件的类型，
-    feedbackGeneric是设置回馈给用户的方式，有语音播出和振动。
+    貌似android:accessibilityEventTypes="typeWindowStateChanged"就够了；
+    feedbackGeneric是设置回馈给用户的方式，有语音播出和振动；
     android:packageNames="目标包名"  没有指定包名时，默认辅助所有的应用-->

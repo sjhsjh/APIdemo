@@ -4,12 +4,14 @@ import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.provider.Settings;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -119,4 +121,12 @@ public class AndroidUtils {
         return activeNetwork != null && activeNetwork.isConnected();
     }
 
+    /**
+     * 前往开启辅助服务界面
+     */
+    public static void goAccessibilityServiceSettings(Context context) {
+        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.getApplicationContext().startActivity(intent);
+    }
 }
