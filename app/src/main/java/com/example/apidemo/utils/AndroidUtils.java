@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Debug;
 import android.provider.Settings;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,13 +37,14 @@ public class AndroidUtils {
         return (0x30 & context.getResources().getConfiguration().uiMode) == 32;    // UI_MODE_NIGHT_YES
     }
 
-    public static void printMsgs(Context context) {
+    public static void printMemory(Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        int heapSize = manager.getMemoryClass();    // 256.设备分配给app的最大堆内存
-        int maxHeapSize = manager.getLargeMemoryClass();    // 521.是当清单文件配置了android:largeHeap="true" 才有的最大堆内存，一般是heapSize的2-3倍
+        int heapSize = manager.getMemoryClass();    // 256.设备分配给app的最大堆内存。nexeus: 192
+        int maxHeapSize = manager.getLargeMemoryClass();// 521.是当清单文件配置了android:largeHeap="true"才有的最大堆内存，一般是heapSize的2-3倍。nexeus: 512
         NLog.d("sjh8", "heapSize =  " + heapSize + " maxHeapSize = " + maxHeapSize);
 
         NLog.i("sjh8", "isDebug" + ((context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0));
+        Debug.startMethodTracing();
     }
 
     /**

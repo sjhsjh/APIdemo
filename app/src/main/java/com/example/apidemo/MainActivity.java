@@ -5,9 +5,6 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.os.Build;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
@@ -61,14 +58,15 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.listview);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            Window window = getWindow();
-//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-//            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-//            window.setStatusBarColor(Color.TRANSPARENT);
-//        }
+        // 使当前activity的状态栏变成沉浸式
+        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        //     Window window = getWindow();
+        //     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        //     window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        //             | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+        //     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //     window.setStatusBarColor(Color.TRANSPARENT);
+        // }
 
         HardWareUtils.registerBluetoothListener(this);
         DoraemonKit.hide();
