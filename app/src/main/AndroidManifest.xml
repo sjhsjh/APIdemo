@@ -109,6 +109,7 @@
         </service>
 
         <service
+            android:label="ApiDemo-监听当前最顶层的Activity"
             android:name="com.example.apidemo.utils.background.DetectService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
 
@@ -121,8 +122,8 @@
                 android:resource="@xml/detection_service_config" />
         </service>
 
-        <!--  模拟屏幕点击-->
         <service
+            android:label="ApiDemo-模拟屏幕点击"
             android:name="com.example.apidemo.accessibility.ClickAccessibilityService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
 
@@ -171,6 +172,7 @@
         <activity android:name=".activity.NestScrollActivity" />
         <activity android:name=".activity.CoordinatorActivity" />
         <activity android:name=".activity.AppBarActivity" />
+        <activity android:name=".activity.AutoClickActivity" />
 
         <meta-data android:value="58db526f310c935d4f001c2e" android:name="UMENG_APPKEY"/>       <!--  测试key：59420a29a40fa31dad000ce9-->
         <meta-data android:value="my_channel" android:name="UMENG_CHANNEL"/>

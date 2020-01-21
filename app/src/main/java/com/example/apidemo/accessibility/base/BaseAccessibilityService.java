@@ -28,8 +28,12 @@ public class BaseAccessibilityService extends AccessibilityService {
     }
 
     public static BaseAccessibilityService getInstance() {
-        if (mInstance == null) {
-            mInstance = new BaseAccessibilityService();
+        if (null == mInstance) {
+            synchronized (BaseAccessibilityService.class) {
+                if (null == mInstance) {
+                    mInstance = new BaseAccessibilityService();
+                }
+            }
         }
         return mInstance;
     }
@@ -37,14 +41,15 @@ public class BaseAccessibilityService extends AccessibilityService {
     /**
      * Check当前辅助服务是否启用
      *
-     * @param serviceName serviceName
+     * @param serviceID serviceID
      * @return 是否启用
      */
-    private boolean checkAccessibilityEnabled(String serviceName) {
+    public boolean checkAccessibilityEnabled(String serviceID) {
+        // 获取当前所有开启的辅助服务
         List<AccessibilityServiceInfo> accessibilityServices =
                 mAccessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
         for (AccessibilityServiceInfo info : accessibilityServices) {
-            if (info.getId().equals(serviceName)) {
+            if (info.getId().equals(serviceID)) {
                 return true;
             }
         }
@@ -74,7 +79,7 @@ public class BaseAccessibilityService extends AccessibilityService {
      */
     public void performBackClick() {
         try {
-            Thread.sleep(500);      // todo
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

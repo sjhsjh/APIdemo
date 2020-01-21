@@ -32,4 +32,7 @@
         \nNestChildViewn内容1\n-----单屏end----\nNestChildViewn内容3\nNestChildViewn内容4
         \nNestChildViewn内容5\nNestChildViewn内容6\nNestChildViewn内容7\nNestChildViewn内容8\n-------end----</string>
 
+    <string name="accessibility_click">实现模拟点击功能需要辅助功能权限\n(在设置里给用户看的描述)</string>
+    <string name="accessibility_window">监听当前最顶层的Activity</string>
+
 </resources>

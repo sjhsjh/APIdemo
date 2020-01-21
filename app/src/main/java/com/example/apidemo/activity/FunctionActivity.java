@@ -55,7 +55,7 @@ public class FunctionActivity extends BaseActivity {
             public void onClick(View v) {
                 finishWithoutAnimation();
                 Intent intent = new Intent(FunctionActivity.this, FunctionActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);     // 等效于overridePendingTransition(0, 0);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);    // 等效于overridePendingTransition(0, 0);这flag仅适用于进入activity
                 startActivity(intent);
                 Toast.makeText(FunctionActivity.this, "当前activity已重启", Toast.LENGTH_SHORT).show();
 

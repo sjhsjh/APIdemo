@@ -13,8 +13,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import com.crashlytics.android.Crashlytics;
 import com.didichuxing.doraemonkit.DoraemonKit;
+import com.example.apidemo.accessibility.ClickAccessibilityService;
 import com.example.apidemo.activity.ADActivity;
 import com.example.apidemo.activity.AppBarActivity;
+import com.example.apidemo.activity.AutoClickActivity;
 import com.example.apidemo.activity.CoordinatorActivity;
 import com.example.apidemo.activity.DIYViewActivity;
 import com.example.apidemo.activity.EventDispatchActivity;
@@ -74,6 +76,7 @@ public class MainActivity extends BaseActivity {
         List<Object> list = new ArrayList<Object>();
         list.add(DoraemonKit.class);
         // todo
+        list.add(AutoClickActivity.class);
         list.add(CoordinatorActivity.class);
         list.add(AppBarActivity.class);
         list.add(NestScrollActivity.class);
@@ -146,6 +149,12 @@ public class MainActivity extends BaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         NLog.d("sjh7", " main onNewIntent\n" + intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ClickAccessibilityService.enable = false;
     }
 
     @Override
