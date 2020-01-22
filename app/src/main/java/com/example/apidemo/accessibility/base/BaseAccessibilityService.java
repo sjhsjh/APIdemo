@@ -19,7 +19,7 @@ import java.util.List;
 
 public class BaseAccessibilityService extends AccessibilityService {
     private AccessibilityManager mAccessibilityManager;
-    private Context mContext;
+    protected Context mContext;
     private static BaseAccessibilityService mInstance;
 
     public void init(Context context) {

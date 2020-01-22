@@ -15,7 +15,6 @@ import java.util.Locale;
 import java.util.UUID;
 
 /**
- * <br>
  * 2016/10/27.
  */
 public class HardWareUtils {
@@ -267,6 +266,10 @@ public class HardWareUtils {
      */
     public static void wakeUpScreen(Context context) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        if (pm == null) {
+            NLog.e("sjh2", "PowerManager null!!!");
+            return;
+        }
         // 获取PowerManager.WakeLock对象，后面的参数|表示同时传入两个值，最后的是调试用的Tag
         // SCREEN_BRIGHT_WAKE_LOCK是4个flag之一，决定CPU、Screen、Keyboard是否开启
         // ps:用户点击电源键时 SCREEN_BRIGHT_WAKE_LOCK 会被释放
@@ -277,7 +280,9 @@ public class HardWareUtils {
 
         //得到键盘锁管理器对象，需要DISABLE_KEYGUARD权限
         KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        NLog.i("sjh2", "islocking = " + keyguardManager.inKeyguardRestrictedInputMode());
         KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("apidemo-keyguard");
+
         //解锁
         keyguardLock.disableKeyguard();
 
