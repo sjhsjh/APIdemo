@@ -1,15 +1,20 @@
 package com.example.apidemo.accessibility;
 
 import android.accessibilityservice.GestureDescription;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import com.example.apidemo.accessibility.base.BaseAccessibilityService;
+import com.example.apidemo.utils.HardWareUtils;
 import com.example.apidemo.utils.NLog;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 自动点击
@@ -23,6 +28,25 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
         if (event.getPackageName() == null) {
             return;
         }
+        if (event.getEventType() == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
+            NLog.v("sjh2", "==receive notification==event==" + event);
+            clickNotification(event);
+            HardWareUtils.wakeUpScreen(mContext);
+            performGlobalAction(GLOBAL_ACTION_HOME);
+            startClickOrMove(160, 268, true);   // 最左上角
+
+
+            List<CharSequence> texts = event.getText();
+            if (!texts.isEmpty()) {
+                for (CharSequence text : texts) {
+                    String content = text.toString();
+                    if (!TextUtils.isEmpty(content)) {
+                        NLog.i("sjh2", "==notification content==" + content);
+                    }
+                }
+            }
+        }
+
         if ("com.example.apidemo".equals(event.getPackageName().toString())) {
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                 // rootNode的className都是FrameLayout，全屏幕的，viewIdResName也为null；但是它的儿子却不包含状态栏和导航栏，而是应用区域里的一些可交互view（实测）。
@@ -172,6 +196,22 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                     reset();
                 }
             }, mHandler);
+        }
+    }
+
+    private void clickNotification(AccessibilityEvent event) {
+        if (event.getParcelableData() != null && event.getParcelableData() instanceof Notification) {
+            Notification notification = (Notification) event.getParcelableData();
+            if (notification.tickerText != null) {
+                String content = notification.tickerText.toString();
+                NLog.d("sjh2", "==tickerText content==" + content);   // 君临天下: 8
+            }
+            PendingIntent pendingIntent = notification.contentIntent;
+            try {
+                pendingIntent.send();
+            } catch (PendingIntent.CanceledException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
