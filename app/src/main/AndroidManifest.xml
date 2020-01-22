@@ -6,6 +6,7 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- <uses-permission android:name="android.permission.DEVICE_POWER" /> -->
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
 
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <!--<uses-permission android:name="android.permission.INSTALL_SHORTCUT" />  -->
@@ -22,6 +23,7 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.FLASHLIGHT"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />   <!--    SYSTEM_OVERLAY_WINDOW-->
+
 
     <uses-feature android:name="android.hardware.camera2"/>
     <uses-feature android:name="android.hardware.autofocus" />

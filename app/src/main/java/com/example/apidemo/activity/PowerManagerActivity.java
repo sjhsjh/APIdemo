@@ -13,10 +13,10 @@ import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 
 /**
- * 这三个Level在API17被弃用。被弃用说明肯定有替代品吗，上面三个类型的作用无非就是保持屏幕长亮。 
- * 所以推荐是用WindowFlagWindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON。
+ * 这三个Level在API17被弃用。PowerManager.FULL_WAKE_LOCK 等3个类型的作用无非就是保持屏幕长亮or唤醒屏幕。
+ * 所以推荐是用WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON。
  * 使用方法是： 在Activity中： getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
- *  甚至可以在布局中添加这个属性：android:keepScreenOn=”true”
+ * 甚至可以在布局中添加这个属性：android:keepScreenOn=”true”
  * @author shao
  *
  */
@@ -41,7 +41,7 @@ public class PowerManagerActivity extends BaseActivity {
 		////////////////////////////////////////////////////////////////////////////////////////////
 
 		final PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-		final WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "PowerManagerActivity");
+		final WakeLock wakeLock = powerManager.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, "apidemo:PowerManagerActivity");
 		//设置是否判断wakelock的acquire和release次数是否相等，若为false，则一个release就取消所有acquire。若为true，没有wakelock的时候release则报错。
 		wakeLock.setReferenceCounted(false);
 

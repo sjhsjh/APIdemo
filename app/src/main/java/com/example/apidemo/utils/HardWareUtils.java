@@ -1,11 +1,13 @@
 package com.example.apidemo.utils;
 
+import android.app.KeyguardManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import java.security.MessageDigest;
@@ -259,5 +261,26 @@ public class HardWareUtils {
         return sb.toString().toUpperCase(Locale.CHINA);
     }
 
+    /**
+     * 熄屏下唤醒屏幕并解锁
+     * 另附反射方案解锁屏幕：https://blog.csdn.net/behindeye/article/details/78178673
+     */
+    public static void wakeUpScreen(Context context) {
+        PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        // 获取PowerManager.WakeLock对象，后面的参数|表示同时传入两个值，最后的是调试用的Tag
+        // SCREEN_BRIGHT_WAKE_LOCK是4个flag之一，决定CPU、Screen、Keyboard是否开启
+        // ps:用户点击电源键时 SCREEN_BRIGHT_WAKE_LOCK 会被释放
+        PowerManager.WakeLock wakelock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+                PowerManager.ACQUIRE_CAUSES_WAKEUP, "apidemo:wakelock-flag-bright");
+        //点亮屏幕
+        wakelock.acquire(5000);
 
+        //得到键盘锁管理器对象，需要DISABLE_KEYGUARD权限
+        KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
+        KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("apidemo-keyguard");
+        //解锁
+        keyguardLock.disableKeyguard();
+
+        wakelock.release();
+    }
 }
