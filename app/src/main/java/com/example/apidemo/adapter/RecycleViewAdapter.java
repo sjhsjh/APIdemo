@@ -28,43 +28,43 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemViewType(int position) {
         NLog.i("sjh0", "getItemViewType  position = " + position);
-        if(position == 0){
-            return TYPE_HEADER;
-        }
-        else if(position == getItemCount() - 1){
-            return TYPE_FOOTER;
-        }
-        else {
+        // if(position == 0){
+        //     return TYPE_HEADER;
+        // }
+        // else if(position == getItemCount() - 1){
+        //     return TYPE_FOOTER;
+        // }
+        // else {
             return TYPE_ITEM;
-        }
+        // }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         NLog.w("sjh0", "onCreateViewHolder");
-        if(viewType == TYPE_HEADER){
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleview_header, parent, false);
-            HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
-            return headerViewHolder;
-        }
-        else if(viewType == TYPE_FOOTER){
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleviewfooter, parent, false);
-            FooterViewHolder footerViewHolder = new FooterViewHolder(view);
-            return footerViewHolder;
-        }
-        else {
+        // if(viewType == TYPE_HEADER){
+        //     View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleview_header, parent, false);
+        //     HeaderViewHolder headerViewHolder = new HeaderViewHolder(view);
+        //     return headerViewHolder;
+        // }
+        // else if(viewType == TYPE_FOOTER){
+        //     View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycleviewfooter, parent, false);
+        //     FooterViewHolder footerViewHolder = new FooterViewHolder(view);
+        //     return footerViewHolder;
+        // }
+        // else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
             ItemViewHolder itemViewHolder = new ItemViewHolder(view);
             return itemViewHolder;
-        }
+        // }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         NLog.w("sjh0", "onBindViewHolder: position = " + position);
         if(holder instanceof ItemViewHolder) {
-            if(position - 1 < mItemDatas.size()){
-                ((ItemViewHolder)holder).textview.setText(mItemDatas.get(position - 1).toString());
+            if(position - 0 < mItemDatas.size()){
+                ((ItemViewHolder)holder).textview.setText(mItemDatas.get(position - 0).toString());
                 holder.itemView.setTag(position);
             }
         }else if(holder instanceof HeaderViewHolder){
@@ -77,7 +77,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemCount() {
         NLog.i("sjh0", "getItemCount");
-        return mItemDatas.size() + 2;
+        return mItemDatas.size() + 0;
      }
 
     public void setData(List<Integer> itemDatas){
