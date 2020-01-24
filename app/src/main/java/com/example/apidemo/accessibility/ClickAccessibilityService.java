@@ -3,15 +3,18 @@ package com.example.apidemo.accessibility;
 import android.accessibilityservice.GestureDescription;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Intent;
 import android.graphics.Path;
-import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
+import android.graphics.Rect;
 import android.view.accessibility.AccessibilityNodeInfo;
-import com.example.apidemo.accessibility.base.BaseAccessibilityService;
+import com.example.apidemo.APIDemoApplication;
 import com.example.apidemo.utils.HardWareUtils;
+import com.example.apidemo.activity.AutoClickActivity;
+import com.example.apidemo.accessibility.base.BaseAccessibilityService;
 import com.example.apidemo.utils.NLog;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,51 +25,61 @@ import java.util.List;
  */
 public class ClickAccessibilityService extends BaseAccessibilityService {
     public static final String SERVICE_ID = "com.example.apidemo/.accessibility.ClickAccessibilityService";
+    private static final String PKG_WEIXIN = "com.tencent.mm";
+    private static final String PKG_QQ = "com.tencent.mobileqq";
+    private static final String PKG_API_DEMO = "com.example.apidemo";
+    private static final String PKG_BROWSER = "com.android.browser";
+    private static final String PKG_MI_LAUNCHER = "com.miui.home";
 
+    /**
+     * @param event
+     * EventType: TYPE_WINDOW_STATE_CHANGED; EventTime: 9763348; PackageName: com.example.apidemo; MovementGranularity: 0;
+     * Action: 0 [ ClassName: com.example.apidemo.activity.AutoClickActivity; Text: [API-DEMO]; ContentDescription: null;
+     * ItemCount: -1; CurrentItemIndex: -1; IsEnabled: true; IsPassword: false; IsChecked: false; IsFullScreen: true; Scrollable: false;
+     * BeforeText: null; FromIndex: -1; ToIndex: -1; ScrollX: -1; ScrollY: -1; MaxScrollX: -1; MaxScrollY: -1; AddedCount: -1;
+     * RemovedCount: -1; ParcelableData: null ]; recordCount: 0
+     *
+     * TYPE_WINDOW_STATE_CHANGED的className一般是activity的class，但也有LinearLayout的；
+     * 而TYPE_WINDOW_CONTENT_CHANGED的className则全部是FrameLayout等；
+     */
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         if (event.getPackageName() == null) {
             return;
         }
-        if (event.getEventType() == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
-            NLog.v("sjh2", "==receive notification==event==" + event);
-            clickNotification(event);
-            HardWareUtils.wakeUpScreen(mContext);
-            performGlobalAction(GLOBAL_ACTION_HOME);
-            startClickOrMove(160, 268, true);   // 最左上角
+        // if (PKG_WEIXIN.equals(event.getPackageName().toString())) {     // for test
+        //     NLog.v("sjh2", "==receive==event==" + event);
+        // }
 
+        // 无论是否锁屏，收到qq特定内容的消息就开启自动点击
+        // if (event.getEventType() == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
+        //     if (PKG_QQ.equals(event.getPackageName().toString())) {
+        //         NLog.v("sjh2", "==receive notification==event==" + event);
+        //         // if(checkEventText(event, "qqq")){
+        //         //
+        //         // }
+        //         // clickNotification(event);
+        //         HardWareUtils.getInstance().wakeUpAndDisableKeyguard(APIDemoApplication.getContext());
+        //         new Handler().postDelayed(new Runnable() {
+        //             @Override
+        //             public void run() {
+        //                 performGlobalAction(GLOBAL_ACTION_HOME);    // 第一次点击home对屏幕重新上锁，没回到桌面。
+        //                 try {
+        //                     Thread.sleep(500);
+        //                 } catch (InterruptedException e) {
+        //                     e.printStackTrace();
+        //                 }
+        //                 performGlobalAction(GLOBAL_ACTION_HOME);
+        //                 startClickOrMove(130, 1685, true);   // 左下角。MI: 170, 2135
+        //             }
+        //         }, 2000);   // 解锁需要时间
+        //     }
+        // }
 
-            List<CharSequence> texts = event.getText();
-            if (!texts.isEmpty()) {
-                for (CharSequence text : texts) {
-                    String content = text.toString();
-                    if (!TextUtils.isEmpty(content)) {
-                        NLog.i("sjh2", "==notification content==" + content);
-                    }
-                }
-            }
-        }
-
-        if ("com.example.apidemo".equals(event.getPackageName().toString())) {
+        if (AutoClickActivity.enableAutoClick && PKG_API_DEMO.equals(event.getPackageName().toString()) // PKG_BROWSER、PKG_MI_LAUNCHER
+                && event.getClassName() != null && AutoClickActivity.CLASSNAME.equals(event.getClassName().toString())) {
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-                // rootNode的className都是FrameLayout，全屏幕的，viewIdResName也为null；但是它的儿子却不包含状态栏和导航栏，而是应用区域里的一些可交互view（实测）。
-                // 这些交互view覆盖了应用区域。
-                // 各节点也只能获得一部分的child，并且它们的viewIdResName可能null可能非null。
-                // getServiceInfo().flags = AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS;
-                AccessibilityNodeInfo rootNode = getRootInActiveWindow();
-
-                Rect rect = new Rect();
-                rootNode.getBoundsInScreen(rect);
-                NLog.i("sjh2", "==rect : " + rect);
-                // NLog.i("sjh2", "==getViewIdResourceName : " + rootNode.getChild(0).getViewIdResourceName());
-            }
-        }
-
-        // if (event.getPackageName().toString().contains("miui.home")) {
-        // if ("com.android.browser".equals(event.getPackageName().toString())) {
-        if ("com.example.apidemo".equals(event.getPackageName().toString())) {
-            if (enable && event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-
+                AutoClickActivity.enableAutoClick = false;
                 // reset();
                 addSimulateAction(new Runnable() {
                     @Override
@@ -94,9 +107,39 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
             }
         }
 
+        // 查看node节点的Rect坐标
+        // if (PKG_API_DEMO.equals(event.getPackageName().toString())) {
+        //     if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+        //         // rootNode的className都是FrameLayout，全屏幕的，viewIdResName也为null；但是它的儿子却不包含状态栏和导航栏，而是应用区域里的一些可交互view（实测）。
+        //         // 这些交互view覆盖了应用区域。
+        //         // 各节点也只能获得一部分的child，并且它们的viewIdResName可能null可能非null。
+        //         // getServiceInfo().flags = AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS;
+        //         AccessibilityNodeInfo rootNode = getRootInActiveWindow();
+        //
+        //         Rect rect = new Rect();
+        //         rootNode.getBoundsInScreen(rect);
+        //         NLog.i("sjh2", "==rect : " + rect);
+        //         // NLog.i("sjh2", "==getViewIdResourceName : " + rootNode.getChild(0).getViewIdResourceName());
+        //     }
+        // }
+
+        // 最简单的抢红包
+        // if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED)
+        //     if (PKG_WEIXIN.equals(event.getPackageName().toString())
+        //             && event.getClassName() != null && "com.tencent.mm.ui.LauncherUI".equals(event.getClassName().toString()))  {
+        //         NLog.v("sjh2", "==red packet==event==" + event);
+        //         startClickOrMove(500, 1800, true);
+        //         try {
+        //             Thread.sleep(500);
+        //         } catch (InterruptedException e) {
+        //             e.printStackTrace();
+        //         }
+        //         startClickOrMove(485, 1450, true);
+        // }
+
         // 一旦回到桌面就打开电话
         // if (event.getPackageName().toString().contains("googlequicksearchbox") ||
-        //         event.getPackageName().toString().contains("miui.home")) {
+        //         PKG_MI_LAUNCHER.equals(event.getPackageName().toString())) {
         //     if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
         //         AccessibilityNodeInfo settingNode = findViewByText("电话");
         //         if (settingNode != null) {
@@ -106,7 +149,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
         // }
 
         // 自动滚动view
-        // if ("com.example.apidemo".equals(event.getPackageName().toString())) {
+        // if (PKG_API_DEMO.equals(event.getPackageName().toString())) {
         //     if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
         //         AccessibilityNodeInfo node = findViewByText("Activity");
         //         performScrollForward(node);
@@ -122,7 +165,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
     private ArrayList<Runnable> list = new ArrayList<Runnable>();
     private float currentX = 500;
     private float currentY = 500;
-    public static boolean enable = false;
+    public static boolean enable = true;
     private boolean isRunning = false;
 
     private ClickAccessibilityService addSimulateAction(Runnable runnable) {
@@ -199,6 +242,23 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
         }
     }
 
+    /**
+     * 检查通知里是否有指定内容
+     */
+    private boolean checkEventText(AccessibilityEvent event, String beCheckText) {
+        List<CharSequence> texts = event.getText();
+        if (!texts.isEmpty()) {
+            for (CharSequence text : texts) {
+                String content = text.toString();
+                if (!TextUtils.isEmpty(content) && content.contains(beCheckText)) {
+                    NLog.i("sjh2", "==notification content==" + content); // 君临天下: 2
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private void clickNotification(AccessibilityEvent event) {
         if (event.getParcelableData() != null && event.getParcelableData() instanceof Notification) {
             Notification notification = (Notification) event.getParcelableData();
@@ -213,5 +273,11 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        NLog.v("sjh2", "==onStartCommand==flags==" + flags);    // 没调用
+        return super.onStartCommand(intent, flags, startId);
     }
 }

@@ -15,25 +15,25 @@
         android:packageNames="目标包名"  没有指定包名时，默认辅助所有的应用-->
 
     <!--自动点击器-->
-    <!--<accessibility-service-->
-    <!--android:accessibilityEventTypes="typeAllMask"-->
-    <!--android:notificationTimeout="50"-->
-    <!--android:accessibilityFlags="flagDefault|flagIncludeNotImportantViews"-->
-    <!--android:canRetrieveWindowContent="true"-->
-    <!--android:canPerformGestures="true"-->
+<!--<accessibility-service
+    android:accessibilityEventTypes="typeAllMask"
+    android:notificationTimeout="50"
+    android:accessibilityFlags="flagDefault|flagIncludeNotImportantViews"
+    android:canRetrieveWindowContent="true"
+    android:canPerformGestures="true"
 
-    <!--android:description="需要辅助功能权限实现模拟点击功能\n 在设置里给用户看的描述"-->
-    <!--android:accessibilityFeedbackType="feedbackGeneric"-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android" />-->
+    android:description="需要辅助功能权限实现模拟点击功能\n 在设置里给用户看的描述"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    xmlns:android="http://schemas.android.com/apk/res/android" />-->
 
 
     <!--点击助手-->
-    <!--<accessibility-service android:description="@string/description"-->
-    <!--android:accessibilityEventTypes="typeWindowStateChanged"-->
+<!--<accessibility-service android:description="@string/description"
+    android:accessibilityEventTypes="typeWindowStateChanged"
 
-    <!--android:accessibilityFeedbackType="feedbackGeneric"-->
-    <!--android:canPerformGestures="true"-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android" />-->
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:canPerformGestures="true"
+    xmlns:android="http://schemas.android.com/apk/res/android" />-->
 
 
 

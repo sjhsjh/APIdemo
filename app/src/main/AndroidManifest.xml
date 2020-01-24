@@ -98,8 +98,8 @@
         <service
             android:name=".service.TestService"
             android:enabled="true"
-
             android:exported="true" >
+
             <intent-filter>
                 <action android:name=".AIDLAction" />
             </intent-filter>
@@ -110,7 +110,7 @@
             android:process=":remote" >
         </service>
 
-        <service
+      <!--  <service
             android:label="ApiDemo-监听当前最顶层的Activity"
             android:name="com.example.apidemo.utils.background.DetectService"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
@@ -122,7 +122,7 @@
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/detection_service_config" />
-        </service>
+        </service>-->
 
         <service
             android:label="ApiDemo-模拟屏幕点击"

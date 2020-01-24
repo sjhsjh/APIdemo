@@ -10,7 +10,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import com.crashlytics.android.Crashlytics;
 import com.didichuxing.doraemonkit.DoraemonKit;
-import com.example.apidemo.accessibility.ClickAccessibilityService;
 import com.example.apidemo.activity.ADActivity;
 import com.example.apidemo.activity.AppBarActivity;
 import com.example.apidemo.activity.AutoClickActivity;
@@ -152,7 +151,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ClickAccessibilityService.enable = false;
+        AutoClickActivity.enableAutoClick = false;
     }
 
     @Override

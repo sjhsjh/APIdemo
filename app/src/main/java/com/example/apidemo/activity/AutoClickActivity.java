@@ -16,6 +16,8 @@ import com.example.apidemo.utils.AndroidUtils;
  * @date 2020/1/21
  */
 public class AutoClickActivity extends BaseActivity {
+    public static final String CLASSNAME = "com.example.apidemo.activity.AutoClickActivity";
+    public static boolean enableAutoClick = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,7 @@ public class AutoClickActivity extends BaseActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        ClickAccessibilityService.enable = true;
+                        enableAutoClick = true;
 
                         finish();
                         overridePendingTransition(0, 0);

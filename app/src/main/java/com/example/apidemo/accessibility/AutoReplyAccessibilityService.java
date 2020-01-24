@@ -20,7 +20,6 @@ import java.util.List;
  * 收到微信通知消息后自动回复
  */
 public class AutoReplyAccessibilityService extends BaseAccessibilityService {
-
     private final static String MM_PNAME = "com.tencent.mm";
     boolean hasAction = false;
     boolean locked = false;

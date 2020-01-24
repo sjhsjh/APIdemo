@@ -43,7 +43,17 @@ public class HardWareUtils {
         }
     };
 
-
+    private static HardWareUtils mInstance;
+    public static HardWareUtils getInstance() {
+        if (null == mInstance) {
+            synchronized (HardWareUtils.class) {
+                if (null == mInstance) {
+                    mInstance = new HardWareUtils();
+                }
+            }
+        }
+        return mInstance;
+    }
     /**
      * GPS，蓝牙，数据漫游的开启关闭，会修改系统的数据表，通过监听数据表中数据变化来判断打开，关闭操作。
      * @param context
@@ -260,11 +270,22 @@ public class HardWareUtils {
         return sb.toString().toUpperCase(Locale.CHINA);
     }
 
+    private KeyguardManager.KeyguardLock currentKeyguardLock;
     /**
      * 熄屏下唤醒屏幕并解锁
      * 另附反射方案解锁屏幕：https://blog.csdn.net/behindeye/article/details/78178673
+     * disableKeyguard注意事项：
+     * 0、disableKeyguard之后按home键看似没反应，实质应该对屏幕重新上锁（系统原因）。
+     * 此时要先将上一次的keyguardLock进行reenableKeyguard才能再用新keyguardLock来disableKeyguard。
+     * 1、调用完disable这个方法后，除非应用进程被杀死，否则按电源键只是黑屏，无法锁住屏幕的。
+     * 2、KeyguardLock对象必须是同一个才能在disable之后重新reenable，所以要使reenable生效的话要把调用disable的对象存起来便于再reenable，
+     * 而且单纯的调用reenable方法是没有任何作用的，所以你锁不了其他程序打开的屏幕，有时候甚至锁不了自己曾经打开的锁（对象不是同一个的话）
+     * 3、调用完disableKeyguard方法关闭系统锁屏服务后， 在适当的时候（即恢复系统锁屏服务时）调用reenableKeyguard方法，让他们成对调用。
+     * （先理解成系统同一时刻只允许存在一对disableKeyguard与reenableKeyguard吧）。
+     * 4、disableKeyguard并不是解锁屏幕，只是把锁屏功能禁掉了。这也导致了在某些系统上锁屏界面仍然存在而且并没有解锁，
+     * 导致按Home键的时候Home的实际功能被锁屏界面拦截而无法进入主页。
      */
-    public static void wakeUpScreen(Context context) {
+    public void wakeUpAndDisableKeyguard(Context context) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         if (pm == null) {
             NLog.e("sjh2", "PowerManager null!!!");
@@ -278,14 +299,23 @@ public class HardWareUtils {
         //点亮屏幕
         wakelock.acquire(5000);
 
+        reenableKeyguard();
         //得到键盘锁管理器对象，需要DISABLE_KEYGUARD权限
         KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-        NLog.i("sjh2", "islocking = " + keyguardManager.inKeyguardRestrictedInputMode());
+        NLog.d("sjh2", "isLocked = " + keyguardManager.inKeyguardRestrictedInputMode());
         KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("apidemo-keyguard");
 
         //解锁
         keyguardLock.disableKeyguard();
+        currentKeyguardLock = keyguardLock;
+        NLog.i("sjh2", "isKeyguardLocked = " + keyguardManager.isKeyguardLocked());
 
         wakelock.release();
+    }
+
+    public void reenableKeyguard() {
+        if (currentKeyguardLock != null) {
+            currentKeyguardLock.reenableKeyguard();
+        }
     }
 }
