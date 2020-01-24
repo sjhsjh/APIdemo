@@ -11,12 +11,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Debug;
 import android.provider.Settings;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -130,5 +132,34 @@ public class AndroidUtils {
         Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.getApplicationContext().startActivity(intent);
+    }
+
+    /**
+     * 展开通知栏
+     */
+    public static void openStatusBar(Context mContext) {
+        String methodName = (Build.VERSION.SDK_INT <= 16) ? "expand" : "expandNotificationsPanel";
+        openOrCloseStatusBar(mContext, methodName);
+    }
+
+    /**
+     * 收起通知栏
+     */
+    public static void closeStatusBar(Context mContext) {
+        String methodName = (Build.VERSION.SDK_INT <= 16) ? "collapse" : "collapsePanels";
+        openOrCloseStatusBar(mContext, methodName);
+    }
+
+    private static void openOrCloseStatusBar(Context context, String methodName) {
+        Object service = context.getSystemService("statusbar"); // @hide : Context.STATUS_BAR_SERVICE
+        try {
+            Class<?> clazz = Class.forName("android.app.StatusBarManager");
+
+            Method method = clazz.getMethod(methodName);
+            method.setAccessible(true);
+            method.invoke(service);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
