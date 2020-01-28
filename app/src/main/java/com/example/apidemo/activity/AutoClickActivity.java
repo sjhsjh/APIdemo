@@ -7,12 +7,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 import com.example.apidemo.BaseActivity;
+import com.example.apidemo.MainActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.accessibility.ClickAccessibilityService;
 import com.example.apidemo.accessibility.base.BaseAccessibilityService;
 import com.example.apidemo.utils.AndroidUtils;
+import com.example.apidemo.utils.NLog;
+import java.util.Calendar;
 
 /**
+ * @see ClickAccessibilityService
  * @date 2020/1/21
  */
 public class AutoClickActivity extends BaseActivity {
@@ -55,9 +59,37 @@ public class AutoClickActivity extends BaseActivity {
                         startActivity(intent);
                         Toast.makeText(AutoClickActivity.this, "AutoClick Activity已重启", Toast.LENGTH_SHORT).show();
                     }
-                }, 1000);
+                }, 500);
             }
         });
 
+        ((Button) findViewById(R.id.button3)).setText("AlarmManager");
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //设定时间为 2016年12月16日11点50分0秒
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, 2020);
+                calendar.set(Calendar.MONTH, Calendar.JANUARY);
+                calendar.set(Calendar.DAY_OF_MONTH, 28);
+                calendar.set(Calendar.HOUR_OF_DAY, 16);
+                calendar.set(Calendar.MINUTE, 30);
+                calendar.set(Calendar.SECOND, 0);
+
+                AndroidUtils.openAlarm(AutoClickActivity.this,false,
+                        System.currentTimeMillis(), 7000, new Runnable() {
+                    @Override
+                    public void run() {
+                        NLog.d("sjh5", "---times up run---");
+                        Intent intent = new Intent(AutoClickActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                });
+
+            }
+        });
     }
+
 }

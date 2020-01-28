@@ -192,7 +192,6 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
         list.clear();
         currentX = 500;
         currentY = 500;
-        enable = false;
     }
 
     private void execNext() {

@@ -1,10 +1,14 @@
 package com.example.apidemo.utils;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
@@ -14,6 +18,7 @@ import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Debug;
 import android.provider.Settings;
+import com.example.apidemo.broadcast.AlarmBroadcastReceiver;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -150,6 +155,7 @@ public class AndroidUtils {
         openOrCloseStatusBar(mContext, methodName);
     }
 
+    @SuppressLint("WrongConstant")
     private static void openOrCloseStatusBar(Context context, String methodName) {
         Object service = context.getSystemService("statusbar"); // @hide : Context.STATUS_BAR_SERVICE
         try {
@@ -161,5 +167,62 @@ public class AndroidUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private static AlarmBroadcastReceiver alarmReceiver; // 全局广播，对应context.getApplicationContext().registerReceiver
+    public static PendingIntent currentPendingIntent;
+
+    @SuppressWarnings({"ConstantConditions"})   // 忽略lint空指针警告
+    public static void openAlarm(Context context, boolean isRepeat, long beginMs, long intervalMs, Runnable timeUpRunnable) {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        Intent broastIntent = new Intent();//context, AlarmBroadcastReceiver.class);  xx
+        broastIntent.setAction(AlarmBroadcastReceiver.ACTION_ALARM);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, broastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        currentPendingIntent = pendingIntent;
+
+        // 注册处理到时任务和循环任务的广播
+        destoryBroadcast(context);
+        alarmReceiver = new AlarmBroadcastReceiver(alarmManager, isRepeat, intervalMs, timeUpRunnable, pendingIntent);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(AlarmBroadcastReceiver.ACTION_ALARM);
+        context.getApplicationContext().registerReceiver(alarmReceiver, filter); // 广播生命周期跟随registerReceiver的context
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            NLog.v("sjh5", "---set alarm---");
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, beginMs, pendingIntent);
+            // alarmManager.setExact(AlarmManager.RTC_WAKEUP, beginMs, pendingIntent);
+            // // setWindow的触发时间比较不确定。[0,2]->5s触发；[0,60]->62s、5s触发；setWindow的windowLengthMillis为0时等价于setExact；
+            // alarmManager.setWindow(AlarmManager.RTC_WAKEUP, beginMs, 2000, pendingIntent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT || !isRepeat) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, beginMs, pendingIntent);
+        } else {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, beginMs, intervalMs, pendingIntent);
+        }
+    }
+
+    /**
+     * 主动结束AlarmManager循环任务
+     */
+    public static void destoryBroadcast(Context context) {
+        if (alarmReceiver != null) {
+            context.getApplicationContext().unregisterReceiver(alarmReceiver);
+            alarmReceiver = null;
+        }
+    }
+    /**
+     * 主动取消AlarmManager定时任务
+     */
+    public static void cancelAlarm(Context context) {
+        if (currentPendingIntent != null) {
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.cancel(currentPendingIntent);
+        }
+    }
+
+    public static void cancelAlarmAndBroadcast(Context context) {
+        destoryBroadcast(context);
+        cancelAlarm(context);
     }
 }
