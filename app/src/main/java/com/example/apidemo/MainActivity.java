@@ -151,7 +151,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        AutoClickActivity.enableAutoClick = false;
+        AutoClickActivity.enableAutoClickTest = false;
     }
 
     @Override

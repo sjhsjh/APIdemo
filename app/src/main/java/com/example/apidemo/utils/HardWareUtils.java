@@ -302,13 +302,13 @@ public class HardWareUtils {
         reenableKeyguard();
         //得到键盘锁管理器对象，需要DISABLE_KEYGUARD权限
         KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE);
-        NLog.d("sjh2", "isLocked = " + keyguardManager.inKeyguardRestrictedInputMode());
+        NLog.i("sjh2", "wakeUpAndDisableKeyguard isLocked = " + keyguardManager.inKeyguardRestrictedInputMode());
         KeyguardManager.KeyguardLock keyguardLock = keyguardManager.newKeyguardLock("apidemo-keyguard");
 
         //解锁
         keyguardLock.disableKeyguard();
         currentKeyguardLock = keyguardLock;
-        NLog.i("sjh2", "isKeyguardLocked = " + keyguardManager.isKeyguardLocked());
+        NLog.i("sjh2", "wakeUpAndDisableKeyguard isKeyguardLocked = " + keyguardManager.isKeyguardLocked());
 
         wakelock.release();
     }

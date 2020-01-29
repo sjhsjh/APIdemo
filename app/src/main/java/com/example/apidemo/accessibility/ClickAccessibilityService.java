@@ -52,34 +52,83 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
         // }
 
         // 无论是否锁屏，收到qq特定内容的消息就开启自动点击
-        // if (event.getEventType() == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
-        //     if (PKG_QQ.equals(event.getPackageName().toString())) {
-        //         NLog.v("sjh2", "==receive notification==event==" + event);
-        //         // if(checkEventText(event, "qqq")){
-        //         //
-        //         // }
-        //         // clickNotification(event);
-        //         HardWareUtils.getInstance().wakeUpAndDisableKeyguard(APIDemoApplication.getContext());
-        //         new Handler().postDelayed(new Runnable() {
-        //             @Override
-        //             public void run() {
-        //                 performGlobalAction(GLOBAL_ACTION_HOME);    // 第一次点击home对屏幕重新上锁，没回到桌面。
-        //                 try {
-        //                     Thread.sleep(500);
-        //                 } catch (InterruptedException e) {
-        //                     e.printStackTrace();
-        //                 }
-        //                 performGlobalAction(GLOBAL_ACTION_HOME);
-        //                 startClickOrMove(130, 1685, true);   // 左下角。MI: 170, 2135
-        //             }
-        //         }, 2000);   // 解锁需要时间
-        //     }
-        // }
-
-        if (AutoClickActivity.enableAutoClick && PKG_API_DEMO.equals(event.getPackageName().toString()) // PKG_BROWSER、PKG_MI_LAUNCHER
+        if (AutoClickActivity.isMonitorOpen && event.getEventType() == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED) {
+            if (PKG_QQ.equals(event.getPackageName().toString())) {
+                NLog.v("sjh2", "==receive notification==event==" + event);
+                if(!checkEventText(event, "qqq")){
+                    return;
+                }
+                // clickNotification(event);
+                HardWareUtils.getInstance().wakeUpAndDisableKeyguard(APIDemoApplication.getContext());
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        performGlobalAction(GLOBAL_ACTION_HOME);    // 第一次点击home对屏幕重新上锁，没回到桌面。
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        performGlobalAction(GLOBAL_ACTION_HOME);
+                        startClickOrMove(130, 1685, true);   // 左下角。MI: 170, 2135
+                    }
+                }, 2000);   // 解锁需要时间
+            }
+        }
+        // 点击应用
+        if (AutoClickActivity.enableAutoClickPhone && PKG_API_DEMO.equals(event.getPackageName().toString())
                 && event.getClassName() != null && AutoClickActivity.CLASSNAME.equals(event.getClassName().toString())) {
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-                AutoClickActivity.enableAutoClick = false;
+                AutoClickActivity.enableAutoClickPhone = false;
+                addSimulateAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        performGlobalAction(GLOBAL_ACTION_HOME);    // 第一次点击home对屏幕重新上锁，没回到桌面。
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        performGlobalAction(GLOBAL_ACTION_HOME);
+                        execNext();
+                    }
+                }).addSimulateAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        startClickOrMove(130, 1685, true);    // 左下角。
+                    }
+                }).start();
+            }
+        }
+        // 应用内点击
+        if (AutoClickActivity.isMonitorOpen && event.getPackageName().toString().contains("aapp")) {
+            if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+                NLog.v("sjh2", "==getClassName==" + event.getClassName().toString());
+                // com.yy.oaapp:id/appRootView,能ACTION_ACCESSIBILITY_FOCUS
+                // AccessibilityNodeInfo settingNode = findViewByID("com.yy.oaapp:id/workflowFragment");
+                // NLog.w("sjh2", "==settingNode==" + settingNode);
+
+                // if (event.getClassName() != null && event.getClassName().toString().equals("android.widget.FrameLayout") && settingNode2 != null) {
+                if (event.getClassName() != null && event.getClassName().toString().contains("IMAp")) {
+                    NLog.v("sjh2", "==enter page one==");
+                    try {
+                        Thread.sleep(5000);  // 页面已加载好但是尚未可见
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    startClickOrMove(860, 400, true);
+
+                } else if (event.getClassName() != null && event.getClassName().toString().contains("gosd")) {
+                    NLog.v("sjh2", "==enter page two==" );
+                    performBackClick();
+                }
+            }
+        }
+
+        if (AutoClickActivity.enableAutoClickTest && PKG_API_DEMO.equals(event.getPackageName().toString()) // PKG_BROWSER、PKG_MI_LAUNCHER
+                && event.getClassName() != null && AutoClickActivity.CLASSNAME.equals(event.getClassName().toString())) {
+            if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+                AutoClickActivity.enableAutoClickTest = false;
                 // reset();
                 addSimulateAction(new Runnable() {
                     @Override
@@ -176,7 +225,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
     }
 
     private void start() {
-        NLog.i("sjh2", "==list : " + list.size());
+        NLog.i("sjh2", "==start list==" + list.size());
         if (enable && !isRunning && !list.isEmpty()) {
             isRunning = true;
             Runnable runnable = list.get(0);

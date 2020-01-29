@@ -191,10 +191,11 @@ public class AndroidUtils {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             NLog.v("sjh5", "---set alarm---");
+            // 触发时间太靠近当前时间的话，第一次执行的时刻不准！！
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, beginMs, pendingIntent);
             // alarmManager.setExact(AlarmManager.RTC_WAKEUP, beginMs, pendingIntent);
-            // // setWindow的触发时间比较不确定。[0,2]->5s触发；[0,60]->62s、5s触发；setWindow的windowLengthMillis为0时等价于setExact；
-            // alarmManager.setWindow(AlarmManager.RTC_WAKEUP, beginMs, 2000, pendingIntent);
+            // setWindow的windowLengthMillis为0时等价于setExact；[0,2]->0s触发；[0,30]->7s、11s、30s触发；[0,60]->0s、9s、32s触发；
+            // alarmManager.setWindow(AlarmManager.RTC_WAKEUP, beginMs, 30000, pendingIntent);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT || !isRepeat) {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, beginMs, pendingIntent);
         } else {
@@ -218,6 +219,7 @@ public class AndroidUtils {
         if (currentPendingIntent != null) {
             AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             alarmManager.cancel(currentPendingIntent);
+            currentPendingIntent = null;
         }
     }
 

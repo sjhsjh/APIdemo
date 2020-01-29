@@ -49,6 +49,15 @@
             android:text="允许截屏"
             android:visibility="gone" />
 
+        <Switch
+            android:id="@+id/switchBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchPadding="0dp"
+            android:layout_marginTop="20dp"
+            android:text="Switch"
+            android:visibility="gone" />
+
     </LinearLayout>
 
     <LinearLayout
