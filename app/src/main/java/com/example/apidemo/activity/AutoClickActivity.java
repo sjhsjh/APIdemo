@@ -1,5 +1,7 @@
 package com.example.apidemo.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +29,7 @@ public class AutoClickActivity extends BaseActivity {
     private static final long ONE_DAY = 24 * 60 * 60 * 1000;
     private static final long ONE_WEEK = 7 * ONE_DAY;
     public static final String CLASSNAME = "com.example.apidemo.activity.AutoClickActivity";
+    public static final String TRIGGER_WINDOW_CHANGE = "trigger_window_change";
     private Switch switchBtn;
     public static boolean enableAutoClickTest = false;
     public static boolean enableAutoClickPhone = false;
@@ -49,7 +52,7 @@ public class AutoClickActivity extends BaseActivity {
         switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                NLog.d("sjh5", "---isChecked--" + isChecked);
+                // NLog.v("sjh5", "---isChecked--" + isChecked);
                 isMonitorOpen = isChecked;
             }
         });
@@ -94,42 +97,52 @@ public class AutoClickActivity extends BaseActivity {
                 calendar.set(Calendar.YEAR, 2020);
                 calendar.set(Calendar.MONTH, Calendar.JANUARY);
                 calendar.set(Calendar.DAY_OF_MONTH, 29);
-                calendar.set(Calendar.HOUR_OF_DAY, 11);
-                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.HOUR_OF_DAY, 11); //
+                calendar.set(Calendar.MINUTE, 0);       //
                 calendar.set(Calendar.SECOND, 0);
 
                 Random r1 = new Random();
                 int offset = r1.nextInt(120) * 1000;
                 NLog.v("sjh5", "---offset---" + offset);
 
-                // beginMs太靠近当前时间的话，第一次执行的时刻不准！！偏移10s就正常。
-                AndroidUtils.openAlarm(AutoClickActivity.this,true,
-                        calendar.getTimeInMillis(), 5 * 60 * 1000, new Runnable() {
-                    @Override
-                    public void run() {
-                        NLog.d("sjh5", "---times up run---");
-                        // Intent intent = new Intent(AutoClickActivity.this, MainActivity.class);
-                        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        // startActivity(intent);
+                long beginMs = calendar.getTimeInMillis();
+                long now = System.currentTimeMillis();
+                long inteval = 60 * 60 * 1000;   //
+                while (beginMs < now) {
+                    beginMs += inteval;
+                }
+                NLog.v("sjh5", "---deta time---" + (beginMs - now));
 
-                        HardWareUtils.getInstance().wakeUpAndDisableKeyguard(AutoClickActivity.this.getApplicationContext());
-                        new Handler().postDelayed(new Runnable() {
+                // 若beginMs为过去的时刻，则闹钟约3~5s后触发；若beginMs太靠近当前时间的话，则第一次执行的时刻不准！！偏移10s就正常。
+                // 因此beginMs永远需要大于当前时刻才正确，最好大于10s以上
+                AndroidUtils.openAlarm(AutoClickActivity.this, true,    // System.currentTimeMillis() + 10000, 15000
+                        beginMs, inteval, new TimeUpCallback() {
                             @Override
-                            public void run() {
-                                enableAutoClickPhone = true;
-                                isMonitorOpen = true;
-                                switchBtn.setChecked(isMonitorOpen);
-                                finish();
-                                overridePendingTransition(0, 0);
-                                Intent intent = new Intent(AutoClickActivity.this, AutoClickActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                                startActivity(intent);
-                                Toast.makeText(AutoClickActivity.this, "AutoClick Activity已重启", Toast.LENGTH_SHORT).show();
-                            }
-                        }, 2000);   // 解锁需要时间
+                            public void timeUp() {
+                                NLog.d("sjh5", "---time up run---" + AutoClickActivity.this);
+                                // Intent intent = new Intent(AutoClickActivity.this, MainActivity.class);
+                                // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                // startActivity(intent);
 
-                    }
-                });
+                                HardWareUtils.getInstance().wakeUpAndDisableKeyguard(AutoClickActivity.this.getApplicationContext());
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        enableAutoClickPhone = true;
+                                        isMonitorOpen = true;
+                                        switchBtn.setChecked(isMonitorOpen);
+
+                                        // finish();
+                                        // overridePendingTransition(0, 0);
+                                        Intent intent = new Intent(AutoClickActivity.this, AutoClickActivity.class);
+                                        // intent.setAction(TRIGGER_WINDOW_CHANGE);
+                                        // intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                                        startActivity(intent);
+                                        // Toast.makeText(AutoClickActivity.this, "start AutoClick Activity", Toast.LENGTH_SHORT).show();
+                                    }
+                                }, 2000);   // 解锁需要时间
+                            }
+                        });
             }
         });
         ((Button) findViewById(R.id.button4)).setText("取消 AlarmManager");
@@ -152,4 +165,38 @@ public class AutoClickActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // NLog.v("sjh5", "AutoClickActivity onResume :" + getIntent());
+        if (enableAutoClickPhone) {         // 可增加action判断
+            switchBtn.post(new Runnable() { // 重要！！onResume直接showDialog会导致dialog显示后还未能获取焦点（尚未绘制完），触发不了AccessibilityEvent
+                @Override
+                public void run() {
+                    showFakeDialog();
+                }
+            });
+        }
+    }
+
+    private void showFakeDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(AutoClickActivity.this)
+                .setTitle(TRIGGER_WINDOW_CHANGE)// .setMessage("msg")
+                .setNegativeButton("确定", null);
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog2) {
+                NLog.i("sjh5", "-------dialog show--------");  // dialog.getContext() : ContextThemeWrapper
+                Toast.makeText(AutoClickActivity.this, "dialog已触发显示", Toast.LENGTH_SHORT).show();
+
+                dialog2.dismiss();   // 立刻消失
+            }
+        });
+        dialog.show();
+    }
+
+    public interface TimeUpCallback {
+        void timeUp();
+    }
 }

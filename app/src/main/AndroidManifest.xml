@@ -25,6 +25,8 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />   <!--    SYSTEM_OVERLAY_WINDOW-->
     <!-- 展开or收起通知栏 -->
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <!-- 允许后台运行的弹窗权限，即电池优化 -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
 
     <uses-feature android:name="android.hardware.camera2"/>
@@ -180,7 +182,10 @@
         <activity android:name=".activity.NestScrollActivity" />
         <activity android:name=".activity.CoordinatorActivity" />
         <activity android:name=".activity.AppBarActivity" />
-        <activity android:name=".activity.AutoClickActivity" />
+        <activity
+            android:name=".activity.AutoClickActivity"
+            android:launchMode="singleTop" />
+
 
         <meta-data android:value="58db526f310c935d4f001c2e" android:name="UMENG_APPKEY"/>       <!--  测试key：59420a29a40fa31dad000ce9-->
         <meta-data android:value="my_channel" android:name="UMENG_CHANNEL"/>

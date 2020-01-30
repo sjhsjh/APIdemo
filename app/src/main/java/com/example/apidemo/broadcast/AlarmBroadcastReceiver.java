@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import com.example.apidemo.activity.AutoClickActivity;
 import com.example.apidemo.utils.AndroidUtils;
 import com.example.apidemo.utils.NLog;
 
@@ -14,28 +15,28 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
     private AlarmManager alarmManager;
     private boolean isRepeat;
     private long intervalMs;
-    private Runnable timeUpRunnable;
+    private AutoClickActivity.TimeUpCallback timeUpCallback;
     private PendingIntent pendingIntent;
 
     /**
-     * @param timeUpRunnable 尽量不要引用Activity等对象
+     * @param timeUpCallback 尽量不要引用Activity等对象
      */
-    public AlarmBroadcastReceiver(AlarmManager alarmManager, boolean isRepeat, long intervalMs, Runnable timeUpRunnable, PendingIntent pendingIntent) {
+    public AlarmBroadcastReceiver(AlarmManager alarmManager, boolean isRepeat, long intervalMs, AutoClickActivity.TimeUpCallback timeUpCallback, PendingIntent pendingIntent) {
         this.isRepeat = isRepeat;
         this.intervalMs = intervalMs;
-        this.timeUpRunnable = timeUpRunnable;
+        this.timeUpCallback = timeUpCallback;
         this.alarmManager = alarmManager;
         this.pendingIntent = pendingIntent;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        NLog.d("sjh5", "--AlarmBroadcastReceiver onReceive----");
+        NLog.w("sjh5", "--AlarmBroadcastReceiver onReceive----");
         if (intent != null) {
             String action = intent.getAction();
             if (ACTION_ALARM.equals(action)) {
-                if (timeUpRunnable != null) {
-                    timeUpRunnable.run();
+                if (timeUpCallback != null) {
+                    timeUpCallback.timeUp();
                 }
                 // 重复定时任务
                 if (isRepeat) {

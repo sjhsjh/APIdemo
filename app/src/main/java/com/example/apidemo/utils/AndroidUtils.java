@@ -13,11 +13,14 @@ import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Debug;
+import android.os.PowerManager;
 import android.provider.Settings;
+import com.example.apidemo.activity.AutoClickActivity;
 import com.example.apidemo.broadcast.AlarmBroadcastReceiver;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -60,7 +63,6 @@ public class AndroidUtils {
     public static void copyText(Context context, String text) {
         ClipboardManager clipboardManager = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
 //        clipboardManager.setText(text.trim());
-//
 //        clipboardManager.setPrimaryClip(ClipData.newPlainText(null, text));
 
         ClipData clip = ClipData.newPlainText("simple text copy", text);
@@ -140,6 +142,30 @@ public class AndroidUtils {
     }
 
     /**
+     * 前往更多设置-系统安全-特殊应用权限-电池优化界面
+     */
+    @SuppressWarnings({"ConstantConditions"})
+    public static void goBatteryOptimizationSettings(Context context) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            String packageName = context.getPackageName();
+            Intent intent = new Intent();
+            // 所弹系统dialog文案“设置--应用和通知”有误
+            if (pm.isIgnoringBatteryOptimizations(packageName)){                        // 若已在白名单中
+                intent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS); // 跳转电池优化
+            } else {
+                // 弹窗允许后台运行；需要加上权限：android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + packageName));
+            }
+            NLog.w("sjh5", "--isIgnoringBatteryOptimizations--" + pm.isIgnoringBatteryOptimizations(packageName));
+
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.getApplicationContext().startActivity(intent);
+        }
+    }
+
+    /**
      * 展开通知栏
      */
     public static void openStatusBar(Context mContext) {
@@ -174,7 +200,8 @@ public class AndroidUtils {
     public static PendingIntent currentPendingIntent;
 
     @SuppressWarnings({"ConstantConditions"})   // 忽略lint空指针警告
-    public static void openAlarm(Context context, boolean isRepeat, long beginMs, long intervalMs, Runnable timeUpRunnable) {
+    public static void openAlarm(Context context, boolean isRepeat, long beginMs, long intervalMs,
+                                 AutoClickActivity.TimeUpCallback timeUpCallback) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         Intent broastIntent = new Intent();//context, AlarmBroadcastReceiver.class);  xx
@@ -184,7 +211,7 @@ public class AndroidUtils {
 
         // 注册处理到时任务和循环任务的广播
         destoryBroadcast(context);
-        alarmReceiver = new AlarmBroadcastReceiver(alarmManager, isRepeat, intervalMs, timeUpRunnable, pendingIntent);
+        alarmReceiver = new AlarmBroadcastReceiver(alarmManager, isRepeat, intervalMs, timeUpCallback, pendingIntent);
         IntentFilter filter = new IntentFilter();
         filter.addAction(AlarmBroadcastReceiver.ACTION_ALARM);
         context.getApplicationContext().registerReceiver(alarmReceiver, filter); // 广播生命周期跟随registerReceiver的context

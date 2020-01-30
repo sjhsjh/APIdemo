@@ -30,6 +30,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
     private static final String PKG_API_DEMO = "com.example.apidemo";
     private static final String PKG_BROWSER = "com.android.browser";
     private static final String PKG_MI_LAUNCHER = "com.miui.home";
+    private static final String DIALOD_CLASS = "android.app.AlertDialog";
 
     /**
      * @param event
@@ -75,9 +76,12 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                 }, 2000);   // 解锁需要时间
             }
         }
-        // 点击应用
+        // 监听dialog变化，并自动点击特定位置的应用
         if (AutoClickActivity.enableAutoClickPhone && PKG_API_DEMO.equals(event.getPackageName().toString())
-                && event.getClassName() != null && AutoClickActivity.CLASSNAME.equals(event.getClassName().toString())) {
+                // && event.getClassName() != null && AutoClickActivity.CLASSNAME.equals(event.getClassName().toString())) {
+                && event.getClassName() != null && DIALOD_CLASS.equals(event.getClassName().toString())
+                && event.getText() != null && event.getText().toString().contains(AutoClickActivity.TRIGGER_WINDOW_CHANGE)) {
+
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                 AutoClickActivity.enableAutoClickPhone = false;
                 addSimulateAction(new Runnable() {
@@ -100,7 +104,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                 }).start();
             }
         }
-        // 应用内点击
+        // 应用内自动点击
         if (AutoClickActivity.isMonitorOpen && event.getPackageName().toString().contains("aapp")) {
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                 NLog.v("sjh2", "==getClassName==" + event.getClassName().toString());
