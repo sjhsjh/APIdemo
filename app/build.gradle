@@ -1,5 +1,9 @@
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'           // firebase Crashlytics
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'   // 可选.含findViewById功能
+//apply plugin: 'kotlin-kapt'               // 可选.java使用annotationProcessor ，kotlin中使用kapt插件来支持Android的注解处理
+apply plugin: 'io.fabric'                   // firebase Crashlytics
+
 android {
     compileSdkVersion 28
     buildToolsVersion '28.0.3'
@@ -105,6 +109,25 @@ android {
         releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
 
     }
+}
+
+kotlin {
+    experimental {  // 协程
+        coroutines 'enable'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // kotlin反射的依赖
+//    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.3.41'
+    // 协程
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1"    // 升级1.3.2反而导致android工程compile project(':JavaC')就编译失败
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1"
 }
 
 // firebase. Add to the bottom of the file
