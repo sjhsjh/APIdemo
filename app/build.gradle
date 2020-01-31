@@ -33,7 +33,8 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField("boolean", "IS_DEBUG", "true")
-            apply plugin: 'android-aspectjx'    // DoraemonKit
+            // DoraemonKit。apply plugin: 'android-aspectjx' 与 apply plugin: 'kotlin-android'同时存在应用就闪退
+//            apply plugin: 'android-aspectjx'
         }
     }
 
