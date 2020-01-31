@@ -17,6 +17,7 @@ import com.example.apidemo.accessibility.ClickAccessibilityService;
 import com.example.apidemo.accessibility.base.BaseAccessibilityService;
 import com.example.apidemo.utils.AndroidUtils;
 import com.example.apidemo.utils.HardWareUtils;
+import com.example.apidemo.utils.KeepCompactUtil;
 import com.example.apidemo.utils.NLog;
 import java.util.Calendar;
 import java.util.Random;
@@ -163,6 +164,50 @@ public class AutoClickActivity extends BaseActivity {
                 HardWareUtils.getInstance().reenableKeyguard();
             }
         });
+
+        ((Button) findViewById(R.id.button6)).setText("前往设置 允许应用不休眠");
+        findViewById(R.id.button6).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                boolean hasPage = KeepCompactUtil.INSTANCE.goNoSleepSettings(AutoClickActivity.this);
+                if (!hasPage) {
+                    Toast.makeText(AutoClickActivity.this, "找不到防休眠的设置页面", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        findViewById(R.id.ll_button7).setVisibility(View.VISIBLE);
+        findViewById(R.id.button8).setVisibility(View.VISIBLE);
+        ((Button) findViewById(R.id.button7_1)).setText("前往 电池优化界面");
+        findViewById(R.id.button7_1).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AndroidUtils.goBatteryOptimizationSettings(AutoClickActivity.this);
+            }
+        });
+        ((Button) findViewById(R.id.button7_2)).setText("检查是否在电池优化白名单");
+        findViewById(R.id.button7_2).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                boolean isWhite = AndroidUtils.isInBatteryOptimizationWhiteList(AutoClickActivity.this);
+                Toast.makeText(AutoClickActivity.this, isWhite ? "是" : "否", Toast.LENGTH_SHORT).show();
+            }
+        });
+        ((Button) findViewById(R.id.button8)).setText("前往设置 允许应用自启动");
+        findViewById(R.id.button8).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                boolean hasPage = KeepCompactUtil.INSTANCE.goAutoStartSettings(AutoClickActivity.this);
+                if (!hasPage) {
+                    Toast.makeText(AutoClickActivity.this, "找不到自启动的设置页面", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     @Override

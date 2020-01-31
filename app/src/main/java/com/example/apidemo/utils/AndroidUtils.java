@@ -158,11 +158,23 @@ public class AndroidUtils {
                 intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
                 intent.setData(Uri.parse("package:" + packageName));
             }
-            NLog.w("sjh5", "--isIgnoringBatteryOptimizations--" + pm.isIgnoringBatteryOptimizations(packageName));
 
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.getApplicationContext().startActivity(intent);
         }
+    }
+
+    /**
+     * 是否在系统电池优化白名单
+     */
+    public static boolean isInBatteryOptimizationWhiteList(Context context) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            String packageName = context.getPackageName();
+            NLog.w("sjh5", "--isIgnoringBatteryOptimizations--" + pm.isIgnoringBatteryOptimizations(packageName));
+            return pm.isIgnoringBatteryOptimizations(packageName);
+        }
+        return true;
     }
 
     /**
@@ -200,6 +212,10 @@ public class AndroidUtils {
     public static PendingIntent currentPendingIntent;
 
     @SuppressWarnings({"ConstantConditions"})   // 忽略lint空指针警告
+    /**
+     * tips:小米应用在“亮屏非前台”和“灭屏（无论是否disablekeyguard）”都不一定能触发到时间的AlarmManager；
+     * 因为小米默认智能限制应用后台运行，即无前台服务的应用可能会被休眠。因此使用AlarmManager时，要不为应用添加前台服务，要不把应用的休眠限制改为无限制。
+     */
     public static void openAlarm(Context context, boolean isRepeat, long beginMs, long intervalMs,
                                  AutoClickActivity.TimeUpCallback timeUpCallback) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
