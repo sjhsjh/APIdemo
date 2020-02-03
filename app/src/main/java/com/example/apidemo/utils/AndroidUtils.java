@@ -142,7 +142,8 @@ public class AndroidUtils {
     }
 
     /**
-     * 前往更多设置-系统安全-特殊应用权限-电池优化界面
+     * 前往更多设置-系统安全-特殊应用权限-电池优化界面；
+     * 低电耗模式和应用待机模式优化的白名单
      */
     @SuppressWarnings({"ConstantConditions"})
     public static void goBatteryOptimizationSettings(Context context) {

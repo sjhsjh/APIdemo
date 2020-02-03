@@ -66,7 +66,7 @@ public class AutoClickActivity extends BaseActivity {
                 AndroidUtils.goAccessibilityServiceSettings(AutoClickActivity.this);
             }
         });
-        ((Button) findViewById(R.id.button2)).setText("开启模拟点击");
+        ((Button) findViewById(R.id.button2)).setText("模拟点击Test");
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -96,9 +96,9 @@ public class AutoClickActivity extends BaseActivity {
                 //设定时间为 2016年12月16日11点50分0秒
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.YEAR, 2020);
-                calendar.set(Calendar.MONTH, Calendar.JANUARY);
-                calendar.set(Calendar.DAY_OF_MONTH, 29);
-                calendar.set(Calendar.HOUR_OF_DAY, 11); //
+                calendar.set(Calendar.MONTH, Calendar.FEBRUARY);
+                calendar.set(Calendar.DAY_OF_MONTH, 1);
+                calendar.set(Calendar.HOUR_OF_DAY, 9); //
                 calendar.set(Calendar.MINUTE, 0);       //
                 calendar.set(Calendar.SECOND, 0);
 
