@@ -5,9 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 import com.example.apidemo.BaseActivity;
@@ -31,6 +34,7 @@ public class AutoClickActivity extends BaseActivity {
     private static final long ONE_WEEK = 7 * ONE_DAY;
     public static final String CLASSNAME = "com.example.apidemo.activity.AutoClickActivity";
     public static final String TRIGGER_WINDOW_CHANGE = "trigger_window_change";
+    private EditText edittext;
     private Switch switchBtn;
     public static boolean enableAutoClickTest = false;
     public static boolean enableAutoClickPhone = false;
@@ -57,6 +61,12 @@ public class AutoClickActivity extends BaseActivity {
                 isMonitorOpen = isChecked;
             }
         });
+
+        edittext = findViewById(R.id.edittext);
+        edittext.setTextSize(12);
+        edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
+        edittext.setHint("下个闹钟跳过几天");
+        edittext.setEnabled(!AndroidUtils.isAlarmRunning());
 
         ((Button) findViewById(R.id.button1)).setText("跳转辅助服务");
         findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
@@ -108,11 +118,19 @@ public class AutoClickActivity extends BaseActivity {
 
                 long beginMs = calendar.getTimeInMillis();
                 long now = System.currentTimeMillis();
-                long inteval = 60 * 60 * 1000;   //
+                long inteval = ONE_DAY;     // 3 * 60 * 1000;
                 while (beginMs < now) {
                     beginMs += inteval;
                 }
                 NLog.v("sjh5", "---deta time---" + (beginMs - now));
+
+                edittext.setEnabled(false);
+                int skipDays = 0;
+                if (!TextUtils.isEmpty(edittext.getText().toString())) {
+                    skipDays = Integer.parseInt(edittext.getText().toString());
+                }
+                NLog.v("sjh5", "---skipDays---" + skipDays);
+                beginMs += skipDays * ONE_DAY;
 
                 // 若beginMs为过去的时刻，则闹钟约3~5s后触发；若beginMs太靠近当前时间的话，则第一次执行的时刻不准！！偏移10s就正常。
                 // 因此beginMs永远需要大于当前时刻才正确，最好大于10s以上
@@ -154,6 +172,8 @@ public class AutoClickActivity extends BaseActivity {
                 AndroidUtils.cancelAlarmAndBroadcast(AutoClickActivity.this);
                 isMonitorOpen = false;
                 switchBtn.setChecked(isMonitorOpen);
+                edittext.setEnabled(true);
+                edittext.requestFocus();
             }
         });
         ((Button) findViewById(R.id.button5)).setText("恢复锁屏 reenableKeyguard");

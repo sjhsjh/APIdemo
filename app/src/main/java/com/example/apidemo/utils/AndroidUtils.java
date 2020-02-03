@@ -267,6 +267,10 @@ public class AndroidUtils {
         }
     }
 
+    public static boolean isAlarmRunning() {
+        return currentPendingIntent != null;
+    }
+
     public static void cancelAlarmAndBroadcast(Context context) {
         destoryBroadcast(context);
         cancelAlarm(context);
