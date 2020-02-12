@@ -22,6 +22,7 @@ import com.example.apidemo.activity.GestureDectorActivity;
 import com.example.apidemo.activity.GridViewActivity;
 import com.example.apidemo.activity.GsonActivity;
 import com.example.apidemo.activity.HardWareActivity;
+import com.example.apidemo.activity.JobServiceActivity;
 import com.example.apidemo.activity.MessengerActivity;
 import com.example.apidemo.activity.NestScrollActivity;
 import com.example.apidemo.activity.NewsActivity;
@@ -73,6 +74,7 @@ public class MainActivity extends BaseActivity {
         List<Object> list = new ArrayList<Object>();
         list.add(DoraemonKit.class);
         // todo
+        list.add(JobServiceActivity.class);
         list.add(AutoClickActivity.class);
         list.add(CoordinatorActivity.class);
         list.add(AppBarActivity.class);

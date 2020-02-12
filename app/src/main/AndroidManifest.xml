@@ -145,6 +145,10 @@
         <!-- ps：发送隐式广播时携带intent.addFlags(0x01000000); 即能让广播突破隐式广播限制，让清单文件注册的隐式广播能收到广播。FLAG_RECEIVER_INCLUDE_BACKGROUND。-->
         <receiver android:name=".notification.NotificationReceiver" />
 
+        <service
+            android:name=".service.MyJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
 
         <!--
         android:isolatedProcess=["true" | "false"]
@@ -185,6 +189,7 @@
         <activity
             android:name=".activity.AutoClickActivity"
             android:launchMode="singleTop" />
+        <activity android:name=".activity.JobServiceActivity" />
 
 
         <meta-data android:value="58db526f310c935d4f001c2e" android:name="UMENG_APPKEY"/>       <!--  测试key：59420a29a40fa31dad000ce9-->

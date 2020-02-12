@@ -112,10 +112,6 @@ public class AutoClickActivity extends BaseActivity {
                 calendar.set(Calendar.MINUTE, 0);       //
                 calendar.set(Calendar.SECOND, 0);
 
-                Random r1 = new Random();
-                int offset = r1.nextInt(120) * 1000;
-                NLog.v("sjh5", "---offset---" + offset);
-
                 long beginMs = calendar.getTimeInMillis();
                 long now = System.currentTimeMillis();
                 long inteval = ONE_DAY;     // 3 * 60 * 1000;
@@ -131,6 +127,12 @@ public class AutoClickActivity extends BaseActivity {
                 }
                 NLog.v("sjh5", "---skipDays---" + skipDays);
                 beginMs += skipDays * ONE_DAY;
+
+                Random r1 = new Random();
+                int offset = r1.nextInt(180) * 1000;
+                NLog.v("sjh5", "---offset---" + offset);
+                beginMs += offset;
+                // beginMs = now + 10000;
 
                 // 若beginMs为过去的时刻，则闹钟约3~5s后触发；若beginMs太靠近当前时间的话，则第一次执行的时刻不准！！偏移10s就正常。
                 // 因此beginMs永远需要大于当前时刻才正确，最好大于10s以上

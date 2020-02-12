@@ -81,6 +81,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                 // && event.getClassName() != null && AutoClickActivity.CLASSNAME.equals(event.getClassName().toString())) {
                 && event.getClassName() != null && DIALOD_CLASS.equals(event.getClassName().toString())
                 && event.getText() != null && event.getText().toString().contains(AutoClickActivity.TRIGGER_WINDOW_CHANGE)) {
+            NLog.v("sjh2", "==receive dialog change==");
 
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
                 AutoClickActivity.enableAutoClickPhone = false;
@@ -107,7 +108,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
         // 应用内自动点击
         if (AutoClickActivity.isMonitorOpen && event.getPackageName().toString().contains("aapp")) {
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-                NLog.v("sjh2", "==getClassName==" + event.getClassName().toString());
+                NLog.v("sjh2", "==receive app change. getClassName==" + event.getClassName().toString());
                 // com.yy.oaapp:id/appRootView,能ACTION_ACCESSIBILITY_FOCUS
                 // AccessibilityNodeInfo settingNode = findViewByID("com.yy.oaapp:id/workflowFragment");
                 // NLog.w("sjh2", "==settingNode==" + settingNode);
@@ -123,7 +124,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                     startClickOrMove(860, 400, true);
 
                 } else if (event.getClassName() != null && event.getClassName().toString().contains("gosd")) {
-                    NLog.v("sjh2", "==enter page two==" );
+                    NLog.v("sjh2", "==enter page two==");
                     performBackClick();
                 }
             }
