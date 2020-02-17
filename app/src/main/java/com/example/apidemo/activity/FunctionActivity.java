@@ -27,11 +27,11 @@ public class FunctionActivity extends BaseActivity {
         setContentView(R.layout.general_layout);
         NLog.w("sjh1", "FunctionActivity onCreate ");
 
-        CheckBox checkBox = ((CheckBox)findViewById(R.id.checkbox));
+        CheckBox checkBox = ((CheckBox) findViewById(R.id.checkbox));
         checkBox.setVisibility(View.VISIBLE);
-        if(PreferencesManager.getInstance(this).getBoolean(Constant.ALLOW_SCREENSHOT, true)){
+        if (PreferencesManager.getInstance(this).getBoolean(Constant.ALLOW_SCREENSHOT, true)) {
             checkBox.setChecked(true);
-        }else {
+        } else {
             // 禁止截屏,包括系统截屏和adb命令截屏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
             checkBox.setChecked(false);
@@ -66,8 +66,12 @@ public class FunctionActivity extends BaseActivity {
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!isChecked) {
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+                } else {
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
+                }
                 PreferencesManager.getInstance(FunctionActivity.this).putBoolean(Constant.ALLOW_SCREENSHOT, isChecked);
-                Toast.makeText(FunctionActivity.this, "请重启当前activity", Toast.LENGTH_SHORT).show();
             }
         });
 

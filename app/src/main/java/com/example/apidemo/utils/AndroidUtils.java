@@ -1,6 +1,7 @@
 package com.example.apidemo.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -11,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -20,6 +22,10 @@ import android.os.Build;
 import android.os.Debug;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import com.blankj.utilcode.util.BarUtils;
 import com.example.apidemo.activity.AutoClickActivity;
 import com.example.apidemo.broadcast.AlarmBroadcastReceiver;
 import java.io.File;
@@ -274,5 +280,66 @@ public class AndroidUtils {
     public static void cancelAlarmAndBroadcast(Context context) {
         destoryBroadcast(context);
         cancelAlarm(context);
+    }
+
+    /**
+     * 沉浸式。使当前activity的状态栏变成沉浸式
+     * ps：若在activity.onCreate结束后再执行，则应用区域不上移。
+     */
+    public static void immersionStatusBar(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = activity.getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
+        }
+    }
+
+    /**
+     * 沉浸式。效果等同于immersionStatusBar
+     * 来自BarUtils.transparentStatusBar
+     */
+    public static void immersionStatusBar2(final Activity activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+            return;
+        }
+        Window window = activity.getWindow();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                int vis = window.getDecorView().getSystemUiVisibility() & View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+                window.getDecorView().setSystemUiVisibility(option | vis);
+            } else {
+                window.getDecorView().setSystemUiVisibility(option);
+            }
+            window.setStatusBarColor(Color.TRANSPARENT);
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+    }
+
+    /**
+     * 状态栏变色步骤：
+     * 1、BarUtils.transparentStatusBar 让状态栏变透明 + 应用区域上移；即沉浸式
+     * 2、activity布局根view加上topMargin；
+     * 3、activity的parentView add自定义状态栏view；
+     */
+    public static void changeStatusBarColor(Activity activity, View activityRootView, int color) {
+        BarUtils.setStatusBarColor(activity, color);
+        BarUtils.addMarginTopEqualStatusBarHeight(activityRootView);    // activity布局根view
+    }
+
+    /**
+     * 状态栏直接隐藏与否！！
+     */
+    public static void setFullScreen(Activity activity, boolean isFullScreen) {
+        if (isFullScreen) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else {
+            activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
     }
 }

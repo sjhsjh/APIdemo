@@ -117,7 +117,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                 if (event.getClassName() != null && event.getClassName().toString().contains("IMAp")) {
                     NLog.v("sjh2", "==enter page one==");
                     try {
-                        Thread.sleep(5000);  // 页面已加载好但是尚未可见
+                        Thread.sleep(8000);  // 页面已加载好但是尚未可见
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

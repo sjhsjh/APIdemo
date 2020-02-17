@@ -58,15 +58,6 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.listview);
 
-        // 使当前activity的状态栏变成沉浸式
-        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        //     Window window = getWindow();
-        //     window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        //     window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        //             | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        //     window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        //     window.setStatusBarColor(Color.TRANSPARENT);
-        // }
 
         HardWareUtils.registerBluetoothListener(this);
         DoraemonKit.hide();

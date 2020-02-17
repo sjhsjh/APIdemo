@@ -80,7 +80,7 @@ public class FlashLightManager {
         }
         else {
             if (open) {
-                // 7.0运行该段代码无异常单不能打开闪光灯
+                // 7.0运行该段代码无异常但不能打开闪光灯
                 PackageManager packageManager = mContext.getPackageManager();
                 FeatureInfo[] featureInfos = packageManager.getSystemAvailableFeatures();
                 if (featureInfos != null) {
