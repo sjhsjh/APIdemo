@@ -109,7 +109,7 @@ public class AutoClickActivity extends BaseActivity {
                 calendar.set(Calendar.MONTH, Calendar.FEBRUARY);
                 calendar.set(Calendar.DAY_OF_MONTH, 1);
                 calendar.set(Calendar.HOUR_OF_DAY, 9); //
-                calendar.set(Calendar.MINUTE, 0);       //
+                calendar.set(Calendar.MINUTE, 54);       //
                 calendar.set(Calendar.SECOND, 0);
 
                 long beginMs = calendar.getTimeInMillis();
@@ -129,7 +129,7 @@ public class AutoClickActivity extends BaseActivity {
                 beginMs += skipDays * ONE_DAY;
 
                 Random r1 = new Random();
-                int offset = r1.nextInt(180) * 1000;
+                int offset = r1.nextInt(300) * 1000;
                 NLog.v("sjh5", "---offset---" + offset);
                 beginMs += offset;
                 // beginMs = now + 10000;

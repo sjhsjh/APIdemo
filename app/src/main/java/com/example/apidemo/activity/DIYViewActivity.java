@@ -178,7 +178,8 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
         }
         NLog.w("sjh0", "全屏高度：==============================1、dm.heightPixels " + dm4.heightPixels);
 
-        Point point = new Point();// 方法2
+        // 方法2 ok
+        Point point = new Point();
         wm.getDefaultDisplay().getRealSize(point);
         NLog.i("sjh0", "2、point.y " + point.y);
 
