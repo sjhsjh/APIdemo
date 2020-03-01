@@ -149,6 +149,8 @@
             android:name=".service.MyJobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <service
+            android:name=".screenshot.FloatWindowsService" android:exported="false"/>
 
         <!--
         android:isolatedProcess=["true" | "false"]
@@ -190,6 +192,10 @@
             android:name=".activity.AutoClickActivity"
             android:launchMode="singleTop" />
         <activity android:name=".activity.JobServiceActivity" />
+        <activity android:name=".activity.ScreenShotActivity" />
+        <activity
+            android:name=".screenshot.ScreenShotPermissionActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />   <!-- 让activity背景透明 -->
 
 
         <meta-data android:value="58db526f310c935d4f001c2e" android:name="UMENG_APPKEY"/>       <!--  测试key：59420a29a40fa31dad000ce9-->

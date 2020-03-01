@@ -1,12 +1,16 @@
 package com.example.apidemo.utils.image;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.view.Display;
 import android.view.View;
-
+import android.widget.Toast;
+import java.io.File;
 
 public class BitmapUtils {
 
@@ -85,5 +89,25 @@ public class BitmapUtils {
         return bitmap;
     }
 
+    public static void openImage(Context context, String filePath) {
+        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        //     StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        //     StrictMode.setVmPolicy(builder.build());
+        // }
 
+        File file = new File(filePath);
+        if (file.exists()) {
+            Uri uri = Uri.fromFile(file);
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            intent.setDataAndType(uri, "image/jpeg");
+
+            context.startActivity(intent);
+        } else {
+            Toast.makeText(context, "图片不存在", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
