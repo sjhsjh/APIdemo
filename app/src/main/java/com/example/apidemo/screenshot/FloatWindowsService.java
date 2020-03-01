@@ -118,7 +118,7 @@ public class FloatWindowsService extends Service {
                 | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
         mLayoutParams.gravity = Gravity.LEFT | Gravity.TOP;
         mLayoutParams.x = mScreenWidth;
-        mLayoutParams.y = 100;
+        mLayoutParams.y = 300;
         mLayoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
         mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
@@ -246,7 +246,9 @@ public class FloatWindowsService extends Service {
             if (params == null || params.length < 1 || params[0] == null) {
                 return null;
             }
-
+            // 注意以下2点：
+            // 1、Image.Plane中的 buffer 数据并不是完全是Bitmap所需要的，缓冲数据存在行间距，因此我们必须去除这些间距。
+            // 2、Image 设置的图片格式与Bitmap设置的必须一致
             Image image = params[0];
 
             int width = image.getWidth();
@@ -262,6 +264,7 @@ public class FloatWindowsService extends Service {
             bitmap.copyPixelsFromBuffer(buffer);
             bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height);
             image.close();
+
             File imageFile = null;
             String imagePath = null;
             if (bitmap != null) {
@@ -344,6 +347,7 @@ public class FloatWindowsService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        NLog.w(TAG, "FloatWindowsService onDestroy. 服务停止");
         if (mFloatView != null) {
             mWindowManager.removeView(mFloatView);
         }
