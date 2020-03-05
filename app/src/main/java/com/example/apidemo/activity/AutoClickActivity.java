@@ -30,8 +30,8 @@ import java.util.Random;
  * @date 2020/1/21
  */
 public class AutoClickActivity extends BaseActivity {
-    private static final long ONE_DAY = 24 * 60 * 60 * 1000;
-    private static final long ONE_WEEK = 7 * ONE_DAY;
+    private static final long ONE_HOUR = 60 * 60 * 1000;
+    private static final long ONE_DAY = 24 * ONE_HOUR;
     public static final String CLASSNAME = "com.example.apidemo.activity.AutoClickActivity";
     public static final String TRIGGER_WINDOW_CHANGE = "trigger_window_change";
     private EditText edittext;
@@ -65,7 +65,7 @@ public class AutoClickActivity extends BaseActivity {
         edittext = findViewById(R.id.edittext);
         edittext.setTextSize(12);
         edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
-        edittext.setHint("下个闹钟跳过几天");
+        edittext.setHint("下个闹钟跳过1小时");
         edittext.setEnabled(!AndroidUtils.isAlarmRunning());
 
         ((Button) findViewById(R.id.button1)).setText("跳转辅助服务");
@@ -108,7 +108,7 @@ public class AutoClickActivity extends BaseActivity {
                 calendar.set(Calendar.YEAR, 2020);
                 calendar.set(Calendar.MONTH, Calendar.FEBRUARY);
                 calendar.set(Calendar.DAY_OF_MONTH, 1);
-                calendar.set(Calendar.HOUR_OF_DAY, 9); //
+                calendar.set(Calendar.HOUR_OF_DAY, 8);   //
                 calendar.set(Calendar.MINUTE, 54);       //
                 calendar.set(Calendar.SECOND, 0);
 
@@ -121,12 +121,12 @@ public class AutoClickActivity extends BaseActivity {
                 NLog.v("sjh5", "---deta time---" + (beginMs - now));
 
                 edittext.setEnabled(false);
-                int skipDays = 0;
+                int skipHours = 1;
                 if (!TextUtils.isEmpty(edittext.getText().toString())) {
-                    skipDays = Integer.parseInt(edittext.getText().toString());
+                    skipHours = Integer.parseInt(edittext.getText().toString());
                 }
-                NLog.v("sjh5", "---skipDays---" + skipDays);
-                beginMs += skipDays * ONE_DAY;
+                NLog.v("sjh5", "---skipHours---" + skipHours);
+                beginMs += skipHours * ONE_HOUR;
 
                 Random r1 = new Random();
                 int offset = r1.nextInt(300) * 1000;

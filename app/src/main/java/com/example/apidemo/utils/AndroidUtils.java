@@ -240,7 +240,7 @@ public class AndroidUtils {
         context.getApplicationContext().registerReceiver(alarmReceiver, filter); // 广播生命周期跟随registerReceiver的context
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            NLog.v("sjh5", "---set alarm---");
+            NLog.v("sjh5", "---set alarm---" + TimeUtils.getTimeStringFromMillis(beginMs));
             // 触发时间太靠近当前时间的话，第一次执行的时刻不准！！
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, beginMs, pendingIntent);
             // alarmManager.setExact(AlarmManager.RTC_WAKEUP, beginMs, pendingIntent);
