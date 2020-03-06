@@ -11,6 +11,8 @@
         <!-- <item name="android:windowNoTitle">true</item> -->
         <!-- 设置activity切换动画 -->
         <!--<item name="android:windowAnimationStyle">@style/activityAnimation</item>-->
+
+        <item name="android:textAllCaps">false</item>  <!-- 5.0以后button的默认属性 textAllCaps 被改为true 了-->
     </style>
 
     <!-- 全局activity切换动画！ animation 样式 -->

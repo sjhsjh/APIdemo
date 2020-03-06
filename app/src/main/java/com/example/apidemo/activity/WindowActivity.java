@@ -133,7 +133,7 @@ public class WindowActivity extends BaseActivity {
         // 4、 FLAG_WATCH_OUTSIDE_TOUCH ： 在window区域外的发生down事件，你就会接收到一个MotionEvent.ACTION_OUTSIDE事件。window区域外的move和up都是收不到的。
         // 设置TYPE_APPLICATION + FLAG_SHOW_WHEN_LOCKED且无overlay权限时window所在的activity也显示在锁屏上了
         // TYPE_SYSTEM_ERROR + overlay权限即可在锁屏上显示window；
-        layoutParams.gravity = Gravity.LEFT | Gravity.TOP;      // Window默认居中显示
+        layoutParams.gravity = Gravity.LEFT | Gravity.TOP;      // Window默认居中显示。当使用Gravity.BOTTOM时，y值是向上为正的
         layoutParams.y = 100;
     }
 

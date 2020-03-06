@@ -55,7 +55,6 @@ android {
 //        ignore 'WrongViewCast'    // @SuppressLint("WrongViewCast")   忽略“报错findViewById没有显式强转类型”
     }
 
-
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
         testCompile 'junit:junit:4.12'
@@ -111,7 +110,14 @@ android {
         implementation 'com.blankj:utilcode:1.25.0'     // 1.26.0就报错
 //        implementation 'com.blankj:utilcodex:1.25.0'  // if u use AndroidX, use the following
 
+        def work_version = "1.0.0-alpha11"
+        // use -ktx for Kotlin
+        implementation "android.arch.work:work-runtime:$work_version"
+        // optional - Firebase JobDispatcher support
+        implementation "android.arch.work:work-firebase:$work_version"
+
     }
+
 }
 
 kotlin {
