@@ -154,6 +154,42 @@ public class JobServiceActivity extends FragmentActivity {
      * 1、WorkManager目的是统一Android背景任务调度。用于如发送应用程序日志，同步应用程序数据，备份用户数据等场景。
      * 2、发出延时N秒的任务，当进程被杀后不会拉起进程，而是在进程重启后重新发出延时N秒的任务！！！
      * 而小米要将省电策略改成无限制，应用重启后才能触发WorkManager的任务。
+     *
+     * ==WorkManager 是JobScheduler, JobDispatcher, AlarmManager的另一层封装，在api23开始才使用JobScheduler，低于23使用BroadcastReceiver+ AlarmManager。
+     * 但无论采用哪种方案，任务最终都是交由Executor来完成。
+     * ==WorkManagerTaskExecutor 内使用线程池执行runnable。
+     * ==WorkManagerImpl(ContentProvider onCreate时创建)——>主要负责管理任务的添加、移除、状态监听。
+     * ==WorkContinuationImpl——> 一个任务序列的串行并行组合。
+     *
+     * ==WorkManager工作过程：
+     * WorkManagerImpl.enqueue使用线程池执行runnable——>EnqueueRunnable.run将WorkSpec保存到数据库，enable RescheduleReceiver广播（含BOOT_COMPLETED）
+     *  ——>scheduleWorkInBackground————>Schedulers.schedule().
+     *  List<Scheduler> = 含SystemJobScheduler（JobScheduler，api>=23） + SystemAlarmScheduler（AlarmManager）
+     * （1）SystemJobScheduler.schedule————>jobScheduler.schedule————>SystemJobServiceon.StartJob————>mWorkManagerImpl.startWork()
+     * （2）开启广播————>收到监听广播————>开启AlarmManager————>线程池执行任务。
+     *  SystemAlarmScheduler.schedule 开启服务 SystemAlarmService.onStartCommand（含ScheduleWorkIntent）————>
+     *  CommandHandler.handleScheduleWorkIntent内先发送ConstraintProxyUpdateReceiver广播，ConstraintProxyUpdateReceiver收到广播后
+     *  用packageManager.setComponentEnabledSetting将NetworkStateProxy等广播使能。
+     *  NetworkStateProxy.onReceive————>SystemAlarmService.onStartCommand————>线程池————>CommandHandler————>AlarmManager配置延时任务
+     *  ————>到时间再次start SystemAlarmService.onStartCommand ————>DelayMetCommandHandler————>最终调用Worker.startWork执行任务.
+     * （2.1）ConstraintProxyUpdateReceiver等广播都是在framework目录签单文件注册的：
+     *  android / platform / frameworks / support / androidx-master-dev / . / work / workmanager / src / main / AndroidManifest.xml。
+     *
+     * ps:
+     * 1、设置的条件如何触发？————开启广播————收广播————延时————线程池执行任务。
+     * 2、用什么类来执行任务？————服务 + 线程池 or 线程池。
+     * 3、Alarms and Jobs get cancelled when an application is force-stopped.WorkManager is restarted after an app was force stopped.
+     *  ——>如何重启？应用重启--ContentProvider（WorkManagerInitializer）重新onCreate————WorkManager重新初始化————获取持久化数据--重新schedule。
+     * 4、周期任务的实际执行，与所设定的时间差别较大。执行时间看起来并没有太明显的规律。并且在任务执行完成后，WorkInfo并不会收到Success的通知。
+     *  查阅了相关资料，发现Android认为Success和Failure都属于终止类的通知。意思是，如果发出这类通知，则表明任务彻底结束，而周期任务不会彻底终止，会一直执行下去，
+     *  所以我们在使用LiveData观察周期任务时，不会收到Success这类的通知。
+     * 5、ForceStopRunnable：Checks for app force stops.检查应用进程是否重启。
+     * 每次应用重启都由ContentProvider——>ForceStopRunnable执行 mWorkManager.rescheduleEligibleWork()———>Schedulers.schedule()
+     * ContentProvider onCreate时就用线程池执行ForceStopRunnable。
+     * ForceStopRunnable执行时用PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)生成PendingIntent，并开启重复的间隔10年的AlarmManager；
+     * 进程被杀重启后，判断PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_NO_CREATE)是否返回null即可判断进程是否重启
+     * （getBroadcast从AMS获取内容。static对象有相同功效），若是重启则会再次开启闹钟。闹钟时间到之后发送广播，广播内再次setAlarm。
+     *
      */
     private void startWorkManagerJob() {
         NLog.d("sjh3", "startWorkManagerJob()  ->  " + System.currentTimeMillis());
