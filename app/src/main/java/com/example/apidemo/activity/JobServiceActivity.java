@@ -96,6 +96,8 @@ public class JobServiceActivity extends FragmentActivity {
         JobInfo.Builder builder = new JobInfo.Builder(mJobId++,
                 new ComponentName(getPackageName(), MyJobService.class.getName()));
 
+        builder.setPersisted(true); // 需要RECEIVE_BOOT_COMPLETED权限
+
         // 设置任务的延迟执行时间，相当于post delay。
         // builder.setMinimumLatency(10 * 1000);
 
@@ -114,7 +116,7 @@ public class JobServiceActivity extends FragmentActivity {
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_UNMETERED);
 
         // 你的任务只有当用户没有在使用该设备且有一段时间没有使用时才会启动该任务。设备处于屏幕关闭或dreaming状态（类似window的休眠动画状态）71分钟后，执行工作。
-        builder.setRequiresDeviceIdle(true);
+        // builder.setRequiresDeviceIdle(true);
         // 当设备在充电时这个任务才会被执行。这个也并非只是插入充电器，而且还要在电池处于健康状态的情况下才会触发，一般来说是手机电量>15%
         // builder.setRequiresCharging(true);
 

@@ -27,7 +27,7 @@
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <!-- 允许后台运行的弹窗权限，即电池优化 -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <uses-feature android:name="android.hardware.camera2"/>
     <uses-feature android:name="android.hardware.autofocus" />
@@ -98,6 +98,19 @@
         <activity android:name=".activity.WindowActivity"
             android:configChanges="orientation|screenSize" />
 
+        <!-- 8.0开始不能再 静态注册隐式广播了。但能在清单文件注册显式广播。概括理解：清单文件中广播的intent-filter无效-->
+        <!-- ps：发送隐式广播时携带intent.addFlags(0x01000000); 即能让广播突破隐式广播限制，让清单文件注册的隐式广播能收到广播。FLAG_RECEIVER_INCLUDE_BACKGROUND。-->
+        <receiver android:name=".notification.NotificationReceiver" />
+
+        <!-- BOOT_COMPLETED不受8.0静态隐式广播限制。https://developer.android.google.cn/guide/components/broadcast-exceptions.html -->
+        <!--国产手机不给自启动权限也收到开机广播？？？关机前应用进程若存在，重启后没自启动权限也收到开机广播-->
+        <receiver android:name=".broadcastReceiver.MyBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+
         <service
             android:name=".service.TestService"
             android:enabled="true"
@@ -140,10 +153,6 @@
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
         </service>
-
-        <!-- 8.0开始不能再 静态注册隐式广播了。但能在清单文件注册显式广播。概括理解：清单文件中广播的intent-filter无效-->
-        <!-- ps：发送隐式广播时携带intent.addFlags(0x01000000); 即能让广播突破隐式广播限制，让清单文件注册的隐式广播能收到广播。FLAG_RECEIVER_INCLUDE_BACKGROUND。-->
-        <receiver android:name=".notification.NotificationReceiver" />
 
         <service
             android:name=".service.MyJobService"
