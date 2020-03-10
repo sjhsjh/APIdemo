@@ -96,9 +96,10 @@ public class JobServiceActivity extends FragmentActivity {
         JobInfo.Builder builder = new JobInfo.Builder(mJobId++,
                 new ComponentName(getPackageName(), MyJobService.class.getName()));
 
-        builder.setPersisted(true); // 需要RECEIVE_BOOT_COMPLETED权限
+        builder.setPersisted(true); // 需要RECEIVE_BOOT_COMPLETED权限。重启后由广播拉起进程，估计也是根据持久化的mIsPersisted值重新发出任务。
 
         // 设置任务的延迟执行时间，相当于post delay。
+        // ps:在手机重启后重新发出任务时，workmanager的setInitialDelay是重新计算延迟，而JobScheduler的setMinimumLatency则是关机前schedule时刻计算出触发时刻。
         // builder.setMinimumLatency(10 * 1000);
 
         //设置任务最晚的延迟时间。如果到了规定的时间时其他条件还未满足，你的任务也会被启动。
@@ -147,7 +148,7 @@ public class JobServiceActivity extends FragmentActivity {
 
     /**
      * WorkManager相比JobScheduler的不同点：
-     * 1、没有deadline；
+     * 1、没有deadline方法；
      * 2、使用WorkContinuation进行链式请求，非常灵活地控制各任务的执行顺序；
      * 3、增加了对任务的状态监听
      * 4、WorkManager结合了Room，将数据保存在数据库中。
@@ -176,6 +177,15 @@ public class JobServiceActivity extends FragmentActivity {
      *  ————>到时间再次start SystemAlarmService.onStartCommand ————>DelayMetCommandHandler————>最终调用Worker.startWork执行任务.
      * （2.1）ConstraintProxyUpdateReceiver等广播都是在framework目录签单文件注册的：
      *  android / platform / frameworks / support / androidx-master-dev / . / work / workmanager / src / main / AndroidManifest.xml。
+     *
+     * ==Workmanager用开机广播拉起进程：
+     * ==Workmanager的JobScheduler固定(JobInfo.Builder).setPersisted(false);因为Workmanager监听开机广播-->拉起进程-->ContentProvider onCreate
+     * -->ForceStopRunnable 重新mWorkManager.rescheduleEligibleWork()发出任务。
+     * We don't want to persist these jobs because we reschedule these jobs on BOOT_COMPLETED. That way ForceStopRunnable correctly reschedules Jobs when necessary.
+     * ==RescheduleReceiver（监听RECEIVE_BOOT_COMPLETED）
+     * 1、api23以下startService————dispatcher.getWorkManager().rescheduleEligibleWork(); 与ForceStopRunnable重复？
+     * 2、api23以上收到开机广播时，若WorkManagerImpl静态对象还存在（即ContentProvider已初始化好）则回调pendingResult.finish()。
+     *
      *
      * ps:
      * 1、设置的条件如何触发？————开启广播————收广播————延时————线程池执行任务。

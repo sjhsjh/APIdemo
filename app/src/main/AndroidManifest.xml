@@ -27,7 +27,7 @@
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <!-- 允许后台运行的弹窗权限，即电池优化 -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" /> <!-- setPersisted用到。Workmanager库也会引入该权限-->
 
     <uses-feature android:name="android.hardware.camera2"/>
     <uses-feature android:name="android.hardware.autofocus" />
@@ -107,6 +107,7 @@
         <receiver android:name=".broadcastReceiver.MyBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
 
