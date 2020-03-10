@@ -224,7 +224,6 @@ fun coroutines() {
 //    }
 
 
-
     println("Hello===3=====\n\n")
 
 
@@ -278,6 +277,13 @@ private fun collectionApi() {
 }
 
 private fun demo2() {
+    // Any?.toString()  // null 也可以调用toString方法，返回"null"
+    var a: MyObjectB? = null
+    System.out.println("a.toString()===" + a.toString())
+    System.out.println("a===" + a)    // null
+    System.out.println("a===$a")      // null
+    System.out.println("null".equals(a.toString()))      // null
+
     // object
     ObjectClass.print()
     // companion object

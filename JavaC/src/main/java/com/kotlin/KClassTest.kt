@@ -27,8 +27,7 @@ class ClassTest(age: Int) {
 
     // 定义一个有参数的info方法
     fun info(str: String) {
-        println("执行有参数的info方法"
-            + "，其str参数值：" + str)
+        println("执行有参数的info方法，其str参数值：" + str)
     }
 
     // 定义一个测试用的嵌套类
@@ -37,7 +36,7 @@ class ClassTest(age: Int) {
 
 // 为ClassTest定义扩展方法
 fun ClassTest.bar() {
-    println("扩展的bar方法")
+    println("扩展的bar方法 " + name)
 }
 
 // 为ClassTest定义扩展属性
@@ -105,7 +104,7 @@ fun main(args: Array<String>) {
     所代表类的全部扩展属性（不包括继承的属性） */
     var extensionProperties = clazz.memberExtensionProperties
     println("ClassTest的扩展属性如下：")
-    extensionProperties.forEach{
+    extensionProperties.forEach {
         println(it)
     }
 
@@ -130,7 +129,7 @@ fun main(args: Array<String>) {
     reflect()
 }
 
-private fun reflect(){
+private fun reflect() {
     val instance = ClassTest::class.createInstance()    // 调用无参构造函数
     val kFunctionImpl = ClassTest::class.constructors.last()
     val instance2 = kFunctionImpl.call(99)      // 调用参数为Int的构造函数

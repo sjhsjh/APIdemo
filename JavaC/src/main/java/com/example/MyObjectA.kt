@@ -46,10 +46,8 @@ open class MyObjectA(var member: Int = 70.also { println("4、父类 MyObjectA �
         return super.toString() + " member = " + member
     }
 
-    open fun plus(){
+    open fun plus() {
         println("MyObjectA plus.")
     }
-
-
 
 }

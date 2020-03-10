@@ -18,12 +18,11 @@ public class MyClass {
     }
 
     private static void kotlinStaticTest() {
-        // Utils.TAG_CONST
+        String str = Utils.TAG_CONST;  // Utils public static 对象
         // Utils.TAG_NOT_CONST
-        // Utils.invokeStaticMethod();
+        Utils.invokeStaticMethod();
         // Utils.invokeNonStaticMethod();  // with @JvmStatic. 加上@JvmStatic修饰静态方法可以让java文件调用时省去Companion
-        //
-        // Utils.comObj.TAG_CONST
+
         Utils.comObj.getTAG_NOT_CONST();
         Utils.comObj.getQqq();
         Utils.comObj.invokeStaticMethod();

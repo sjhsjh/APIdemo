@@ -37,7 +37,7 @@ fun main(args: Array<String>) {
 fun printArray() {
 	println("====================printArray====================")
 	// 所有数组类型：Array<Any>、Array<Int>、IntArray
-	var objArray:Array<Any>
+	var objArray: Array<Any>
 
 	var obj: MyClass2 = MyClass2()
 	// 静态初始化数组

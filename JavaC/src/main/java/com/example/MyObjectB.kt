@@ -17,11 +17,11 @@ open class MyObjectB(var member: Int) {
         return super.toString() + " member = " + member
     }
 
-    open fun printB(){
+    open fun printB() {
         println("MyObjectB printB.")
     }
 
-    fun plus(i: Int) : Int{
+    fun plus(i: Int): Int {
         return i + 10
     }
 
