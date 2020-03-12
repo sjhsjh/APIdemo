@@ -22,6 +22,7 @@ import java.util.List;
 /**
  * 自动点击
  * 可增加位置偏移来反检测
+ * ps : 系统貌似没有提供模拟点击软键盘回车键的api；
  */
 public class ClickAccessibilityService extends BaseAccessibilityService {
     public static final String SERVICE_ID = "com.example.apidemo/.accessibility.ClickAccessibilityService";

@@ -176,6 +176,8 @@ public class BaseAccessibilityService extends AccessibilityService {
 
     /**
      * 返回带坐标的AccessibilityNodeInfo集合用于判断获取哪个view
+     * 不确定List<AccessibilityNodeInfo> nodeInfoList = accessibilityNodeInfo.findAccessibilityNodeInfosByText(text)返回的List的内部如何排序，
+     * 但是可以通过nodeInfo.getBoundsInScreen(rect) 来获取view的屏幕坐标来获取指定view。
      */
     public HashMap<Rect, AccessibilityNodeInfo> findViewByTextForRect(String text) {
         HashMap<Rect, AccessibilityNodeInfo> map = new HashMap<Rect, AccessibilityNodeInfo>();
