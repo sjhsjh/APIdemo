@@ -1,7 +1,12 @@
 package com.example.apidemo.data;
 
+import com.example.compiler.AutoBindClass;
+import com.example.compiler.AutoBindField;
+import com.example.compiler.AutoBindMethod;
 
+@AutoBindClass(value = "student")
 public class Student {
+    @AutoBindField(value = "nameX")
     private String name;
     private String sex;
     private String nickName;
@@ -14,6 +19,7 @@ public class Student {
         this.name = name;
     }
 
+    @AutoBindMethod(value = "getsex")
     public String getSex() {
         return sex;
     }

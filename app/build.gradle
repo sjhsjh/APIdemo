@@ -24,6 +24,13 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
+
+        // 用于注解处理器报错： Annotation processors must be explicitly declared now.  The following dependencies on the compile classpath are found to contain annotation processor.
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath true
+            }
+        }
     }
 
     buildTypes {
@@ -65,6 +72,7 @@ android {
         compile project(':statisticslibrary')
 //        compile project(':arcface')
 //        compile project(':JavaC')
+        compile project(':compiler')
 
         implementation 'com.android.support:appcompat-v7:27.1.1'
         implementation 'com.android.support:recyclerview-v7:27.1.1'

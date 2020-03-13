@@ -51,14 +51,13 @@ import com.example.apidemo.utils.PermissionUtils;
 
 
 public class MainActivity extends BaseActivity {
-    ListView mListView;
+    private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mListView = (ListView) findViewById(R.id.listview);
-
 
         HardWareUtils.registerBluetoothListener(this);
         DoraemonKit.hide();

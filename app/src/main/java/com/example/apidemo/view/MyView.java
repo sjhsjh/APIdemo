@@ -7,11 +7,13 @@ import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
 import android.widget.RelativeLayout;
 import android.widget.Scroller;
+import com.example.compiler.AutoBindClass;
 
 /**
  * <br> 使用Scroller进行startScroll和fling
  * Created by jinhui.shao on 2017/9/8.
  */
+@AutoBindClass(value = "myview")
 public class MyView extends RelativeLayout {
     private Scroller mScroller;
     private VelocityTracker mVelocityTracker;
