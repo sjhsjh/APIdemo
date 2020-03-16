@@ -44,11 +44,12 @@ import com.example.apidemo.activity.ViewModelActivity;
 import com.example.apidemo.activity.WindowActivity;
 import com.example.apidemo.activity.XmlParseActivity;
 import com.example.apidemo.adapter.DemoAdapter;
+import com.example.apidemo.data.Student;
 import com.example.apidemo.firebase.Usage;
 import com.example.apidemo.utils.HardWareUtils;
 import com.example.apidemo.utils.NLog;
 import com.example.apidemo.utils.PermissionUtils;
-
+import com.qq.TestManager;
 
 public class MainActivity extends BaseActivity {
     private ListView mListView;
@@ -134,6 +135,9 @@ public class MainActivity extends BaseActivity {
         });
 
         PermissionUtils.requestForPermissions(this, PermissionUtils.PERMISSIONS);
+
+        TestManager.getInstance().init();
+        NLog.v("sjh0", "AbstractProcessor file test = " + TestManager.getInstance().findObj(new Student()));
     }
 
 

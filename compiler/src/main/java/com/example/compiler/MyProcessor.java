@@ -16,10 +16,12 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.ExecutableType;
+import javax.lang.model.type.ReferenceType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic;
@@ -52,7 +54,7 @@ public class MyProcessor extends AbstractProcessor {
         messager = processingEnv.getMessager();
         filer = processingEnv.getFiler();
         elementUtils = processingEnv.getElementUtils();
-        messager.printMessage(Diagnostic.Kind.OTHER, "MyProcessor init. ");
+        messager.printMessage(Diagnostic.Kind.OTHER, "MyProcessor init.");
     }
 
     /**
@@ -91,91 +93,125 @@ public class MyProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
         // [com.example.compiler.AutoBindClass, com.example.compiler.AutoBindField]。 与getSupportedAnnotationTypes相同
-        print("==============process 1 ================" + set);
-        // print("==============process 2 roundEnvironment=====" + roundEnvironment);
-        // print("==============process processingOver==" +  roundEnvironment.processingOver());     // 循环处理是否完成
+        print("====process 1 set===" + set);
+        // print("====process 2 roundEnvironment===" + roundEnvironment);
+        // print("====process 3 processingOver===" +  roundEnvironment.processingOver());     // 循环处理是否完成
 
         // 得到所有注解 @AutoBindClass 的Element集合
         Set<? extends Element> elements = roundEnvironment.getElementsAnnotatedWith(AutoBindClass.class);
-        print("==============AutoBindClass elements================" + elements);    // [com.example.apidemo.MainActivity, com.example.apidemo.view.MyView]
+        print("====AutoBindClass elements================" + elements);    // [com.example.apidemo.MainActivity, com.example.apidemo.view.MyView]
         // if (elements == null || elements.size() == 0) {
         //     return false;
         // }
+        String bodyStr = "";
         for (Element element : elements) {
             if (element.getKind() != ElementKind.CLASS) {
                 continue;
             }
             TypeElement typeElement = (TypeElement) element;
-            List<? extends Element> childElementList =  typeElement.getEnclosedElements();     // element.getEnclosedElements();// 获取子元素
-
-
-            print("====AutoBindClass elements1 ================" + element.getKind()
-                    + "  " + element.getModifiers()     // [public]
-                    + "  " +  childElementList);    // Student(),name,sex,nickName,getName(),setName(java.lang.String),getSex(),setSex(java.lang.String),getNickName(),setNickName(java.lang.String),toString()
-        }
-
-
-
-        Set<? extends Element> elements2 = roundEnvironment.getElementsAnnotatedWith(AutoBindField.class);
-        print("==============AutoBindField elements================" + elements2);      // [name]
-        for (Element element : elements2) {
-            if (element.getKind() != ElementKind.FIELD) {
-              continue;
-            }
-
-            VariableElement bindViewElement = (VariableElement) element;
-            // 获取注解的成员 变量名
-            String filedName = bindViewElement.getSimpleName().toString();
-            // 获取注解的成员 变量类型
-            TypeMirror typeMirror = bindViewElement.asType();
-            print("==============element typeMirror================" + typeMirror);     // java.lang.String
-
-            // 获取注解元数据
-            AutoBindField annotation = element.getAnnotation(AutoBindField.class);
-            String value = annotation.value();
-            print("===AutoBindField element annotation value================" + value);     // nameX
+            bodyStr += createStatment(typeElement.getSimpleName().toString());
+            List<? extends Element> childElementList =  typeElement.getEnclosedElements();          // element.getEnclosedElements();// 获取子元素
 
             // 获取元素所在包名
             PackageElement packageElement = elementUtils.getPackageOf(element);
             String pkName = packageElement.getQualifiedName().toString();
-            print("====AutoBindField element pkName================" + pkName);             //  com.example.apidemo.data
+            print("====element pkName================" + pkName);                   //  com.example.apidemo.data、com.example.apidemo.view
+            TypeMirror typeMirrorPkg = packageElement.asType();
+            print("====packageElement getKind=======" + packageElement.getKind()    // PACKAGE
+                    + ",  typeMirrorPkg = " + typeMirrorPkg + ",    typeMirrorPkg.getKind = " + typeMirrorPkg.getKind());   // com.example.apidemo.data, PACKAGE
+
+
+            // 获取注解元数据
+            AutoBindClass annotation = element.getAnnotation(AutoBindClass.class);
+            String value = annotation.value();
+            print("====AutoBindClass element annotation value================" + value);     // student
+
+            // Set<Modifier> modifierSet = element.getModifiers();
+
+            // 获取注解的成员 变量类型
+            TypeMirror typeMirror = element.asType();
+            print("====element getKind=======" + element.getKind()
+                    + ",  typeMirror = " + typeMirror + ",    typeMirror.getKind = " + typeMirror.getKind());   // com.example.apidemo.data.Student, DECLARED
+            DeclaredType declaredType = (DeclaredType) typeMirror;
+
+            print("====typeElement.getEnclosedElements======="
+                    + childElementList);    // Student(),name,sex,nickName,getName(),setName(java.lang.String),getSex(),setSex(java.lang.String),getNickName(),setNickName(java.lang.String),toString()
+        }
+        print("-");
+
+
+        Set<? extends Element> elements2 = roundEnvironment.getElementsAnnotatedWith(AutoBindField.class);
+        print("====AutoBindField elements================" + elements2);      // [name]
+        for (Element element : elements2) {
+            if (element.getKind() != ElementKind.FIELD) {
+              continue;
+            }
+            VariableElement variableElement = (VariableElement) element;
+            // Set<Modifier> modifierSet = element.getModifiers();
+            // TypeMirror typeMirror = variableElement.asType();
+            // 获取注解的成员 变量名
+            String filedName = variableElement.getSimpleName().toString();
+
+            // 获取注解元数据
+            AutoBindField annotation = element.getAnnotation(AutoBindField.class);
+            String value = annotation.value();
+            print("====AutoBindField element annotation value================" + value);     // nameX
 
             // 获取包装类类型
             TypeElement enclosingElement = (TypeElement) element.getEnclosingElement();
-            String enclosingQualifiedName = enclosingElement.getQualifiedName().toString();     // 全名
-            String enclosingSimpleName = enclosingElement.getSimpleName().toString();           // 简称
-            print("===AutoBindField element getQualifiedName===" + enclosingQualifiedName
-                    + " getSimpleName==" +  enclosingSimpleName);
+            String enclosingQualifiedName = enclosingElement.getQualifiedName().toString();     // 全名 com.example.apidemo.data.Student
+            String enclosingSimpleName = enclosingElement.getSimpleName().toString();           // 简称 Student
+            print("====AutoBindField element getQualifiedName===" + enclosingQualifiedName
+                    + ", getSimpleName = " +  enclosingSimpleName);
 
+            // 获取注解的成员 变量类型
+            TypeMirror typeMirror = variableElement.asType();
+            DeclaredType declaredType = (DeclaredType) typeMirror;
+            ReferenceType referenceType = (ReferenceType) typeMirror;
+            // print(String.valueOf(typeMirror instanceof DeclaredType));   // true
+            // print(String.valueOf(typeMirror instanceof ReferenceType));  // true
+
+            print("====element getKind=======" + element.getKind()
+                    + ",  typeMirror = " + typeMirror + ",    typeMirror.getKind = " + typeMirror.getKind());      // java.lang.String, DECLARED??
         }
+        print("-");
 
 
         Set<? extends Element> elements3 = roundEnvironment.getElementsAnnotatedWith(AutoBindMethod.class);
-        print("==============AutoBindMethod elements================" + elements3);     // [getSex()]
+        print("====AutoBindMethod elements================" + elements3);     // [getSex()]
         for (Element element : elements3) {
             if (element.getKind() != ElementKind.METHOD) {
                 continue;
             }
-            // if (!element.getModifiers().contains(Modifier.PUBLIC)) {
-            //     messager.printMessage(Diagnostic.Kind.ERROR, "Subscriber method must be public", element);
-            //     return true;
-            // }
-            //
             ExecutableElement execElement = (ExecutableElement) element;
             // element.getEnclosingElement();// 获取父元素。  方法的父元素是类
             TypeElement classElement = (TypeElement) execElement.getEnclosingElement();
+            print("====execElement.getEnclosingElement=====" + classElement);           // com.example.apidemo.data.Student
+
+            print("====execElement.getModifiers()===" + execElement.getModifiers()      // [public]，不加修饰符时不是[package]而是 []
+                    + ",   execElement.getReturnType() = " + execElement.getReturnType()
+                    + ",   execElement.getSimpleName() = " + execElement.getSimpleName()
+                    + ",   execElement.getParameters() = " + execElement.getParameters());
+
+            // 获取注解元数据
+            AutoBindMethod annotation = element.getAnnotation(AutoBindMethod.class);
+            String value = annotation.value();
+            print("====AutoBindMethod element annotation value================" + value);     // getsex
 
 
-            print("====AutoBindMethod elements3 ================" + element.getKind()
-                    + "  " + element.getModifiers()     // [public]，不加修饰符时不是[package]而是 []
-                    + "  " +  classElement);            // com.example.apidemo.data.Student
+            // 获取注解的成员 变量类型
+            TypeMirror typeMirror = element.asType();
+            ExecutableType executableType = (ExecutableType) typeMirror;
+
+            print("====element getKind=======" + element.getKind()
+                    + ",  typeMirror = " + typeMirror + ",    typeMirror.getKind = " + typeMirror.getKind());        // ()java.lang.String, EXECUTABLE
         }
 
-        // MethodSpec
-        // elementUtils.
 
+        print("-");
         print("-\n"); // 换行符被删不能打印
-        // generateFile("com.qq.TestFile", "package com.qq;\npublic class TestFile {\n}");
+        // generateFile("com.qq.TestManager", "package com.qq;\npublic class TestManager {\n}");
+        generateFile("com.qq.TestManager", getContent(bodyStr));
 
         // 返回值表示这些注解是否已由当前Processor处理。
         // 返回 true 代表该注解被当前 processor 消耗，其他注解处理器就不会再处理这些注解（甚至process方法也不执行）。即控制该注解是否需要被多个注解处理器重复处理
@@ -184,7 +220,7 @@ public class MyProcessor extends AbstractProcessor {
 
     /**
      * 其生成路径：app\build\generated\source\apt\debug\[pkg]\[name].java
-     * @see com.qq.TestFile
+     * @see com.qq.TestManager
      */
     private void generateFile(String className, String content) {
         try {
@@ -193,12 +229,61 @@ public class MyProcessor extends AbstractProcessor {
             writer.write(content);
             writer.close();
         } catch (IOException e) {
-            // javax.annotation.processing.FilerException: Attempt to recreate a file for type com.qq.TestFile
+            // javax.annotation.processing.FilerException: Attempt to recreate a file for type com.qq.TestManager
             // e.printStackTrace();
         }
     }
 
     private void print(CharSequence msg) {
         messager.printMessage(Diagnostic.Kind.OTHER, msg);
+
+    }
+
+    private String createStatment(String classStr) {
+        return String.format("        objList.add(new %s());\n", classStr);
+    }
+
+    private String getContent(String methodBody) {
+        String str = "package com.qq;\n" +
+                "\n" +
+                "import com.example.apidemo.data.AccountBean;\n" +
+                "import com.example.apidemo.data.IBaseObj;\n" +
+                "import com.example.apidemo.data.Student;\n" +
+                "import com.example.apidemo.view.MyView;\n" +
+                "import java.util.ArrayList;\n" +
+                "import java.util.List;\n" +
+                "\n" +
+                "public class TestManager {\n" +
+                "    private static final String TAG = \"TestManager\";\n" +
+                "    private static TestManager sInstance;\n" +
+                "    public List<IBaseObj> objList = new ArrayList<IBaseObj>();\n" +
+                "\n" +
+                "    public static TestManager getInstance() {\n" +
+                "        if (null == sInstance) {\n" +
+                "            synchronized (TestManager.class) {\n" +
+                "                if (null == sInstance) {\n" +
+                "                    sInstance = new TestManager();\n" +
+                "                }\n" +
+                "            }\n" +
+                "        }\n" +
+                "        return sInstance;\n" +
+                "    }\n" +
+                "\n" +
+                "    public void init() {\n" +
+                methodBody +
+                "    }\n" +
+                "\n" +
+                "    public String findObj(IBaseObj obj) {\n" +
+                "        String result = \"empty\";\n" +
+                "        for (IBaseObj ob : objList) {\n" +
+                "            if (obj.getID() == obj.getID()) {\n" +
+                "                result = obj.getNick();\n" +
+                "                break;\n" +
+                "            }\n" +
+                "        }\n" +
+                "        return result;\n" +
+                "    }\n" +
+                "}";
+        return str;
     }
 }

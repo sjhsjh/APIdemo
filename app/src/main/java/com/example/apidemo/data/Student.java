@@ -5,7 +5,8 @@ import com.example.compiler.AutoBindField;
 import com.example.compiler.AutoBindMethod;
 
 @AutoBindClass(value = "student")
-public class Student {
+public class Student implements IBaseObj {
+
     @AutoBindField(value = "nameX")
     private String name;
     private String sex;
@@ -36,6 +37,7 @@ public class Student {
         this.nickName = nickName;
     }
 
+
     @Override
     public String toString() {
         return "Student{" +
@@ -43,5 +45,15 @@ public class Student {
                 ", sex='" + sex + '\'' +
                 ", nickname='" + nickName + '\'' +
                 '}';
+    }
+
+    @Override
+    public int getID() {
+        return 5;
+    }
+
+    @Override
+    public String getNick() {
+        return "nick_student";
     }
 }
