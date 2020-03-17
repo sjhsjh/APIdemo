@@ -1,8 +1,17 @@
 package com.example.compiler;
 
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +25,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
@@ -212,6 +222,7 @@ public class MyProcessor extends AbstractProcessor {
         print("-\n"); // 换行符被删不能打印
         // generateFile("com.qq.TestManager", "package com.qq;\npublic class TestManager {\n}");
         generateFile("com.qq.TestManager", getContent(bodyStr));
+        generateByPoet("com.qq", elements);
 
         // 返回值表示这些注解是否已由当前Processor处理。
         // 返回 true 代表该注解被当前 processor 消耗，其他注解处理器就不会再处理这些注解（甚至process方法也不执行）。即控制该注解是否需要被多个注解处理器重复处理
@@ -234,9 +245,78 @@ public class MyProcessor extends AbstractProcessor {
         }
     }
 
-    private void print(CharSequence msg) {
-        messager.printMessage(Diagnostic.Kind.OTHER, msg);
+    /**
+     * @see com.qq.TestManager2
+     */
+    private void generateByPoet(String packageName, Set<? extends Element> elements) {
+        String pkg = "com.example.apidemo";
+        TypeSpec.Builder classBuilder = TypeSpec.classBuilder("TestManager2") // 构造名为 TestManager2 的类
+                .addModifiers(Modifier.PUBLIC);
 
+        // public List<IBaseObj> objList = new ArrayList<IBaseObj>();
+        ClassName className = ClassName.get(pkg + ".data", "IBaseObj");
+        ParameterizedTypeName typeName = ParameterizedTypeName.get(ClassName.get(ArrayList.class), className);  // 会引入ArrayList包
+        FieldSpec.Builder field = FieldSpec.builder(typeName, "objList")
+                .addModifiers(Modifier.PUBLIC);
+        field.initializer("new ArrayList<$T>()", className); // 写成字符串形式就不会引入ArrayList包
+
+        classBuilder.addField(field.build());   // 添加属性
+        classBuilder.addField(String.class, "testStr", Modifier.PRIVATE);
+        // 使用ClassName.get可以自动导入包！！
+        classBuilder.addField(ClassName.get(pkg, "MainActivity"), "test", Modifier.PRIVATE);
+
+
+        // public void init()
+        MethodSpec.Builder method = MethodSpec.methodBuilder("init")          // 构造名为 init 方法
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL)                       // 添加关键字public、final、static等，可添加多个
+                .returns(void.class);                                                // 设置方法发返回的类型
+        for (Element element : elements) {
+            if (element.getKind() != ElementKind.CLASS) {
+                continue;
+            }
+            TypeElement typeElement = (TypeElement) element;
+
+            TypeMirror typeMirror = element.asType();                 // (DeclaredType) typeMirror
+            TypeName typeName1 = ClassName.get(typeMirror);
+
+            method.addStatement("objList.add(new $T())", typeMirror); // 在方法里添加语句。typeMirror、typeElement和typeName1都支持
+        }
+        classBuilder.addMethod(method.build()); // 添加方法
+
+
+        // public String findObj(IBaseObj obj)
+        MethodSpec.Builder method2 = MethodSpec.methodBuilder("findObj")
+                .addModifiers(Modifier.PUBLIC)
+                .returns(String.class)
+                .addParameter(className, "obj");     // 设置方法的参数
+                // .addParameter(String[].class, "args")
+        // method2.addStatement("      String result = \"empty\";\n" +
+        //         "        for (IBaseObj ob : objList) {\n" +
+        //         "            if (obj.getID() == obj.getID()) {\n" +
+        //         "                result = obj.getNick();\n" +
+        //         "                break;\n" +
+        //         "            }\n" +
+        //         "        }\n" +
+        //         "        return result");    // ① addStatement 会自动在最后加分号
+
+        CodeBlock.Builder codeBlock = CodeBlock.builder().add("      String result = \"empty\";\n" +
+                "      for (IBaseObj ob : objList) {\n" +
+                "          if (obj.getID() == obj.getID()) {\n" +
+                "              result = obj.getNick();\n" +
+                "              break;\n" +
+                "          }\n" +
+                "      }\n" +
+                "      return result;\n");      // ② CodeBlock 不会自动加分号，可使用$T等占位符
+        method2.addCode(codeBlock.build());
+        classBuilder.addMethod(method2.build());
+
+        JavaFile javaFile = JavaFile.builder(packageName, classBuilder.build()).build();
+        try {
+            javaFile.writeTo(filer);        // 写入文件里
+        } catch (IOException e) {
+            // System.out.print(e.toString());
+            // e.printStackTrace();
+        }
     }
 
     private String createStatment(String classStr) {
@@ -285,5 +365,9 @@ public class MyProcessor extends AbstractProcessor {
                 "    }\n" +
                 "}";
         return str;
+    }
+
+    private void print(CharSequence msg) {
+        messager.printMessage(Diagnostic.Kind.OTHER, msg);
     }
 }

@@ -4,10 +4,12 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     compileOnly 'com.google.auto.service:auto-service:1.0-rc3'
-//    implementation 'com.squareup:javapoet:1.9.0'
+    implementation 'com.squareup:javapoet:1.9.0'
 //    implementation 'com.squareup:kotlinpoet:1.4.4'
 //    implementation 'com.google.auto:auto-common:0.8'
 
+    // 避免报错 Cannot resolve method addModifiers(javax.lang.model.element.Modifier)等。用implementation和compile都报错。 https://github.com/square/javapoet/issues/632
+    compileOnly 'org.checkerframework:checker:2.1.10'
 }
 
 //  解决build警告：编码GBK的不可映射字符。MyProcessor.java:21: error: unmappable character for encoding GBK
