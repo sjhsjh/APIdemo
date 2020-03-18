@@ -96,6 +96,20 @@ public class MyProcessor extends AbstractProcessor {
         return SourceVersion.latestSupported();
     }
 
+    // package com.example;    // 包 PackageElement
+    // public class Foo {      // 类 TypeElement
+    //
+    //     private int a;     // 字段 VariableElement
+    //     private Foo other; // 字段 VariableElement
+    //
+    //     public Foo() {     // 方法 ExecuteableElement
+    //     }
+    //
+    //     public void setA( // 方法 ExecuteableElement
+    //                       int newA //参数 TypeParameterElement
+    //     ) {
+    //     }
+    // }
     /**
      * Annotation Processor扫描出的结果会存储进roundEnvironment中，可以在这里获取到注解内容，编写你的操作逻辑。
      * 注意process()函数中不能直接进行异常抛出,否则运行Annotation Processor的进程会异常崩溃,然后弹出一大堆让人捉摸不清的堆栈调用日志.
@@ -187,6 +201,8 @@ public class MyProcessor extends AbstractProcessor {
         print("-");
 
 
+        // element与TypeMirror接口通过asType与asElement互转；都有各自的多个实现类。
+        // element有ElementKind ；TypeMirror有TypeKind。
         Set<? extends Element> elements3 = roundEnvironment.getElementsAnnotatedWith(AutoBindMethod.class);
         print("====AutoBindMethod elements================" + elements3);     // [getSex()]
         for (Element element : elements3) {
@@ -246,9 +262,19 @@ public class MyProcessor extends AbstractProcessor {
     }
 
     /**
+     * 四种占位符：
+     * $S for Strings 用于字符串等。会自动加上双引号。
+     * $T for Types 用于类。例如使用字节码Class来填写类 new $T()
+     * $N for Names 用于引用自己生成的方法名或者变量名等（即自己定义的methodSpec 等变量）。
+     * $L for Literals 用于字面值，例如使用类元素TypeElement来填写 $L.class。支持strings, primitives, and a few JavaPoet types。用途广泛。常用于原始类型取值。
      * @see com.qq.TestManager2
      */
     private void generateByPoet(String packageName, Set<? extends Element> elements) {
+        // 其他比较常用的方法：
+        // MethodSpec.addAnnotation(Override.class); 方法上面添加注解
+        // TypeSpec.enumBuilder("XXX") 生成一个XXX的枚举
+        // TypeSpec.interfaceBuilder("HelloWorld") 生成一个 HelloWorld 接口
+
         String pkg = "com.example.apidemo";
         TypeSpec.Builder classBuilder = TypeSpec.classBuilder("TestManager2") // 构造名为 TestManager2 的类
                 .addModifiers(Modifier.PUBLIC);
