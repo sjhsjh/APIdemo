@@ -73,6 +73,7 @@ public class MainActivity extends BaseActivity {
         list.add(AppBarActivity.class);
         list.add(NestScrollActivity.class);
         list.add(ADActivity.class);
+        list.add(DIYViewActivity.class);
         list.add(ScaleActivity.class);
         list.add(GsonActivity.class);
         list.add(GaussActivity.class);
@@ -84,7 +85,6 @@ public class MainActivity extends BaseActivity {
         list.add(SlideActivity.class);
         list.add(ScrollActivity.class);
         list.add(NewsActivity.class);
-        list.add(DIYViewActivity.class);
         list.add(TestServiceActivity.class);
         list.add(NotificationActivity.class);
         list.add(SQLActivity.class);

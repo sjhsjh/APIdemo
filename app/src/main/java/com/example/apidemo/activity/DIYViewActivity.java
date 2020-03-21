@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import com.borjabravo.readmoretextview.ReadMoreTextView;
 import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
+import com.example.apidemo.view.ArcProgressBar;
 import com.example.apidemo.view.DIYView;
 import java.lang.reflect.Method;
 
@@ -25,6 +26,8 @@ import java.lang.reflect.Method;
 public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
     private ImageView mImageView;
     private DIYView mDIYView;
+    private ArcProgressBar mArcProgressBar;
+    private int i = 0;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -68,12 +71,17 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
 //        mDIYView.setFocusableInTouchMode(true);
 //        mDIYView.requestFocus();
 
+        mArcProgressBar = ((ArcProgressBar) findViewById(R.id.arc_progressbar));
+
         mImageView = (ImageView) findViewById(R.id.custom_image);
         mImageView.setRotationX(70f);
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mImageView.setRotationX(0f);
+
+                int progress = mArcProgressBar.getProgress() + 10 * ++i;
+                mArcProgressBar.setProgress(progress, true);
             }
         });
 

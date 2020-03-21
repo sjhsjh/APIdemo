@@ -12,6 +12,16 @@
         android:layout_height="wrap_content"
         android:background="#3000ff00" />
 
+    <com.example.apidemo.view.ArcProgressBar
+        android:id="@+id/arc_progressbar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="100dp"
+        app:need_draw_bg="true"
+        app:progress_color="#FCC968"
+        app:start_angle="-90"
+        app:stroke_width="4dp" />
+
     <ImageView
         android:id="@+id/custom_image"
         android:layout_width="240dp"
