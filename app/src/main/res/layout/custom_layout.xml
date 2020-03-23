@@ -17,6 +17,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="100dp"
+        app:barProgress="25"
         app:need_draw_bg="true"
         app:progress_color="#FCC968"
         app:start_angle="-90"

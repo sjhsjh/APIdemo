@@ -71,6 +71,8 @@ public class ArcProgressBar extends View {
         mStartAngle = array.getFloat(R.styleable.ArcProgressBar_start_angle, 0f);
         needDrawBg = array.getBoolean(R.styleable.ArcProgressBar_need_draw_bg, true);
         mDuration = array.getInt(R.styleable.ArcProgressBar_duration, 3000);
+        mCurrentProgress = array.getInt(R.styleable.ArcProgressBar_barProgress, 0);
+        mSweepAngle = mCurrentProgress / 100f * 360;
         array.recycle();
 
         initArcPaint();
