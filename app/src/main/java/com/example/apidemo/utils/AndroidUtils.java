@@ -333,10 +333,25 @@ public class AndroidUtils {
     }
 
     /**
-     * 状态栏直接隐藏与否！！
+     * 应用区域铺满全屏 + 状态栏和导航栏透明
+     */
+    public static void fitComprehensiveScreen(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            activity.getWindow().addFlags(View.SYSTEM_UI_FLAG_FULLSCREEN);
+            activity.getWindow().addFlags(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+            activity.getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+            activity.getWindow().addFlags(View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            activity.getWindow().setNavigationBarColor(Color.TRANSPARENT);
+            activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
+    }
+
+    /**
+     * 状态栏直接隐藏与否！！无需重启activity
      */
     public static void setFullScreen(Activity activity, boolean isFullScreen) {
         if (isFullScreen) {
+            // 对小米，全屏触发隐藏状态栏，但是却把应用区域顶下来了!!状态栏变成黑色区域
             activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         } else {
             activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
