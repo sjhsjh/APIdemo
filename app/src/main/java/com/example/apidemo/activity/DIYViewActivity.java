@@ -167,7 +167,7 @@ public class DIYViewActivity extends AppCompatActivity {    // BaseActivity
         Display display = wm.getDefaultDisplay();     // 方法3,不推荐
         NLog.i("sjh0", "3、display.getHeight() " + display.getHeight());
 
-        Display disp = getWindowManager().getDefaultDisplay();  // 方法4 activity?
+        Display disp = getWindowManager().getDefaultDisplay();  // 方法4 activity?，nexeus包括状态栏高度、小米9不包括。
         Point outP = new Point();
         disp.getSize(outP);
         NLog.i("sjh0", "4、outP.y " + outP.y);
