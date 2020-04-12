@@ -16,7 +16,7 @@ import com.example.apidemo.utils.NLog;
 import java.io.InputStream;
 
 /**
- * Created on 2017/3/16.
+ * Created on 2017/3/16. 
  */
 public class DIYView extends View {
     private Paint mPaint;
