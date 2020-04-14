@@ -3,17 +3,26 @@ package com.example.apidemo.activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import com.blankj.utilcode.util.FileUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
+import com.example.apidemo.utils.NLog;
 import com.example.apidemo.utils.image.BitmapUtils;
+import java.io.File;
 
 /**
  * Created by Administrator on 2019/2/12.
@@ -37,7 +46,7 @@ public class GaussActivity extends BaseActivity {
 //                blur(bitmap, imageView1);
 
                 Bitmap blurBitmap = blur(BitmapUtils.shotActivity(GaussActivity.this), imageView1.getMeasuredWidth(), imageView1.getMeasuredHeight());
-                if(blurBitmap != null){
+                if (blurBitmap != null) {
                     imageView2.setImageBitmap(blurBitmap);
 //                    imageView2.setBackground(new BitmapDrawable(getResources(), blurBitmap));
                 }
@@ -46,6 +55,36 @@ public class GaussActivity extends BaseActivity {
             }
         });
 
+        // glideTest(imageView1);
+    }
+
+    private void glideTest(final ImageView imageView1) {
+        RequestOptions options = new RequestOptions()
+                .override(imageView1.getWidth(), imageView1.getHeight());
+        // options.placeholder(R.drawable.loading)
+        //         .error(R.drawable.error)
+        //         .centerCrop()
+        //         .transform(new BlurTransformation(), new GrayscaleTransformation())
+
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+                + "/APIDemoLog/CameraView.png");
+        if (FileUtils.isFileExists(file)) {
+            try {
+                Glide.with(this).load(file)
+                        // .apply(options)
+                        .into(new SimpleTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                                int width = resource.getIntrinsicWidth();
+                                int height = resource.getIntrinsicHeight();
+                                imageView1.setImageDrawable(resource);
+                            }
+                        });
+            } catch (OutOfMemoryError error) {
+                NLog.d("sjh0", "glide OutOfMemoryError = " + error);    // 无法catch住OOM？？
+                error.printStackTrace();
+            }
+        }
     }
 
     /**
