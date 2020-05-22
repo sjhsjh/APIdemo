@@ -3,8 +3,10 @@ package com.example.apidemo.activity;
 import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 import com.example.apidemo.BaseActivity;
+import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
 
 /**
@@ -17,14 +19,23 @@ public class GestureDectorActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mGestureDetector = new GestureDetector(this, new MyGestureListener());
-        mGestureDetector.setOnDoubleTapListener(new MyDoubleTapListener());
+        setContentView(R.layout.test);
+
+        // mGestureDetector = new GestureDetector(this, new MyGestureListener());
+        // mGestureDetector.setOnDoubleTapListener(new MyDoubleTapListener());
+
+        findViewById(R.id.diy_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findViewById(R.id.diy_view).requestLayout();
+            }
+        });
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        return mGestureDetector.onTouchEvent(event);
-        // super.onTouchEvent(event);
+        // return mGestureDetector.onTouchEvent(event);
+        return super.onTouchEvent(event);
     }
 
     private class MyGestureListener implements GestureDetector.OnGestureListener{
