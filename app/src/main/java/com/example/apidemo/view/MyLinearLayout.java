@@ -31,14 +31,15 @@ public class MyLinearLayout extends LinearLayout  {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             // setVisibility(GONE);
             // setVisibility(VISIBLE);
+
             getLayoutParams().width = 100;
             requestLayout();
             NLog.v("sjh5", " dispatchTouchEvent = ");
 
             // ((TextView) findViewById(R.id.tv_sjh)).setText("qqqqqqqqqqqqqqqqqqqqqqqqqqq");
             // ((TextView) findViewById(R.id.tv_sjh)).setText("qqqqqqqqqqqqqqqqqqqqqqqqqqq");
-            // setVisibility(1);
-            layout(2,2,2,2);
+
+            // layout(2,2,2,2);
         }
         return super.dispatchTouchEvent(ev);
     }

@@ -27,7 +27,7 @@ public class GestureDectorActivity extends BaseActivity{
         findViewById(R.id.diy_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findViewById(R.id.diy_view).requestLayout();
+                findViewById(R.id.diy_view).invalidate();
             }
         });
     }
