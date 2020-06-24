@@ -20,6 +20,7 @@ import android.text.TextUtils;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -417,6 +418,29 @@ public class ReflectUtils {
             return type.isAssignableFrom(first);
         }else{
             return false;
+        }
+    }
+
+    /**
+     * 反射修改final类型
+     * final基本类型和字面String 会被编译器内联优化
+     */
+    public static void changeFinalValue(Object obj, String fieldName, Object newValue) {
+        try {
+            Field field = obj.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true); // 如果field为private,则需要使用该方法使其可被访问
+
+            Field modifiers = Field.class.getDeclaredField("accessFlags");
+            modifiers.setAccessible(true);
+            modifiers.setInt(field, field.getModifiers() & ~Modifier.FINAL);    // fianl标志位置0
+
+            field.set(obj, newValue);
+            NLog.i("sjh3", "setFinalValue ：" + (field.get(obj)));
+
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
         }
     }
 }
