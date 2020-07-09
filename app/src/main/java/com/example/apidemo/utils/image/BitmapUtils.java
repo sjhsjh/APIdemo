@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.Display;
 import android.view.View;
@@ -109,5 +111,10 @@ public class BitmapUtils {
         } else {
             Toast.makeText(context, "图片不存在", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static Bitmap drawableToBitamp(Drawable drawable) {
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+        return bitmapDrawable.getBitmap();
     }
 }

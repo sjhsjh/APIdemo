@@ -15,6 +15,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import com.blankj.utilcode.util.FileUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -61,6 +62,7 @@ public class GaussActivity extends BaseActivity {
     private void glideTest(final ImageView imageView1) {
         RequestOptions options = new RequestOptions()
                 .override(imageView1.getWidth(), imageView1.getHeight());
+//                .format(DecodeFormat.PREFER_RGB_565);
         // options.placeholder(R.drawable.loading)
         //         .error(R.drawable.error)
         //         .centerCrop()
@@ -71,18 +73,28 @@ public class GaussActivity extends BaseActivity {
         if (FileUtils.isFileExists(file)) {
             try {
                 Glide.with(this).load(file)
-                        // .apply(options)
+//                        .load("https://yjmf.bs2dl.yy.com/yym101ip_2328321633_1555410430_395619399.jpg?ips_convert/format=webp")
+//                         .apply(options)
+
                         .into(new SimpleTarget<Drawable>() {
                             @Override
                             public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
                                 int width = resource.getIntrinsicWidth();
                                 int height = resource.getIntrinsicHeight();
-                                imageView1.setImageDrawable(resource);
+                                // java.lang.RuntimeException: Canvas: trying to draw too large(192000000bytes) bitmap.（from DisplayListCanvas）
+                                // DisplayListCanvas.MAX_BITMAP_SIZE等于100 MB.
+//                                imageView1.setImageDrawable(resource);
+
+                                NLog.i("sjh0", "onResourceReady byteCount : " + BitmapUtils.drawableToBitamp(resource).getAllocationByteCount());   // 192000000
+                                NLog.i("sjh0", "onResourceReady format : " + BitmapUtils.drawableToBitamp(resource).getConfig().name());            // ARGB_8888
                             }
                         });
             } catch (OutOfMemoryError error) {
-                NLog.d("sjh0", "glide OutOfMemoryError = " + error);    // 无法catch住OOM？？
+                NLog.w("sjh0", "glide OutOfMemoryError = " + error);    // 无OOM，该大图还没达到OOM触发条件
                 error.printStackTrace();
+            } catch (Exception e) {
+                NLog.w("sjh0", "glide Exception = " + e.getMessage());
+                e.printStackTrace();
             }
         }
     }
