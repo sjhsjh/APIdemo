@@ -1,7 +1,8 @@
-package com.example
+package com.kotlin
 
-import kotlinx.coroutines.CoroutineScope
+import com.example.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.CoroutineName
@@ -13,8 +14,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.setMain
 import java.lang.StringBuilder
 
@@ -274,6 +275,35 @@ private fun collectionApi() {
     // asSequence 懒处理. map filter等返回Sequence的都是中间操作！！！都存在遍历操作。asSequence可以将它们合并起来,只存在一次遍历,提升性能
     val list3 = list2.asSequence().map { it + 2 }.filter { it % 2 == 0 }.toList()
     println(list3)
+}
+
+private fun testFor() {
+    var cc: HashMap<String, Int> = HashMap<String, Int>()
+    cc.put("aa", 11)
+    cc.put("bb", 22)
+    cc.put("cc", 33)
+
+    run loop@{
+        for (entry in cc.entries) {     // for的let内加break
+            entry.key?.let {
+                println("=======break: " + it)
+                if (it == "aa") {
+                    return@loop
+                }
+            }
+        }
+    }
+
+    for (entry in cc.entries) {     // for的let内加continue
+        entry.key?.let {
+            if (it == "aa") {
+//                cc.remove(it)
+                return@let
+            }
+            println("=======continue: " + it)
+        }
+    }
+    println("=======cc = " + cc)
 }
 
 private fun demo2() {
