@@ -14,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 import com.example.apidemo.BaseActivity;
-import com.example.apidemo.MainActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.accessibility.ClickAccessibilityService;
 import com.example.apidemo.accessibility.base.BaseAccessibilityService;
@@ -35,6 +34,7 @@ public class AutoClickActivity extends BaseActivity {
     public static final String CLASSNAME = "com.example.apidemo.activity.AutoClickActivity";
     public static final String TRIGGER_WINDOW_CHANGE = "trigger_window_change";
     private EditText edittext;
+    private EditText edittext2;
     private Switch switchBtn;
     public static boolean enableAutoClickTest = false;
     public static boolean enableAutoClickPhone = false;
@@ -62,10 +62,17 @@ public class AutoClickActivity extends BaseActivity {
             }
         });
 
+
         edittext = findViewById(R.id.edittext);
         edittext.setTextSize(12);
         edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
         edittext.setHint("下个闹钟跳过1小时");
+        edittext.setEnabled(!AndroidUtils.isAlarmRunning());
+
+        edittext2 = findViewById(R.id.edittext2);
+        edittext2.setTextSize(12);
+        edittext2.setInputType(InputType.TYPE_CLASS_NUMBER);
+        edittext2.setHint("N hours later");
         edittext.setEnabled(!AndroidUtils.isAlarmRunning());
 
         ((Button) findViewById(R.id.button1)).setText("跳转辅助服务");
@@ -134,6 +141,13 @@ public class AutoClickActivity extends BaseActivity {
                 beginMs += offset;
                 // beginMs = now + 10000;
 
+                edittext2.setEnabled(false);
+                if (!TextUtils.isEmpty(edittext2.getText().toString())) {
+                    int skipHour = Integer.parseInt(edittext2.getText().toString());
+                    beginMs = now + skipHour * ONE_HOUR;
+                    NLog.i("sjh5", "---edittext2---beginMs = " + beginMs);
+                }
+
                 // 若beginMs为过去的时刻，则闹钟约3~5s后触发；若beginMs太靠近当前时间的话，则第一次执行的时刻不准！！偏移10s就正常。
                 // 因此beginMs永远需要大于当前时刻才正确，最好大于10s以上
                 AndroidUtils.openAlarm(AutoClickActivity.this, true,    // System.currentTimeMillis() + 10000, 15000
@@ -175,6 +189,7 @@ public class AutoClickActivity extends BaseActivity {
                 isMonitorOpen = false;
                 switchBtn.setChecked(isMonitorOpen);
                 edittext.setEnabled(true);
+                edittext2.setEnabled(true);
                 edittext.requestFocus();
             }
         });
