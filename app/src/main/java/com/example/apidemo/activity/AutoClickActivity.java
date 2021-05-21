@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
@@ -21,6 +22,7 @@ import com.example.apidemo.utils.AndroidUtils;
 import com.example.apidemo.utils.HardWareUtils;
 import com.example.apidemo.utils.KeepCompactUtil;
 import com.example.apidemo.utils.NLog;
+import com.example.apidemo.utils.TimeUtils;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -147,6 +149,9 @@ public class AutoClickActivity extends BaseActivity {
                     beginMs = now + skipHour * ONE_HOUR;
                     NLog.i("sjh5", "---edittext2---beginMs = " + beginMs);
                 }
+                // final excute time
+                ((TextView) findViewById(R.id.textView1)).setText("Excute time:\n" + TimeUtils.getTimeStringFromMillis(beginMs));
+
 
                 // 若beginMs为过去的时刻，则闹钟约3~5s后触发；若beginMs太靠近当前时间的话，则第一次执行的时刻不准！！偏移10s就正常。
                 // 因此beginMs永远需要大于当前时刻才正确，最好大于10s以上
@@ -191,6 +196,7 @@ public class AutoClickActivity extends BaseActivity {
                 edittext.setEnabled(true);
                 edittext2.setEnabled(true);
                 edittext.requestFocus();
+                ((TextView) findViewById(R.id.textView1)).setText("");
             }
         });
         ((Button) findViewById(R.id.button5)).setText("恢复锁屏 reenableKeyguard");
