@@ -42,15 +42,21 @@ public class AutoClickActivity extends BaseActivity {
     public static boolean enableAutoClickPhone = false;
     public static boolean isMonitorOpen = false;
 
+    private boolean checkIsEnable() {
+        if (!BaseAccessibilityService.getInstance().checkAccessibilityEnabled(ClickAccessibilityService.SERVICE_ID)) {
+            Toast.makeText(this, "辅助服务未开启", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.general_layout);
 
         BaseAccessibilityService.getInstance().init(this);
-        if (!BaseAccessibilityService.getInstance().checkAccessibilityEnabled(ClickAccessibilityService.SERVICE_ID)) {
-            Toast.makeText(this, "辅助服务未开启", Toast.LENGTH_SHORT).show();
-        }
+        checkIsEnable();
 
         switchBtn = ((Switch) findViewById(R.id.switchBtn));
         switchBtn.setVisibility(View.VISIBLE);
@@ -67,14 +73,14 @@ public class AutoClickActivity extends BaseActivity {
 
         edittext = findViewById(R.id.edittext);
         edittext.setTextSize(12);
-        edittext.setInputType(InputType.TYPE_CLASS_NUMBER);
-        edittext.setHint("下个闹钟跳过1小时");
+        edittext.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        edittext.setHint("9:00 + x.x hours 之前");
         edittext.setEnabled(!AndroidUtils.isAlarmRunning());
 
         edittext2 = findViewById(R.id.edittext2);
         edittext2.setTextSize(12);
         edittext2.setInputType(InputType.TYPE_CLASS_NUMBER);
-        edittext2.setHint("N hours later");
+        edittext2.setHint("N hours later from now");
         edittext.setEnabled(!AndroidUtils.isAlarmRunning());
 
         ((Button) findViewById(R.id.button1)).setText("跳转辅助服务");
@@ -112,6 +118,9 @@ public class AutoClickActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
+                if (!checkIsEnable()) {
+                    return;
+                }
                 //设定时间为 2016年12月16日11点50分0秒
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.YEAR, 2020);
@@ -123,32 +132,33 @@ public class AutoClickActivity extends BaseActivity {
 
                 long beginMs = calendar.getTimeInMillis();
                 long now = System.currentTimeMillis();
-                long inteval = ONE_DAY;     // 3 * 60 * 1000;
+                long inteval = ONE_DAY;
                 while (beginMs < now) {
                     beginMs += inteval;
                 }
-                NLog.v("sjh5", "---deta time---" + (beginMs - now));
+                // NLog.v("sjh5", "---deta time---" + (beginMs - now));
 
                 edittext.setEnabled(false);
-                int skipHours = 1;
-                if (!TextUtils.isEmpty(edittext.getText().toString())) {
-                    skipHours = Integer.parseInt(edittext.getText().toString());
-                }
-                NLog.v("sjh5", "---skipHours---" + skipHours);
-                beginMs += skipHours * ONE_HOUR;
-
-                Random r1 = new Random();
-                int offset = r1.nextInt(300) * 1000;
-                NLog.v("sjh5", "---offset---" + offset);
-                beginMs += offset;
-                // beginMs = now + 10000;
-
                 edittext2.setEnabled(false);
-                if (!TextUtils.isEmpty(edittext2.getText().toString())) {
+                double skipHours = 0.0;
+
+                if (!TextUtils.isEmpty(edittext.getText().toString())) {
+                    skipHours = Double.parseDouble(edittext.getText().toString());
+                } else if (!TextUtils.isEmpty(edittext2.getText().toString())) {
                     int skipHour = Integer.parseInt(edittext2.getText().toString());
                     beginMs = now + skipHour * ONE_HOUR;
                     NLog.i("sjh5", "---edittext2---beginMs = " + beginMs);
                 }
+                NLog.v("sjh5", "---skipHours---" + skipHours);
+                beginMs += skipHours * ONE_HOUR;
+                NLog.v("sjh5", "---skipHours * ONE_HOUR---" + skipHours * ONE_HOUR);
+
+                // 随机增加最多5min
+                Random r1 = new Random();
+                int offset = r1.nextInt(300) * 1000;
+                NLog.v("sjh5", "---offset---" + offset);
+                beginMs += offset;
+
                 // final excute time
                 ((TextView) findViewById(R.id.textView1)).setText("Excute time:\n" + TimeUtils.getTimeStringFromMillis(beginMs));
 
@@ -196,7 +206,7 @@ public class AutoClickActivity extends BaseActivity {
                 edittext.setEnabled(true);
                 edittext2.setEnabled(true);
                 edittext.requestFocus();
-                ((TextView) findViewById(R.id.textView1)).setText("");
+                ((TextView) findViewById(R.id.textView1)).setText("textView1");
             }
         });
         ((Button) findViewById(R.id.button5)).setText("恢复锁屏 reenableKeyguard");
