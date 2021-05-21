@@ -12,9 +12,36 @@ public class MyClass {
 
     public static void main(String[] args) {
         genericity();
+        longPlusFloat();
 
         // usefulApi();
         // kotlinStaticTest();
+
+
+    }
+
+    /**
+     * 很大的long与float相加 就会得到一个很大误差的值。将float改成double就正确。
+     * skipHours * ONE_HOUR = 0.0
+     * 1234567890000
+     * 1234567954432
+     * 3.00000128E8
+     */
+    private static void longPlusFloat() {
+        long ONE_HOUR = 60 * 60 * 1000;
+        long beginMs = 1234567890000L;
+        float skipHours = 0f;
+        System.out.println("skipHours * ONE_HOUR = " + skipHours * ONE_HOUR);
+        System.out.println(beginMs);
+        beginMs = (long) (beginMs + skipHours);  // 很大的long与float相加
+        // beginMs += (beginMs+ skipHours * ONE_HOUR);
+        System.out.println(beginMs);
+
+        long a = 300000000L;
+        float b = 1.23f;
+        long c = 123;
+        b = a + b + c;
+        System.out.println(b);  // 3.00000128E8
     }
 
     private static void kotlinStaticTest() {
