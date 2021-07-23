@@ -1,11 +1,19 @@
 package com.example.apidemo.activity;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.storage.StorageManager;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
@@ -13,10 +21,16 @@ import android.text.InputFilter;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +47,23 @@ public class SDActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.general_layout);
+
+        ((Button) findViewById(R.id.button1)).setText("open SAF to read file");
+        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startSAF(true);
+            }
+        });
+        ((Button) findViewById(R.id.button2)).setText("open SAF to write file");
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                startSAF(false);
+            }
+        });
 
 //        01-16 23:31:08.077 16107-16107/com.example.apidemo I/sjh8: source = a start=0 end=1 dest= dstart=0 dend=0
 //        01-16 23:31:13.057 16107-16107/com.example.apidemo I/sjh8: source = b start=0 end=1 dest=a dstart=1 dend=1
@@ -174,5 +205,80 @@ public class SDActivity extends BaseActivity {
         }
         return null;
     }
+
+
+    private static int READ_CODE = 100;
+    private static int WRITE_CODE = 101;
+
+    /**
+     * 打开 com.google.android.documentsui文件管理器 选择文件
+     */
+    private void startSAF(boolean read) {
+        // 调用者只需要指定想要读写的文件类型，比如文本类型、图片类型、视频类型等，选择器就会过滤出相应文件以供选择
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        //指定选择文本类型的文件
+        intent.setType("text/plain");
+        if (read) {
+            startActivityForResult(intent, READ_CODE);
+        } else {
+            startActivityForResult(intent, WRITE_CODE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == READ_CODE) {
+            //选中返回的文件信息封装在Uri里
+            Uri uri = data.getData();
+            openUriForRead(uri);
+        } else if (requestCode == WRITE_CODE) {
+            Uri uri = data.getData();
+            openUriForWrite(uri);
+        }
+    }
+
+    private void openUriForRead(Uri uri) {
+        if (uri == null)
+            return;
+        try {
+            //获取输入流
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            byte[] readContent = new byte[1024];
+            int len = 0;
+            do {
+                //读文件
+                len = inputStream.read(readContent);
+                if (len != -1) {
+                    Log.d("sjh7", "read content: " + new String(readContent).substring(0, len));
+                }
+            } while (len != -1);
+            inputStream.close();
+        } catch (Exception e) {
+            Log.d("sjh7", e.getLocalizedMessage());
+        }
+    }
+
+    private void openUriForWrite(Uri uri) {
+        if (uri == null) {
+            return;
+        }
+        try {
+            //从uri构造输出流
+            OutputStream outputStream = getContentResolver().openOutputStream(uri);
+            //待写入的内容
+            String content = "hello world I'm from SAF\n";
+            //写入文件
+            outputStream.write(content.getBytes());
+            outputStream.flush();
+            outputStream.close();
+        } catch (Exception e) {
+            Log.e("sjh7", e.getLocalizedMessage());
+        }
+    }
+
+
 
 }
