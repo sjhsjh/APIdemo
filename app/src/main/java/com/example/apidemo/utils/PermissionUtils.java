@@ -26,7 +26,7 @@ import java.util.List;
 public class PermissionUtils {
     public static String[] PERMISSIONS = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
-//            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE, // 申请读权限--始终允许--申请写权限--仍然弹框询问权限。
             Manifest.permission.CAMERA,
             Manifest.permission.READ_PHONE_STATE
     };

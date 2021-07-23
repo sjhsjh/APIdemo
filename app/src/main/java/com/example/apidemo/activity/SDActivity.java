@@ -9,10 +9,12 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.storage.StorageManager;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
@@ -26,9 +28,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
+import com.example.apidemo.utils.FileUtils;
 import com.example.apidemo.utils.NLog;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
@@ -36,9 +41,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * /data/data/ 和 /Android/data/无需权限
+ * /storage/emulated/0/Pictures/ 用MediaStore访问
+ * /storage/emulated/0  用 ASF or ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION or ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION访问
  * Created by Administrator on 2018/1/10 0010.
  */
-
 public class SDActivity extends BaseActivity {
     private String beforeText;
     private int cursorPos;
@@ -62,6 +69,14 @@ public class SDActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 startSAF(false);
+            }
+        });
+        ((Button) findViewById(R.id.button3)).setText("申请访问所有文件（内部存储和外部存储-其他App私有目录 除外）");
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                requestVisitAllFiles();
             }
         });
 
@@ -209,9 +224,11 @@ public class SDActivity extends BaseActivity {
 
     private static int READ_CODE = 100;
     private static int WRITE_CODE = 101;
+    private static int MANAGE_ALL_CODE = 102;
 
     /**
      * 打开 com.google.android.documentsui文件管理器 选择文件
+     * 用于访问 /storage/emulated/0 目录
      */
     private void startSAF(boolean read) {
         // 调用者只需要指定想要读写的文件类型，比如文本类型、图片类型、视频类型等，选择器就会过滤出相应文件以供选择
@@ -232,11 +249,32 @@ public class SDActivity extends BaseActivity {
 
         if (requestCode == READ_CODE) {
             //选中返回的文件信息封装在Uri里
-            Uri uri = data.getData();
-            openUriForRead(uri);
+            if (data != null) {
+                Uri uri = data.getData();
+                openUriForRead(uri);
+            }
         } else if (requestCode == WRITE_CODE) {
-            Uri uri = data.getData();
-            openUriForWrite(uri);
+            if (data != null) {
+                Uri uri = data.getData();
+                openUriForWrite(uri);
+            }
+        } else if (requestCode == MANAGE_ALL_CODE) {
+            if (Environment.isExternalStorageManager()) {
+                Toast.makeText(SDActivity.this, "访问所有文件权限申请成功", Toast.LENGTH_SHORT).show();
+                // 能访问应用目录之外的目录，内部存储和外部存储-其他App私有目录 除外
+
+//                String path1 = "/storage/emulated/0" + "/a.txt";
+//                String str = FileUtils.readFile2String(new File(path1));
+//                Log.d("sjh7", "read content: " + str);
+//
+//                String path2 = "/storage/emulated/0" + "/a.txt";
+//                FileUtils.createOrExistsFile(path2);
+//                try {
+//                    FileUtils.writeFileContent(path2, "write success\n sec");
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+            }
         }
     }
 
@@ -280,5 +318,46 @@ public class SDActivity extends BaseActivity {
     }
 
 
+    private void requestVisitAllFiles() {
+        // 设备 >= Android 11
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // 检查是否已经有权限
+            if (!Environment.isExternalStorageManager()) {
+                // 跳转新页面申请权限，有权限之后就可以遍历目录、读写文件
+                startActivityForResult(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION), MANAGE_ALL_CODE);
+                // 访问指定app的私有目录！
+                // Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+            }
+        }
+    }
 
+    /**
+     * 此种方式只允许读文件，写文件依然不行
+     * todo Android 11 ok??
+     */
+    private void readImageFromMediaStore(Context context) {
+        String path1 = "/storage/emulated/0/Pictures/JPEG_20200317_145937.jpg";
+        String path2 = "/storage/emulated/0/tencent/shouyoubao/ScreenRcordImg/ic_default_share.png";
+        Bitmap bitmap0 = BitmapFactory.decodeFile(path2);        // Android 11 ok??
+        ((ImageView) findViewById(R.id.iv)).setImageBitmap(bitmap0);
+        ///////////////////////////////////////////////////////////////////////////
+
+        ContentResolver contentResolver = context.getContentResolver();
+        Cursor cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, null, null, null, null);
+        while (cursor.moveToNext()) {
+            try {
+                //  取出路径
+                //  /storage/emulated/0/tencent/shouyoubao/ScreenRcordImg/ic_default_share.png
+                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
+                Log.d("sjh9", "path = " + path);
+
+                Bitmap bitmap = BitmapFactory.decodeFile(path);     // Android 11 ok??
+                ((ImageView) findViewById(R.id.iv)).setImageBitmap(bitmap);
+            } catch (Exception e) {
+                Log.d("sjh9", e.getLocalizedMessage());
+            }
+            break;
+        }
+        return;
+    }
 }
