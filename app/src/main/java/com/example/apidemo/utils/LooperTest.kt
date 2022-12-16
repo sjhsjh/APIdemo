@@ -21,7 +21,7 @@ object LooperTest {
             NLog.w(TAG, "======= begin loop 1 ======" + this)
 
             Looper.prepare()
-            handler = Handler(Looper.myLooper())
+            handler = Handler(Looper.myLooper()!!)
             Looper.myLooper()!!.setMessageLogging(LogPrinter(Log.DEBUG, "sjh6"))
 
             try {

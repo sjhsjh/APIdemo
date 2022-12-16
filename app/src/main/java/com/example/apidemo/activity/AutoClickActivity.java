@@ -74,13 +74,13 @@ public class AutoClickActivity extends BaseActivity {
         edittext = findViewById(R.id.edittext);
         edittext.setTextSize(12);
         edittext.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        edittext.setHint("9:00 + x.x hours 之前");
+        edittext.setHint("明早几点(默认8)");
         edittext.setEnabled(!AndroidUtils.isAlarmRunning());
 
         edittext2 = findViewById(R.id.edittext2);
         edittext2.setTextSize(12);
         edittext2.setInputType(InputType.TYPE_CLASS_NUMBER);
-        edittext2.setHint("N hours later from now");
+        edittext2.setHint("明早几分(默认54)");
         edittext.setEnabled(!AndroidUtils.isAlarmRunning());
 
         ((Button) findViewById(R.id.button1)).setText("跳转辅助服务");
@@ -121,42 +121,37 @@ public class AutoClickActivity extends BaseActivity {
                 if (!checkIsEnable()) {
                     return;
                 }
-                //设定时间为 2016年12月16日11点50分0秒
+                edittext.setEnabled(false);
+                edittext2.setEnabled(false);
+
+                //设定时间为 明早8:54
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR, 2020);
-                calendar.set(Calendar.MONTH, Calendar.FEBRUARY);
-                calendar.set(Calendar.DAY_OF_MONTH, 1);
-                calendar.set(Calendar.HOUR_OF_DAY, 8);   //
-                calendar.set(Calendar.MINUTE, 54);       //
+                calendar.add(Calendar.HOUR, 24);
+                // calendar.set(Calendar.YEAR, 2020);
+                // calendar.set(Calendar.MONTH, Calendar.FEBRUARY);
+                // calendar.set(Calendar.DAY_OF_MONTH, 1);
+                calendar.set(Calendar.HOUR_OF_DAY, 8);
+                calendar.set(Calendar.MINUTE, 54);
                 calendar.set(Calendar.SECOND, 0);
+
+                // 调整①
+                if (!TextUtils.isEmpty(edittext.getText().toString())) {
+                    int hour = Integer.parseInt(edittext.getText().toString());
+                    calendar.set(Calendar.HOUR_OF_DAY, hour);
+                }
+                if (!TextUtils.isEmpty(edittext2.getText().toString())) {
+                    int min = Integer.parseInt(edittext2.getText().toString());
+                    calendar.set(Calendar.MINUTE, min);
+                }
 
                 long beginMs = calendar.getTimeInMillis();
                 long now = System.currentTimeMillis();
-                long inteval = ONE_DAY;
-                while (beginMs < now) {
-                    beginMs += inteval;
-                }
-                // NLog.v("sjh5", "---deta time---" + (beginMs - now));
+                NLog.v("sjh5", "---without random---" + calendar.getTime());
 
-                edittext.setEnabled(false);
-                edittext2.setEnabled(false);
-                double skipHours = 0.0;
-
-                if (!TextUtils.isEmpty(edittext.getText().toString())) {
-                    skipHours = Double.parseDouble(edittext.getText().toString());
-                } else if (!TextUtils.isEmpty(edittext2.getText().toString())) {
-                    int skipHour = Integer.parseInt(edittext2.getText().toString());
-                    beginMs = now + skipHour * ONE_HOUR;
-                    NLog.i("sjh5", "---edittext2---beginMs = " + beginMs);
-                }
-                NLog.v("sjh5", "---skipHours---" + skipHours);
-                beginMs += skipHours * ONE_HOUR;
-                NLog.v("sjh5", "---skipHours * ONE_HOUR---" + skipHours * ONE_HOUR);
-
-                // 随机增加最多5min
+                // 调整②   随机增加最多5min
                 Random r1 = new Random();
                 int offset = r1.nextInt(300) * 1000;
-                NLog.v("sjh5", "---offset---" + offset);
+                NLog.v("sjh5", "---offset---" + offset / 1000 + " ms");
                 beginMs += offset;
 
                 // final excute time
@@ -166,7 +161,7 @@ public class AutoClickActivity extends BaseActivity {
                 // 若beginMs为过去的时刻，则闹钟约3~5s后触发；若beginMs太靠近当前时间的话，则第一次执行的时刻不准！！偏移10s就正常。
                 // 因此beginMs永远需要大于当前时刻才正确，最好大于10s以上
                 AndroidUtils.openAlarm(AutoClickActivity.this, true,    // System.currentTimeMillis() + 10000, 15000
-                        beginMs, inteval, new TimeUpCallback() {
+                        beginMs, ONE_DAY, new TimeUpCallback() {
                             @Override
                             public void timeUp() {
                                 NLog.d("sjh5", "---time up run---" + AutoClickActivity.this);
