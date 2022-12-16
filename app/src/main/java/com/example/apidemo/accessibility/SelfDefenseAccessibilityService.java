@@ -6,7 +6,7 @@ import com.example.apidemo.accessibility.base.BaseAccessibilityService;
 
 /**
  * 进入到设置应用详情页面就自动返回，防卸载
- * Created by xuyisheng on 16/12/10.
+ * Created by xuyisheng on 16/12/10
  */
 
 public class SelfDefenseAccessibilityService extends BaseAccessibilityService {
