@@ -139,6 +139,15 @@
             android:text="Button"
             android:visibility="gone" />
 
+        <Switch
+            android:id="@+id/switch9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:switchPadding="0dp"
+            android:layout_marginTop="15dp"
+            android:text="Switch"
+            android:visibility="gone" />
+
         <ViewStub
             android:id="@+id/viewStub"
             android:layout_width="200dp"

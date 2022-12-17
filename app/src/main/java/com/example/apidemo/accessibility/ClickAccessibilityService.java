@@ -9,8 +9,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.accessibility.AccessibilityEvent;
-import android.graphics.Rect;
-import android.view.accessibility.AccessibilityNodeInfo;
 import com.example.apidemo.APIDemoApplication;
 import com.example.apidemo.utils.HardWareUtils;
 import com.example.apidemo.activity.AutoClickActivity;
@@ -18,6 +16,7 @@ import com.example.apidemo.accessibility.base.BaseAccessibilityService;
 import com.example.apidemo.utils.NLog;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * 自动点击
@@ -78,14 +77,14 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
             }
         }
         // 监听dialog变化，并自动点击特定位置的应用
-        if (AutoClickActivity.enableAutoClickPhone && PKG_API_DEMO.equals(event.getPackageName().toString())
+        if (AutoClickActivity.enableAutoClickShift && PKG_API_DEMO.equals(event.getPackageName().toString())
                 // && event.getClassName() != null && AutoClickActivity.CLASSNAME.equals(event.getClassName().toString())) {
                 && event.getClassName() != null && DIALOD_CLASS.equals(event.getClassName().toString())
                 && event.getText() != null && event.getText().toString().contains(AutoClickActivity.TRIGGER_WINDOW_CHANGE)) {
             NLog.v("sjh2", "==receive dialog change==");
 
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-                AutoClickActivity.enableAutoClickPhone = false;
+                AutoClickActivity.enableAutoClickShift = false;
                 addSimulateAction(new Runnable() {
                     @Override
                     public void run() {
@@ -103,7 +102,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                     public void run() {
                         startClickOrMove(130, 1685, true);    // 左下角。
                     }
-                }).start();
+                }).start(false);
             }
         }
         // 应用内自动点击
@@ -131,6 +130,45 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
             }
         }
 
+        // 京东自动抢货
+        if (AutoClickActivity.enableJingDong && event.getPackageName().toString().contains("jingdong")) {
+            if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+                NLog.d("sjh2","==receive app jingdong change. getClassName==" + event.getClassName().toString());
+                final Random r1 = new Random();
+                ClickAccessibilityService bs = null;
+
+                for (int i = 0; i < 20000; i++) {   // 20s * 35
+                    bs = addSimulateAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!AutoClickActivity.enableJingDong) {
+                                reset();
+                            }
+                            // x : 800-1000
+                            // y : 2230-2300
+                            final int offsetX = r1.nextInt(100) + 800;
+                            final int offsetY = r1.nextInt(70) + 2230;
+
+                            NLog.v("sjh2", currentX + "==click jingdong==" + offsetX + "  " + offsetY);
+                            startClickOrMove(offsetX, offsetY, true);
+                        }
+                    });
+
+                    // int offset = r1.nextInt(100) + 5;
+
+                    // handler.postDelayed(new Runnable() {
+                    //     @Override
+                    //     public void run() {
+                    //
+                    //     }
+                    // }, offset);
+                }
+
+                bs.start(true);
+
+            }
+        }
+
         if (AutoClickActivity.enableAutoClickTest && PKG_API_DEMO.equals(event.getPackageName().toString()) // PKG_BROWSER、PKG_MI_LAUNCHER
                 && event.getClassName() != null && AutoClickActivity.CLASSNAME.equals(event.getClassName().toString())) {
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
@@ -145,7 +183,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                 }).addSimulateAction(new Runnable() {
                     @Override
                     public void run() {
-                        startClickOrMove(1060, 500, false);
+                        startClickOrMove(960, 500, false);
                     }
                 }).addSimulateAction(new Runnable() {
                     @Override
@@ -157,7 +195,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                     public void run() {
                         startClickOrMove(160, 268, true);   // 点击最左上角的应用图标
                     }
-                }).start();
+                }).start(false);
 
             }
         }
@@ -230,7 +268,7 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
         return this;
     }
 
-    private void start() {
+    private void start(boolean forceNotReset) {
         NLog.i("sjh2", "==start list==" + list.size());
         if (enable && !isRunning && !list.isEmpty()) {
             isRunning = true;
@@ -238,7 +276,9 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
             list.remove(0);
             runnable.run();
         } else {
-            reset();
+            if (!forceNotReset) {
+                reset();
+            }
         }
     }
 
@@ -273,10 +313,20 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                 path.moveTo(currentX, currentY);  // 只有moveTo就是点击！！
                 path.lineTo(x, y);
             }
+            int startTime = 0;
+            long duration = 0;
+            if (isClick) {
+                startTime = 5;
+                duration = 30;
+            } else {
+                startTime = 500;
+                duration = 200;
+            }
 
             // move的duration在300~500ms的效果较好，太短会导致滑动不可用；click的duration别人用10ms
             GestureDescription gestureDescription = new GestureDescription.Builder()
-                    .addStroke(new GestureDescription.StrokeDescription(path, 300, 200)).build();
+                    .addStroke(new GestureDescription.StrokeDescription(path, startTime, duration))
+                    .build();
             // 能点击到状态栏和应用区域，不能点到导航栏！！
             dispatchGesture(gestureDescription, new GestureResultCallback() {
                 @Override
@@ -290,7 +340,13 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
                 @Override
                 public void onCancelled(GestureDescription gestureDescription) {
                     NLog.w("sjh2", "==GestureResultCallback onCancelled==");
-                    reset();
+                    // reset();
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            execNext();
+                        }
+                    }, 1400);
                 }
             }, mHandler);
         }

@@ -39,7 +39,8 @@ public class AutoClickActivity extends BaseActivity {
     private EditText edittext2;
     private Switch switchBtn;
     public static boolean enableAutoClickTest = false;
-    public static boolean enableAutoClickPhone = false;
+    public static boolean enableAutoClickShift = false;
+    public static boolean enableJingDong = false;
     public static boolean isMonitorOpen = false;
 
     private boolean checkIsEnable() {
@@ -173,7 +174,7 @@ public class AutoClickActivity extends BaseActivity {
                                 new Handler().postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
-                                        enableAutoClickPhone = true;
+                                        enableAutoClickShift = true;
                                         isMonitorOpen = true;
                                         switchBtn.setChecked(isMonitorOpen);
 
@@ -256,13 +257,28 @@ public class AutoClickActivity extends BaseActivity {
             }
         });
 
+        findViewById(R.id.switch9).setVisibility(View.VISIBLE);
+        ((Switch) findViewById(R.id.switch9)).setText("开始京东抢货");
+        findViewById(R.id.switch9).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        enableJingDong = !enableJingDong;
+                    }
+                }, 1500);
+
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         // NLog.v("sjh5", "AutoClickActivity onResume :" + getIntent());
-        if (enableAutoClickPhone) {         // 可增加action判断
+        if (enableAutoClickShift) {         // 可增加action判断
             switchBtn.post(new Runnable() { // 重要！！onResume直接showDialog会导致dialog显示后还未能获取焦点（尚未绘制完），触发不了AccessibilityEvent
                 @Override
                 public void run() {
