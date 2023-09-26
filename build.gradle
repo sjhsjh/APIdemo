@@ -4,7 +4,18 @@ buildscript {
     ext.kotlin_version = '1.3.50'
     repositories {
         google()
-        jcenter()
+//        jcenter()
+//        maven { url "http://jcenter.bintray.com"}
+        mavenCentral()
+
+        // 改为阿里云的镜像地址
+        maven { setUrl("https://maven.aliyun.com/repository/central") }
+        maven { setUrl("https://maven.aliyun.com/repository/jcenter") }
+        maven { setUrl("https://maven.aliyun.com/repository/google") }
+        maven { setUrl("https://maven.aliyun.com/repository/gradle-plugin") }
+        maven { setUrl("https://maven.aliyun.com/repository/public") }
+        maven { setUrl("https://jitpack.io") }
+
         // firebase Crashlytics
         maven {
             url 'https://maven.fabric.io/public'
@@ -13,12 +24,13 @@ buildscript {
         // maven { url 'http://repo1.maven.org/maven2' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
+        classpath 'com.android.tools.build:gradle:3.3.0'
         // Plugin with id 'com.novoda.bintray-release' not found的解决方法:根目录build.gradle下添加该行代码
-        classpath 'com.novoda:bintray-release:0.7.0'
+//        classpath 'com.novoda:bintray-release:0.7.0'      // ReadmoreTextview
 
         // DoraemonKit 流量监控功能（可选）
-        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.4'
+//        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.4'
+
         // firebase
         classpath 'com.google.gms:google-services:4.2.0'
         // firebase Crashlytics
@@ -33,7 +45,18 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+//        jcenter()
+//        maven { url "http://jcenter.bintray.com"}
+        mavenCentral()
+
+        // 改为阿里云的镜像地址
+        maven { setUrl("https://maven.aliyun.com/repository/central") }
+        maven { setUrl("https://maven.aliyun.com/repository/jcenter") }
+        maven { setUrl("https://maven.aliyun.com/repository/google") }
+        maven { setUrl("https://maven.aliyun.com/repository/gradle-plugin") }
+        maven { setUrl("https://maven.aliyun.com/repository/public") }
+        maven { setUrl("https://jitpack.io") }
+
         maven { url 'https://jitpack.io' }
     }
 }
