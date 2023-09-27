@@ -211,16 +211,33 @@ abstract class Grandson extends Son {
 
 
 class Animal {
+    public Animal() {
+        System.out.println("Animal construct");     // 1
+    }
+
     public void aaa() {
-    };
+    }
+
 }
 
 class Cat extends Animal {
+
+    private Garfield xx = new Garfield();
+
+    public Cat() {
+        System.out.println("Cat construct");    // 3
+    }
+
     public void ccc() {
-    };
+    }
+
 }
 
-class Garfield extends Cat {
+class Garfield extends Object {
+    public Garfield() {
+        System.out.println("Garfield construct");  // 2
+    }
+
     public void ggg() {
-    };
+    }
 }

@@ -1,9 +1,9 @@
 import com.example.MyObjectB
 import java.util.Arrays
 
+
 fun main(args: Array<String>) {
 	MyObjectB(1).internalVar = 22
-
 
 	out@ for (x in 0..10) {
 		for (y in 1..9) {
@@ -43,13 +43,22 @@ fun printArray() {
 	// 静态初始化数组
 	var arr1 = arrayOf(obj, obj, obj)
 	var arr2 = arrayOf("ss", "22", "11")	// ② 穷举初始化,自动推测类型和大小
+
+	var arr6 = Array(3, { "ax" })
+	println("=========arr6=============" + arr6)
+	println("=========arr2=============" + Arrays.toString(arr2))
+	var list44 = ArrayList<String>()	  // ① good
+	list44.add("111")
+	list44.add("222")
+	println("======================" + list44.toString())
+
 	var arr3 = intArrayOf(1, 2, 10)			// 注意是小写开头。booleanArrayOf()、charArrayOf()、floatArrayOf()等
 
 	// 指定类型和数组长度
 	var arr4 = arrayOfNulls<String>(5) // ①声明object类型数组Object[5] : var arr4 = arrayOfNulls<Any>(5)
 	var arr5 = emptyArray<String>()    		// 长度为0的数组 : String[0]
 	// 高端用法
-	var arr6 = Array(3, { "ax" })     // ③指定size和初始值！！
+  // ③指定size和初始值！！
 	var arr66 = Array(3, { obj })
 	var arr666 = Array(3, { it.toString() })    // Integer[3]:0, 1, 2。lambda表达式，it代表数组的索引值！根据下标生成对应位置的元素。it需要放在大括号中。
 	var arr7 = IntArray(5, { it + 10 })         // 10~14

@@ -19,6 +19,7 @@ import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.setMain
 import java.lang.StringBuilder
 
+
 fun main(args: Array<String>) {
 
 
@@ -289,6 +290,17 @@ private fun testFor() {
                 println("=======break: " + it)
                 if (it == "aa") {
                     return@loop
+                }
+            }
+        }
+    }
+
+    run {
+        for (entry in cc.entries) {     // for的let内加break  方法2
+            entry.key?.let {
+                println("=======break: " + it)
+                if (it == "aa") {
+                    return@run
                 }
             }
         }
