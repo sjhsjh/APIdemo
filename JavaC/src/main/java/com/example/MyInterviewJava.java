@@ -1,9 +1,5 @@
 package com.example;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
@@ -17,11 +13,11 @@ public class MyInterviewJava {
     static int count = 1;
     static Object monitor = new Object();
 
-    static class PrintSequence implements Runnable {
+    static class PrintSequenceRunnable implements Runnable {
 
         int numOfThreads;
 
-        public PrintSequence(int nubOfThreads) {
+        public PrintSequenceRunnable(int nubOfThreads) {
             this.numOfThreads = nubOfThreads;
         }
 
@@ -31,7 +27,8 @@ public class MyInterviewJava {
         }
 
         private void print() {
-            while (count < 10) {
+            // 1~10 打印10次，然后最后一次（第10次）会notify另外两条线程分别打印一次，即一共10 + 2次！
+            while (count < 11) {
                 synchronized (monitor) {
                     while (count % 3 != numOfThreads) {
                         try {
@@ -41,11 +38,14 @@ public class MyInterviewJava {
                         }
                     }
 
-                    System.out.println("ThreadId [" + numOfThreads
-                            + "] printing -->" + count);
+                    int result = numOfThreads;
+                    if (result == 0) {
+                        result = 3;
+                    }
+                    System.out.println("ThreadId [" + numOfThreads + "] " +
+                            "-->count=" + count + "-->result=" + result);
                     count++;
                     monitor.notifyAll();
-
                 }
 
 
@@ -55,20 +55,23 @@ public class MyInterviewJava {
 
     }
 
-    public static void main(String[] args) {
-        logByReentrantLock();
+    private static void logByWait() {
+        PrintSequenceRunnable runnable1 = new PrintSequenceRunnable(1);
+        PrintSequenceRunnable runnable2 = new PrintSequenceRunnable(2);
+        PrintSequenceRunnable runnable3 = new PrintSequenceRunnable(0);
 
-        // PrintSequence runnable1 = new PrintSequence(1);
-        // PrintSequence runnable2 = new PrintSequence(2);
-        // PrintSequence runnable3 = new PrintSequence(0);
-        //
-        // Thread t1 = new Thread(runnable1, "T1");
-        // Thread t2 = new Thread(runnable2, "T2");
-        // Thread t3 = new Thread(runnable3, "T3");
-        //
-        // t1.start();
-        // t2.start();
-        // t3.start();
+        Thread t1 = new Thread(runnable1, "T1");
+        Thread t2 = new Thread(runnable2, "T2");
+        Thread t3 = new Thread(runnable3, "T3");
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+
+    public static void main(String[] args) {
+        logByWait();
+        // logByReentrantLock();
 
     }
 
