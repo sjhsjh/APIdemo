@@ -14,7 +14,7 @@ public class MyInterviewJava {
     static Object monitor = new Object();
 
     static class PrintSequenceRunnable implements Runnable {
-
+        // 第几条Thread
         int numOfThreads;
 
         public PrintSequenceRunnable(int nubOfThreads) {
@@ -26,6 +26,17 @@ public class MyInterviewJava {
             print();
         }
 
+        /**
+         * 伪代码：
+         * synchronized（lock）{
+         *     while(条件){
+         *         lock.wait()
+         *     }
+         *     // 逻辑
+         *
+         *     lock.notifyAll()
+         * }
+         */
         private void print() {
             // 1~10 打印10次，然后最后一次（第10次）会notify另外两条线程分别打印一次，即一共10 + 2次！
             while (count < 11) {
@@ -69,9 +80,29 @@ public class MyInterviewJava {
         t3.start();
     }
 
+    /**
+     * 不wait  可以直接 notify！！
+     * 不await 也可以直接 signal！！
+     */
+    private static void onlyNotify() {
+        Object lock0 = new Object();
+        synchronized (lock0) {
+            lock0.notify();
+        }
+
+
+        Condition conditionA = lock.newCondition();
+        lock.lock();
+        conditionA.signal();
+        lock.unlock();
+    }
+
     public static void main(String[] args) {
-        logByWait();
-        // logByReentrantLock();
+        //方法1、使用 wait 和 notify
+        // logByWait();
+
+        //方法2、使用 ReentrantLock
+        logByReentrantLock();
 
     }
 
@@ -92,42 +123,46 @@ public class MyInterviewJava {
 
 
     private static ReentrantLock lock = new ReentrantLock();
+    // conditionA可以在 B线程中await，然后在 c线程 中signal！！！！ 即能唤醒指定线程！！
     private static Condition conditionA = lock.newCondition();
     private static Condition conditionB = lock.newCondition();
     private static Condition conditionC = lock.newCondition();
-    private static volatile int state = 1;
+    private static volatile int currentState = 1;
 
 
     public static class Worker implements Runnable {
         private String key;
         private Integer count;
         private Lock lock;
-        private Condition current;
-        private Condition next;
+        private Condition currentCondition;
+        private Condition nextCondition;
         private int targetState;
 
         public Worker(String key, Integer count, int targetState, Lock lock, Condition cur, Condition next) {
             this.key = key;
             this.count = count;
             this.lock = lock;
-            this.current = cur;
-            this.next = next;
+            this.currentCondition = cur;
+            this.nextCondition = next;
             this.targetState = targetState;
         }
 
         public void run() {
             this.lock.lock();
             try {
+                // for循环放在lock外也可, 放lock里面更好，因为这样就不用多次lock  和 unlock
                 for (int i = 0; i < count; i++) {
-                    while (state != targetState) {
-                        current.await();
+                    // while内条件为false者 先执行打印。即 ThreadA 和 ThreadB 要符合循环条件进入wait
+                    while (currentState != targetState) {
+                        currentCondition.await();
                     }
                     System.out.println(i + ",  " + key);
-                    state++;
-                    if (state > 3) {
-                        state = 1;
+
+                    currentState++;
+                    if (currentState > 3) {
+                        currentState = 1;
                     }
-                    next.signal();
+                    nextCondition.signal();
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
