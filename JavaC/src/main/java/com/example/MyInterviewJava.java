@@ -2,18 +2,49 @@ package com.example;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+
+/**
+ * Java多线程---顺序打印ABC打印10次的实现-三种实现
+ * https://www.jianshu.com/p/b036dda3f5c8
+ */
 public class MyInterviewJava {
 
     // private static final Object lock = new Object();
+    public static void main(String[] args) {
+        //方法1、使用 wait 和 notify
+        // logByWait();
 
-    static int count = 1;
-    static Object monitor = new Object();
+        //方法2、使用 ReentrantLock
+        // logByReentrantLock();
 
-    static class PrintSequenceRunnable implements Runnable {
+        //方法3、使用 信号量Semaphore
+        // logBySemaphore();
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+    private static void logByWait() {
+        PrintSequenceRunnable runnable1 = new PrintSequenceRunnable(1);
+        PrintSequenceRunnable runnable2 = new PrintSequenceRunnable(2);
+        PrintSequenceRunnable runnable3 = new PrintSequenceRunnable(0);
+
+        Thread t1 = new Thread(runnable1, "T1");
+        Thread t2 = new Thread(runnable2, "T2");
+        Thread t3 = new Thread(runnable3, "T3");
+
+        t1.start();
+        t2.start();
+        t3.start();
+    }
+
+    private static int count = 1;
+    private static Object monitor = new Object();
+
+    private static class PrintSequenceRunnable implements Runnable {
         // 第几条Thread
         int numOfThreads;
 
@@ -66,19 +97,7 @@ public class MyInterviewJava {
 
     }
 
-    private static void logByWait() {
-        PrintSequenceRunnable runnable1 = new PrintSequenceRunnable(1);
-        PrintSequenceRunnable runnable2 = new PrintSequenceRunnable(2);
-        PrintSequenceRunnable runnable3 = new PrintSequenceRunnable(0);
-
-        Thread t1 = new Thread(runnable1, "T1");
-        Thread t2 = new Thread(runnable2, "T2");
-        Thread t3 = new Thread(runnable3, "T3");
-
-        t1.start();
-        t2.start();
-        t3.start();
-    }
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * 不wait  可以直接 notify！！
@@ -96,15 +115,7 @@ public class MyInterviewJava {
         conditionA.signal();
         lock.unlock();
     }
-
-    public static void main(String[] args) {
-        //方法1、使用 wait 和 notify
-        // logByWait();
-
-        //方法2、使用 ReentrantLock
-        logByReentrantLock();
-
-    }
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static void logByReentrantLock() {
         ExecutorService poolService = Executors.newFixedThreadPool(3);
@@ -168,6 +179,55 @@ public class MyInterviewJava {
                 e.printStackTrace();
             } finally {
                 this.lock.unlock();
+            }
+        }
+    }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+    private static void logBySemaphore() {
+        Semaphore a = new Semaphore(1);
+        Semaphore b  = new Semaphore(0);
+        Semaphore c = new Semaphore(0);
+
+        ExecutorService poolService = Executors.newFixedThreadPool(3);
+        Integer count = 10;
+        poolService.execute(new Worker2(a, b, "A", count));
+        poolService.execute(new Worker2(b, c, "B", count));
+        poolService.execute(new Worker2(c, a, "C", count));
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        poolService.shutdownNow();
+    }
+
+    public static class Worker2 implements Runnable {
+        private String key;
+        private Semaphore current;
+        private Semaphore next;
+        private Integer count;
+
+        public Worker2(Semaphore current, Semaphore next, String key, Integer count) {
+            this.current = current;
+            this.next = next;
+            this.key = key;
+            this.count = count;
+        }
+
+        public void run() {
+            for (int i = 0; i < count; i++) {
+                try {
+                    // 获取当前的锁
+                    current.acquire(); // 请求成功才 current - 1，  请求失败则wait
+                    System.out.println(i + ",  " + key);
+                    // 释放next的锁
+                    next.release();    // next + 1
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
