@@ -1,5 +1,7 @@
 package com.example;
 
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
@@ -16,14 +18,21 @@ public class MyInterviewJava {
 
     // private static final Object lock = new Object();
     public static void main(String[] args) {
-        //方法1、使用 wait 和 notify
+        // 方法1、使用 wait 和 notify
         // logByWait();
 
-        //方法2、使用 ReentrantLock
+        // 方法2、使用 ReentrantLock
         // logByReentrantLock();
 
-        //方法3、使用 信号量Semaphore
+        // 方法3、使用 信号量Semaphore
         // logBySemaphore();
+
+        // 方法4、使用 CyclicBarrier
+        logByBarrier();
+
+        // 方法5、使用 CountDownLatch
+        logByCountDownLatch();
+
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,6 +239,74 @@ public class MyInterviewJava {
                 }
             }
         }
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+    private static class ThreadBarrier extends Thread {
+        private CyclicBarrier barrier;
+        private int index;
+
+        public ThreadBarrier(CyclicBarrier barrier0, int index0) {
+            this.barrier = barrier0;
+            this.index = index0;
+        }
+
+        @Override
+        public void run() {
+            for (int i = 0; i < times; i++) {
+                /**
+                 * 用的是
+                 *  while(true){
+                 *      Thread.sleep(100)   // 会占着CPU不工作.
+                 *  }
+                 * 来实现 线程等待!!!!!!!!!
+                 */
+                while (barrier.getNumberWaiting() != index) {
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // 打印 并且
+                System.out.println("==" + charArray[index]);
+                try {
+                    // getNumberWaiting的值加1 & 等待!!!
+                    barrier.await();
+
+                    System.out.println("=====" + charArray[index] + "==finish wait=="
+                            + "getNumberWaiting=" + barrier.getNumberWaiting());
+                    // C==finish wait==getNumberWaiting=0
+                    // 栅栏被冲破后getNumberWaiting变回0！！
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static char[] charArray = {'A', 'B', 'C'};
+    private static final int times = 5;
+
+    private static void logByBarrier() {
+        CyclicBarrier barrier = new CyclicBarrier(3,() -> {
+            System.out.println("===单个循环结束===" );
+        });
+
+        new ThreadBarrier(barrier, 0).start();
+        new ThreadBarrier(barrier, 1).start();
+        new ThreadBarrier(barrier, 2).start();
+
+    }
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+    private static void logByCountDownLatch() {
+
     }
 
 
