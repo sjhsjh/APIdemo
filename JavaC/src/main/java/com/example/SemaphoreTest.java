@@ -4,6 +4,10 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 使用Semaphore要达到的目的是：控制某个方法 允许并发访问的线程个数。相当于限流。
+ * synchronized 代码块控限制最大并发访问的线程个数是1个，Semaphore则是 N 个。
+ * Tips：
+ * 1、每个Semaphore对象都能被不同的线程所访问。
  * @date 2024/3/8
  */
 class SemaphoreTest {
@@ -16,8 +20,10 @@ class SemaphoreTest {
     public static void main(String[] args) {
         //4表示4张桌子
         Semaphore semaphore = new Semaphore(-1);
+
         for (int i = 0; i < 10; i++) {
             final int index = i;
+
             new Thread(() -> {
                 try {
                     if (result) {
@@ -28,11 +34,12 @@ class SemaphoreTest {
 
 
                     //1.被服务员叫号  分发许可证
-                    semaphore.acquire();
+                    semaphore.acquire();    // 请求成功才 current - 1，  请求失败则wait！
                     //2.开始吃饭
                     System.out.println(Thread.currentThread().getName() + "被服务员叫号后，准备上桌吃饭");
                     //3.吃饭中  模拟吃饭2s
                     TimeUnit.SECONDS.sleep(5);
+
                     //4.吃完饭,喊服务员结算
                     semaphore.release();
 

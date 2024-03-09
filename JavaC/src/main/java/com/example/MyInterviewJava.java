@@ -24,11 +24,12 @@ public class MyInterviewJava {
         // 方法2、使用 ReentrantLock
         // logByReentrantLock();
 
-        // 方法3、使用 信号量Semaphore
+        // 方法3、使用 信号量Semaphore  （加强版synchronized）
         // logBySemaphore();
 
-        // 方法4、使用 CyclicBarrier
-        logByBarrier();
+        // 方法4、使用 CyclicBarrier (有2种方法)
+        // logByBarrier();
+        logByBarrierSecond();
 
         // 方法5、使用 CountDownLatch
         logByCountDownLatch();
@@ -194,6 +195,10 @@ public class MyInterviewJava {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * 线程同步是通过 nextSemaphore.release()来唤醒下一个线程！
+     * 当计数器为0时，acquire()将阻塞线程直到其他线程调用release()。
+     */
     private static void logBySemaphore() {
         Semaphore a = new Semaphore(1);
         Semaphore b  = new Semaphore(0);
@@ -215,13 +220,13 @@ public class MyInterviewJava {
 
     public static class Worker2 implements Runnable {
         private String key;
-        private Semaphore current;
-        private Semaphore next;
+        private Semaphore currentSemaphore;
+        private Semaphore nextSemaphore;
         private Integer count;
 
-        public Worker2(Semaphore current, Semaphore next, String key, Integer count) {
-            this.current = current;
-            this.next = next;
+        public Worker2(Semaphore currentSemaphore, Semaphore next, String key, Integer count) {
+            this.currentSemaphore = currentSemaphore;
+            this.nextSemaphore = next;
             this.key = key;
             this.count = count;
         }
@@ -230,10 +235,10 @@ public class MyInterviewJava {
             for (int i = 0; i < count; i++) {
                 try {
                     // 获取当前的锁
-                    current.acquire(); // 请求成功才 current - 1，  请求失败则wait
+                    currentSemaphore.acquire(); // 请求成功才 current - 1，  请求失败则wait
                     System.out.println(i + ",  " + key);
                     // 释放next的锁
-                    next.release();    // next + 1
+                    nextSemaphore.release();    // next + 1
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -242,6 +247,10 @@ public class MyInterviewJava {
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * 线程同步是通过 barrier.await()来改变getNumberWaiting的值，从而改变
+     * 下一个线程的 循环条件 来唤醒下一个线程！
+     */
     private static class ThreadBarrier extends Thread {
         private CyclicBarrier barrier;
         private int index;
@@ -302,6 +311,58 @@ public class MyInterviewJava {
         new ThreadBarrier(barrier, 2).start();
 
     }
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+    private static CyclicBarrier cyclicBarrier = new CyclicBarrier(3);
+    private static CyclicBarrier cyclicBarrier2 = new CyclicBarrier(3);
+    private static CyclicBarrier cyclicBarrier3 = new CyclicBarrier(3);
+
+    private static void logByBarrierSecond() {
+        new Thread(new PrintABCUsingCyclicBarrier(5, "A")).start();
+        new Thread(new PrintABCUsingCyclicBarrier(5, "B")).start();
+        new Thread(new PrintABCUsingCyclicBarrier(5, "C")).start();
+
+    }
+
+    private static class PrintABCUsingCyclicBarrier implements Runnable {
+        private int times;
+        private String word;
+
+        public PrintABCUsingCyclicBarrier(int times, String word) {
+            this.times = times;
+            this.word = word;
+        }
+
+        @Override
+        public void run() {
+            try {
+                // 每打印一个字母，都要3个线程一起冲破一个屏障
+                for (int i = 0; i < times; i++) {
+                    cyclicBarrier.await();
+                    if ("A".equals(word)) {
+                        System.out.println(word);
+                    }
+                    cyclicBarrier2.await();
+                    if ("B".equals(word)) {
+                        System.out.println(word);
+                    }
+                    cyclicBarrier3.await();
+                    if ("C".equals(word)) {
+                        System.out.println(word);
+                    }
+                }
+            } catch (BrokenBarrierException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
