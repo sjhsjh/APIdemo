@@ -21,6 +21,7 @@ public class CyclicBarrierTest {
      * CountDownLatch 基于 AQS 的共享模式的使用，  而 CyclicBarrier 基于 Condition 来实现的。因为 CyclicBarrier 的源码相对来说简单许多
      * CountDownLatch 是一次性的，        CyclicBarrier 是可循环利用的。
      * CountDownLatch 参与的线程的职责是不一样的，有的在倒计时，有的在等待倒计时结束。CyclicBarrier 参与的线程职责是一样的
+     * CountDownLatch 是等待多个线程都完成之后，自己才继续执行！CyclicBarrier是等待多个线程都完成之后，大家一起继续执行！
      */
     private static void logByBarrier() {
         // 定义循环栅栏
@@ -64,3 +65,11 @@ public class CyclicBarrierTest {
         new Thread(runnable).start();
     }
 }
+
+
+        // System.out.println("111");
+        // cyclicBarrier.await();
+        // cyclicBarrier.await();     // 需要在不同线程执行await才行。
+        // cyclicBarrier.await();
+        //
+        // System.out.println("222");

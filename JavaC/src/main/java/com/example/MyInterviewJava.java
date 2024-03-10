@@ -1,10 +1,14 @@
 package com.example;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -13,6 +17,9 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Java多线程---顺序打印ABC打印10次的实现-三种实现
  * https://www.jianshu.com/p/b036dda3f5c8
+ * 规定：
+ * 1、只有3个线程对象。
+ * 2、不允许使用线程池的复用功能
  */
 public class MyInterviewJava {
 
@@ -22,17 +29,17 @@ public class MyInterviewJava {
         // logByWait();
 
         // 方法2、使用 ReentrantLock
-        // logByReentrantLock();
+        logByReentrantLock();
 
         // 方法3、使用 信号量Semaphore  （加强版synchronized）
         // logBySemaphore();
 
         // 方法4、使用 CyclicBarrier (有2种方法)
         // logByBarrier();
-        logByBarrierSecond();
+        // logByBarrierSecond();
 
         // 方法5、使用 CountDownLatch
-        logByCountDownLatch();
+        // logByCountDownLatch();
 
     }
 
@@ -196,12 +203,12 @@ public class MyInterviewJava {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * 线程同步是通过 nextSemaphore.release()来唤醒下一个线程！
+     * （线程同步是通过 nextSemaphore.release()来唤醒下一个线程！）
      * 当计数器为0时，acquire()将阻塞线程直到其他线程调用release()。
      */
     private static void logBySemaphore() {
         Semaphore a = new Semaphore(1);
-        Semaphore b  = new Semaphore(0);
+        Semaphore b = new Semaphore(0);
         Semaphore c = new Semaphore(0);
 
         ExecutorService poolService = Executors.newFixedThreadPool(3);
@@ -302,8 +309,8 @@ public class MyInterviewJava {
     private static final int times = 5;
 
     private static void logByBarrier() {
-        CyclicBarrier barrier = new CyclicBarrier(3,() -> {
-            System.out.println("===单个循环结束===" );
+        CyclicBarrier barrier = new CyclicBarrier(3, () -> {
+            System.out.println("===单个循环结束===");
         });
 
         new ThreadBarrier(barrier, 0).start();
@@ -364,10 +371,73 @@ public class MyInterviewJava {
     }
 
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-    private static void logByCountDownLatch() {
+    /**
+     * 作用：等待多个线程都完成之后，自己才继续执行！
+     * 当计数器的值为0时，countDownLatch.await被喚醒；
+     * 使用一次性；
+     * countDownLatch.await()前执行 countDownLatch.countDown()无效 且 无影响；
+     */
 
+     /**
+     * 首先调用所依赖的latch的await()方法，如果所依赖的latch的count为0，
+     * 则重置所依赖的latch并打印需要输出的，最后将自身的count减去。
+      *
+      * 一开始，3个countDownLatch都在await，直到手动执行latchC.countDown 来唤醒A。
+      * A                   B                   C
+      * latchC.await        latchA.await        latchB.await
+      * latchA.countDown    latchB.countDown    latchC.countDown
+      *
+      * （线程同步是通过 countDownLatchA.countDown()来唤醒 countDownLatchA.await   ）
+     */
+    private static void logByCountDownLatch() {
+        String latchA = "A";
+        String latchB = "B";
+        String latchC = "C";
+
+        countDownLatchMap.put("A", new CountDownLatch(1));
+        countDownLatchMap.put("B", new CountDownLatch(1));
+        countDownLatchMap.put("C", new CountDownLatch(1));
+
+        //创建三个线程，但是此时由于三个CountDownLatch都不为0，所以三个线程都处于阻塞状态
+        Thread threadA = new Thread(new PrintABCUsingCountDownLatch2("C", "A"));
+        Thread threadB = new Thread(new PrintABCUsingCountDownLatch2("A", "B"));
+        Thread threadC = new Thread(new PrintABCUsingCountDownLatch2("B", "C"));
+        threadA.start();
+        threadB.start();
+        threadC.start();
+
+        //latchC 阻塞了 latchA；调用latchC的countDown()方法，先让latchC为0，使latchA先运行
+        countDownLatchMap.get("C").countDown();
+    }
+
+    private static Map<String, CountDownLatch> countDownLatchMap = new HashMap<>();
+
+    private static class PrintABCUsingCountDownLatch2 implements Runnable {
+
+        private String dependLatch;
+        private String selfLatch;
+
+        private PrintABCUsingCountDownLatch2(String dependLatch, String selfLatch) {
+            this.dependLatch = dependLatch;
+            this.selfLatch = selfLatch;
+        }
+
+        @Override
+        public void run() {
+            for (int i = 0; i < 5; i++) {
+                try {
+                    countDownLatchMap.get(dependLatch).await();
+                    countDownLatchMap.put(dependLatch, new CountDownLatch(1));
+
+                    System.out.println(Thread.currentThread().getName() + ":  " + selfLatch);
+
+                    countDownLatchMap.get(selfLatch).countDown();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 
