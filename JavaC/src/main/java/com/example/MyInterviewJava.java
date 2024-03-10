@@ -11,6 +11,7 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
 
@@ -28,18 +29,22 @@ public class MyInterviewJava {
         // 方法1、使用 wait 和 notify
         // logByWait();
 
-        // 方法2、使用 ReentrantLock
-        logByReentrantLock();
+        // 方法2、使用 ReentrantLock  （基于AQS实现）
+        // logByReentrantLock();
 
-        // 方法3、使用 信号量Semaphore  （加强版synchronized）
+        // 方法3、使用 信号量Semaphore  （加强版synchronized）（基于AQS实现）
+        // 只有信号量的api是semaphore.acquire()和 semaphore.release();其他都是await +（notify OR 空 OR countDown）
         // logBySemaphore();
 
-        // 方法4、使用 CyclicBarrier (有2种方法)
+        // 方法4、使用 CyclicBarrier (有2种方法)（基于Condition实现）
         // logByBarrier();
         // logByBarrierSecond();
 
-        // 方法5、使用 CountDownLatch
+        // 方法5、使用 CountDownLatch （基于AQS实现）
         // logByCountDownLatch();
+
+        // 方法6、使用 LockSupport （基于Unsafe的native实现, 比其他方式更底层）
+        logByLockSupport();
 
         // onlyNotify();
     }
@@ -271,7 +276,7 @@ public class MyInterviewJava {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
     /**
-     * （线程同步是通过 nextSemaphore.release()来唤醒下一个线程！）
+     * （线程同步是通过 限流为0达到wait的效果，然后nextSemaphore.release()来唤醒下一个线程！）
      * 当计数器为0时，acquire()将阻塞线程直到其他线程调用release()。
      */
     private static void logBySemaphore() {
@@ -389,12 +394,15 @@ public class MyInterviewJava {
 
 
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
     private static CyclicBarrier cyclicBarrier = new CyclicBarrier(3);
     private static CyclicBarrier cyclicBarrier2 = new CyclicBarrier(3);
     private static CyclicBarrier cyclicBarrier3 = new CyclicBarrier(3);
 
+    /**
+     * 这方法没有用到线程同步。A 、B、C 三条线程允许以任意顺序执行。
+     * 利用冲破栅栏时，唤醒所有线程，然后对应线程打印对应内容。
+     */
     private static void logByBarrierSecond() {
         new Thread(new PrintABCUsingCyclicBarrier(5, "A")).start();
         new Thread(new PrintABCUsingCyclicBarrier(5, "B")).start();
@@ -493,6 +501,9 @@ public class MyInterviewJava {
 
         @Override
         public void run() {
+            // 可以试试：
+            // current.wait
+            // next.countdown
             for (int i = 0; i < 5; i++) {
                 try {
                     countDownLatchMap.get(dependLatch).await();
@@ -506,6 +517,59 @@ public class MyInterviewJava {
                 }
             }
         }
+    }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+    private static final int times2 = 5;
+    private static Thread t1, t2, t3;
+
+    /**
+     * 另一种写法：
+     * 3个线程都先 LockSupport.park()，然后LockSupport.unpark(t1) 开启循环
+     */
+    private static void logByLockSupport() {
+        t1 = new Thread(() -> {
+            for (int i = 0; i < times2; i++) {
+                System.out.println("   begin park a 1");
+                LockSupport.park();
+
+                System.out.println("A");
+
+                // System.out.println("begin park a 2");
+                // LockSupport.park();
+                System.out.println("   a finish park");
+
+                LockSupport.unpark(t2);
+            }
+        });
+        t2 = new Thread(() -> {
+            for (int i = 0; i < times2; i++) {
+                LockSupport.park();
+                System.out.println("B");
+
+                LockSupport.unpark(t3);
+            }
+        });
+        t3 = new Thread(() -> {
+            for (int i = 0; i < times2; i++) {
+                System.out.println("   c begin unpark  t1  1");
+                LockSupport.unpark(t1);
+
+                // System.out.println("c begin unpark  t1  2");
+                // LockSupport.unpark(t1);
+
+                System.out.println("   begin park c ");
+                LockSupport.park();
+
+                System.out.println("C");
+            }
+        });
+
+        t1.start();
+        t2.start();
+        // sleep
+        t3.start();
+
     }
 
 
