@@ -41,6 +41,7 @@ public class MyInterviewJava {
         // 方法5、使用 CountDownLatch
         // logByCountDownLatch();
 
+        // onlyNotify();
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,48 +116,111 @@ public class MyInterviewJava {
     }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
     /**
      * 不wait  可以直接 notify！！
-     * 不await 也可以直接 signal！！
+     * 不await 也可以直接 signal！！(即可以 signal + await + signal)
      */
     private static void onlyNotify() {
-        Object lock0 = new Object();
-        synchronized (lock0) {
-            lock0.notify();
-        }
+        // Object lock0 = new Object();
+        // synchronized (lock0) {
+        //     lock0.notify();
+        // }
 
 
         Condition conditionA = lock.newCondition();
         lock.lock();
+
+        System.out.println("before signal");
         conditionA.signal();
+        System.out.println("after signal");
+
+
+        new Thread() {
+            @Override
+            public void run() {
+                lock.lock();
+
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+                System.out.println("begin await");
+                try {
+                    conditionA.await();
+                } catch (InterruptedException e) {
+                    System.out.println("bb error =  " + e);
+                    e.printStackTrace();
+                }
+
+                lock.unlock();
+                System.out.println("after await==========");
+            }
+        }.start();
+
+
+        new Thread() {
+            @Override
+            public void run() {
+                lock.lock();
+
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                conditionA.signal();
+                System.out.println(" conditionA.signal();");
+
+                lock.unlock();
+            }
+        }.start();
+
+
+        System.out.println("finish ");
         lock.unlock();
     }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /**
+     * （线程同步是通过 nextCondition.signal() 来唤醒下一个线程！）
+     * conditionA可以在 B线程中await，然后在 c线程 中signal！！！！ 即能唤醒指定线程！！
+     * 若B、C线程先执行，则它们先进入await并等待A来唤醒；    若A线程先执行，则A线打印并且执行不影响结果的conditionB.signal()；
+     */
     private static void logByReentrantLock() {
-        ExecutorService poolService = Executors.newFixedThreadPool(3);
-        Integer count = 10;
-        poolService.execute(new Worker("A", count, 1, lock, conditionA, conditionB));
-        poolService.execute(new Worker("B", count, 2, lock, conditionB, conditionC));
-        poolService.execute(new Worker("C", count, 3, lock, conditionC, conditionA));
+        // ExecutorService poolService = Executors.newFixedThreadPool(3);
+        Integer count = 5;
 
+        new Thread(new Worker("A", count, 1, lock, conditionA, conditionB)).start();
+        // poolService.execute(new Worker("A", count, 1, lock, conditionA, conditionB));
+
+        // 可以任意调整执行顺序，结果都是对的！
         try {
-            Thread.sleep(5000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        poolService.shutdownNow();
+
+        new Thread(new Worker("B", count, 2, lock, conditionB, conditionC)).start();
+        new Thread(new Worker("C", count, 3, lock, conditionC, conditionA)).start();
+
+        // 使用线程池，出现了 执行conditionB.signal() + conditionC.signal() + conditionB.await()时，
+        // await内  if (Thread.interrupted()) throw new InterruptedException();
+
+        // poolService.execute(new Worker("B", count, 2, lock, conditionB, conditionC));
+        // poolService.execute(new Worker("C", count, 3, lock, conditionC, conditionA));
+        //
+        //
+        // poolService.shutdownNow();
     }
 
-
     private static ReentrantLock lock = new ReentrantLock();
-    // conditionA可以在 B线程中await，然后在 c线程 中signal！！！！ 即能唤醒指定线程！！
     private static Condition conditionA = lock.newCondition();
     private static Condition conditionB = lock.newCondition();
     private static Condition conditionC = lock.newCondition();
     private static volatile int currentState = 1;
-
 
     public static class Worker implements Runnable {
         private String key;
@@ -181,6 +245,9 @@ public class MyInterviewJava {
                 // for循环放在lock外也可, 放lock里面更好，因为这样就不用多次lock  和 unlock
                 for (int i = 0; i < count; i++) {
                     // while内条件为false者 先执行打印。即 ThreadA 和 ThreadB 要符合循环条件进入wait
+                    // System.out.println(i + " begin " + key);
+                    // System.out.println(i + " currentState " + currentState);
+                    // System.out.println(i + " targetState " + targetState);
                     while (currentState != targetState) {
                         currentCondition.await();
                     }
@@ -193,6 +260,7 @@ public class MyInterviewJava {
                     nextCondition.signal();
                 }
             } catch (InterruptedException e) {
+                System.out.println(key + " error ");
                 e.printStackTrace();
             } finally {
                 this.lock.unlock();
