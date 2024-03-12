@@ -1,25 +1,27 @@
 import com.example.MyObjectB
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
 import java.util.Arrays
 
 
 fun main(args: Array<String>) {
 	MyObjectB(1).internalVar = 22
 
-	out@ for (x in 0..10) {
-		for (y in 1..9) {
-			if (y == 2) {
-				println(x)
-				break@out
-			}
-		}
-	}
-
-//	when {
-//		false -> {
-//			println(11)
-//		}
-//		true -> println(22)
+//	launch {
+//		flowTest()
 //	}
+
+
+//	out@ for (x in 0..10) {
+//		for (y in 1..9) {
+//			if (y == 2) {
+//				println("break@out  At " + x)
+//				break@out
+//			}
+//		}
+//	}
+
 
 	printArray()
 	printCollection()
@@ -31,8 +33,17 @@ fun main(args: Array<String>) {
 	// list转数组
 	var list2 = listOf(1, 3, 5)
 	var array2: Array<Int> = list2.toTypedArray()    // Integer[3] ,比java方便,java的数组需要自己定义
-
 }
+
+@InternalCoroutinesApi
+private suspend fun flowTest() {
+	println("====================flowTest====================")
+	(1..3).asFlow().collect { value ->
+		println(value)
+	}
+}
+
+
 
 fun printArray() {
 	println("====================printArray====================")
