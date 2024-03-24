@@ -45,6 +45,11 @@ val ClassTest.foo: Double
 
 
 fun main(args: Array<String>) {
+
+
+
+
+
     // 下面代码可以获取ClassTest对应的KClass
     val clazz = ClassTest::class
     // 通过constructors属性获取KClass对象所对应类的全部构造器

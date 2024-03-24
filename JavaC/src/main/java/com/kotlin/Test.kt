@@ -1,9 +1,15 @@
 import com.example.MyObjectB
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.runBlocking
 import java.util.Arrays
-
+import kotlin.system.measureTimeMillis
 
 fun main(args: Array<String>) {
 	MyObjectB(1).internalVar = 22
@@ -12,6 +18,7 @@ fun main(args: Array<String>) {
 //		flowTest()
 //	}
 
+//	flowTest2()
 
 //	out@ for (x in 0..10) {
 //		for (y in 1..9) {
@@ -43,6 +50,40 @@ private suspend fun flowTest() {
 	}
 }
 
+/**
+ * todo learn
+ * collect相当于forEach循环从 流 中读取元素来执行代码块
+ */
+fun flowTest2() = runBlocking {
+	(1..3).asFlow().catch {
+
+	}
+
+//    channelFlow {
+//        for (i in 1..5) {
+//            delay(100)
+//            send(i)
+//        }
+//    }
+
+	// 默认情况下flow内 和collect内是串行执行 且都在同一线程。
+	val time = measureTimeMillis {
+		flow {
+			for (i in 1..5) {
+				println("in flow  ${Thread.currentThread().name}: $i")
+				delay(1000)
+				emit(i)
+			}
+		}.flowOn(Dispatchers.IO)        // 切换线程
+			.collect {
+				println("+ in collect ${Thread.currentThread().name}: $it")
+				delay(5000)
+				println("- in collect ${Thread.currentThread().name}: $it")
+			}
+	}
+
+	print("cost $time\n")
+}
 
 
 fun printArray() {
