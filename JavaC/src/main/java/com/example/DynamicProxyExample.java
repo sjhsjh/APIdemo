@@ -50,11 +50,19 @@ class MyInvocationHandler implements InvocationHandler {
         this.target = target;
     }
 
+    /**
+     * 注意！invoke方法内不能调用proxy.toString()、equals、hashCode
+     * toString内部是调用invocationHandler.invoke(this, m2, null);
+     * 会造成StackOverflowError！！
+     * https://blog.csdn.net/zixiao_YING/article/details/79358708
+     */
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         // 注意这是所有接口方法的总入口，要用method形参来判断是什么方法调用的。
         // 动态代理 前置操作  method=public abstract void com.example.IUserService.addUser(java.lang.String)
         // 动态代理 前置操作  method=public abstract void com.example.IUserService.delUser(java.lang.String)
 
+    //  proxy class = class com.example.$Proxy0
+        System.out.println("proxy address: " + System.identityHashCode(proxy)); // 1975012498这个哈希码并不等于对象的实际内存地址，而是JVM为对象生成的一个唯一标识符。这个标识符在对象的生命周期内是稳定的，
 
         System.out.println("动态代理 前置操作  method=" + method);
         Object result = method.invoke(target, args);
