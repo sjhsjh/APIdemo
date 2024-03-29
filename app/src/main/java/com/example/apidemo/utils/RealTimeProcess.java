@@ -1,4 +1,4 @@
-package com.shopline.pos2.checkout;
+package com.example.apidemo.utils;
 
 import android.os.Build;
 import android.util.Log;
