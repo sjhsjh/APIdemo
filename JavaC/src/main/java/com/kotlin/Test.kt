@@ -31,15 +31,73 @@ fun main(args: Array<String>) {
 
 
 	printArray()
-	printCollection()
+//	printCollection()
 //	printFunction()
+
+	commonApi()
+
+
+}
+
+/**
+ * kotlin 算法面试的常见api
+ * val array22 = Array<Int>(5) { 1 }
+ *
+ * array22.toList()
+ * list2.toTypedArray()
+ */
+private fun commonApi(){
+	println("====================commonApi====================")
+	// new数组：
+val array11 = Array<String>(5) { "Default Value" }
+val array22 = Array<Int>(5) { 1 }
+val array33 = Array<Boolean>(5) { false }
+	array33.size
+
+	println("Array<String>  " + array11[1])
+	println("Array<Int>  " + array22[1])
+	println("Array<Boolean>  " + array33[1])
 
 	// 数组转List:
 	val array1 = arrayOf("a", "b", "c")
 	val list1 = Arrays.asList(*array1)    // 注意Arrays.asList(array1)得到的list第一个元素是array1
+val list111= array22.toList()	// 重要api！！
+	println("list1  " + list1)
+	println("list111  " + list111)
+
 	// list转数组
 	var list2 = listOf(1, 3, 5)
 	var array2: Array<Int> = list2.toTypedArray()    // Integer[3] ,比java方便,java的数组需要自己定义
+
+	println("list2.toIntArray()  " + 	list2.toIntArray()[1])
+	println("list2.toIntArray()  " + 	list2.toTypedArray()[1])
+println("string array()  " + 	listOf("aa", "bb").toTypedArray()[1])	// 重要api！！
+println("boolean array  " + 	listOf(false, true).toTypedArray()[1])
+
+	println("====================commonApi====================")
+	val str = "def"
+
+	println("str.get(0) = " + str.get(0))
+	println("Char之间相减 得到Char=" + (str.get(0) - 'a'))
+	val detaChar = ('b'- 50)
+	println("Int Char 运算 得到Char！！=" + detaChar.javaClass)
+	println("Int Char 运算 得到Char！！=" + ('b'- 50) + "=")	// 48的char
+
+	// b不是0，是乱码！！即kotlin的插入不能直接跟数字相加减！！
+	println("Char若要当成Int用需要toInt() ! " + ('b'- 50).toInt() + "=")
+	println("Int to Char=" + (48).toChar() + "=")
+
+
+	val a = "0"
+	// char 和 Int的相加 运算符重载过， 跟Java里用charAt一样，‘0’+5等于53对应的字符。
+	println(a.get(0) + 5)
+	println((a.get(0) + 5).toInt())
+
+//	String和数组的常见api？
+//
+//	kotlin：
+//	字符串:str1.length
+//	数组: arr.size
 }
 
 @InternalCoroutinesApi
