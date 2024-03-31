@@ -73,6 +73,15 @@ public class MyClass {
         // }
     }
 
+    /**
+     * java 算法面试的常见api
+     *   int[] javaArray = new int[5];
+     *
+     *   List list1 = Arrays.asList(array1);
+     *
+     *   String[] array0 = new String[list0.size()];
+     *   list0.toArray(array0);  // !!
+     */
     private static void usefulApi() {
         Random r1 = new Random();
         for (int i = 0; i < 10; i++) {
