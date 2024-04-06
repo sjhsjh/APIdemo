@@ -1,5 +1,6 @@
 package com.example;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -8,17 +9,50 @@ import java.util.Random;
 import kotlin.jvm.JvmClassMappingKt;
 import kotlin.reflect.KClass;
 
+
 public class MyClass {
 
     public static void main(String[] args) {
-        genericity();
-        longPlusFloat();
+        // genericity();
+        // longPlusFloat();
 
         // usefulApi();
         // kotlinStaticTest();
-
+        fanxingTest();
 
     }
+
+    ////////////////////////////////////////////////////////////////
+    interface I<T> {
+        T funC(T a);
+    }
+
+    class IImpl implements I<Integer> {
+        @Override
+        public Integer funC(Integer a) {
+            return a;
+        }
+        // ↓ 编译器自动生成
+        // @Override
+        // public Object funC(Object o) {
+        //     return funC((Integer)o);
+        // }
+    }
+
+    /**
+     * 泛型擦除后，编译器会自动生成一个桥接方法，方法参数都是Object，然后会强转成对应类型再使用。
+     * 该方法将类型参数替换为具体的类型，以确保多态性的正确性。
+     */
+    private static void fanxingTest() {
+        Class<IImpl> ii = IImpl.class;
+        Method[] methods = ii.getDeclaredMethods();
+        for (Method method : methods) {
+            // funC:Integer
+            // funC:Object
+            System.out.println(method.getName() + "  :" + method.getReturnType().getSimpleName());
+        }
+    }
+    ////////////////////////////////////////////////////////////////
 
     /**
      * 很大的long与float相加 就会得到一个很大误差的值。将float改成double就正确。
