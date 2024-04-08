@@ -357,4 +357,35 @@ public class AndroidUtils {
             activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
     }
+
+    /**
+     * 判断CPU是32位还是64位
+     */
+    public static boolean isCpu64() {
+        String cpuAbiList = System.getProperty("ro.product.cpu.abilist");
+        if (cpuAbiList != null) {
+            NLog.i("sjh0", "cpuAbiList = " + cpuAbiList);
+            if (cpuAbiList.contains("64")) {
+                // CPU支持64位
+                return true;
+            } else {
+                // CPU只支持32位
+                return false;
+            }
+        }
+
+
+        String cpuAbi = System.getProperty("os.arch");
+        NLog.i("sjh0", "cpuAbi = " + cpuAbi);   // aarch64
+
+        if (cpuAbi.contains("64")) {
+            // CPU是64位的
+            return true;
+        } else {
+            // CPU是32位的
+            return false;
+        }
+
+    }
+
 }
