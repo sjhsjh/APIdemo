@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <br>
@@ -47,6 +48,33 @@ public class AndroidUtils {
         SimpleDateFormat simpledate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(receiveTime);
         return simpledate.format(date);
+    }
+
+    /**
+     * 应用层获取 ANR Info
+     */
+    public void checkProcessesInErrorState(Context context) {
+        ActivityManager activityManager =
+                (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (activityManager != null) {
+            List<ActivityManager.ProcessErrorStateInfo> processesInError =
+                    activityManager.getProcessesInErrorState();
+            if (processesInError != null && !processesInError.isEmpty()) {
+                for (ActivityManager.ProcessErrorStateInfo process : processesInError) {
+                    // 这里可以处理每个错误状态的进程
+                    // process.pid 是进程的 PID
+                    // process.info 是关于进程的额外信息
+                    // ...
+                    // ActivityManager.ProcessErrorStateInfo.NOT_RESPONDING;
+
+                    NLog.d("sjh8","ProcessErrorStateInfo =  " + process + " longMsg = " + process.longMsg);
+                }
+            } else {
+                // 正常的进程
+            }
+        } else {
+            // 获取 ActivityManager 失败
+        }
     }
 
     public static boolean isNightMode(Context context) {
