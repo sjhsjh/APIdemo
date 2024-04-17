@@ -48,10 +48,12 @@ public class SocketServer {
                         updateUI("No Network");
                         return;
                     }
+
                     mIsRunning = true;
                     if (serverSocket == null) {
                         // 连续单击重复执行new ServerSocket(port)，则报错 Address already in use
                         // 不杀进程退出activity重新进入报错：Address already in use？？因为没有关闭端口：serverSocket.close();
+                        // 没网时 没有服务端ip，但是这句能正常 new
                         serverSocket = new ServerSocket(port);  // 只能在线程中初始化。否则报错NetworkOnMainThreadException
                     }
                     NLog.i("sjh9", "AbsServer服务器已经启动");
@@ -60,7 +62,9 @@ public class SocketServer {
                     // waiting......
 
 
-                    NLog.w("sjh9", "Server accept() over!!");
+                    NLog.w("sjh9", "Server accept() over!! socket=" + socket);
+                    NLog.w("sjh9", "Server accept() over!! getInetAddress=" + socket.getInetAddress());
+
                     updateUI("Server accept() over!!");
                     // socket.setSoTimeout(5 * 1000);  // 设置连接后客户端N秒内要收到客户端发送的数据过来,即read()的等待时长。
                     // 1.接收并解析请求数据
@@ -131,7 +135,7 @@ public class SocketServer {
                 len = in.read(buf); // read返回-1代表已到达流的结尾，客户端关闭socket就会令服务端的输入流到达结尾！
                 // waiting......
 
-                NLog.w("sjh9", "len = " + len);
+                NLog.w("sjh9", "read data ok. len = " + len);
                 if(len == -1){
                     closeSocket();
                     return;
@@ -142,6 +146,7 @@ public class SocketServer {
 
             } catch (IOException e) {
                 e.printStackTrace();
+                // 断wifi触发  Software caused connection abort!!!!!
                 NLog.e("sjh9", "receiveRequest IOException: " + e.getMessage());
                 updateUI("receiveRequest IOException: " + e.getMessage());
                 closeSocket();

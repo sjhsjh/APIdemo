@@ -54,8 +54,10 @@ public class SocketClient {
                         return;
                     }
                     // 1.连接服务器
-                    String localHostIP = InetAddress.getLocalHost().getHostAddress();// 服务器IP地址. 127.0.0.1 ??
+                    String localHostIP = InetAddress.getLocalHost().getHostAddress();// 服务器IP地址.127.0.0.1 xx
                     NLog.i("sjh9", "localHostIP = " + localHostIP);
+                    NLog.i("sjh9", "本机 ip = " + AndroidUtils.getLocalIP(context));//192.168.1.116 ok
+
 
                     NLog.i("sjh9","AbsClient开始连接服务器");
                     // IP地址错误就报错java.net.NoRouteToHostException: No route to host
@@ -63,8 +65,10 @@ public class SocketClient {
                     // 连续两次new Socket，第二次客户端能发送数据但是服务端却收不到，估计是两个客户端socket都能连上服务端，
                     // 但是第一个socket的输出流是关联服务端的输入流的，因此对第二个socket的输出流写数据，服务端收不到。
                     // 需要服务端再次处于accept状态，客户端再发起连接才正确。
+                    // 开始连接服务器，此处会一直处于阻塞，直到连接成功
                     socket = new Socket(site, port);    // connect() 服务端尚未启动new socket报错吧？，但是必须已连上局域网才能new socket！！
                     // socket.setSoTimeout(5000); // 设置超时时间,这样就不能长时间等待服务器返回数据了
+
                     NLog.w("sjh9","AbsClient与服务器成功建立连接！！");
                     updateUI("AbsClient与服务器成功建立连接！！");
 

@@ -7,5 +7,6 @@ public interface Constant {
     public static final String PKG = "com.example.apidemo";
     public static String ALLOW_SCREENSHOT = "allow_screenshot";
     public static String FIRST_SHOW_PERMISSION_DIALOG = "first_show_permission_dialog_";
+    public static String SERVER_IP = "SERVER_IP";
 
 }
