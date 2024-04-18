@@ -38,6 +38,40 @@ fun main(args: Array<String>) {
 fun coroutines() {
     // https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-test
     Dispatchers.setMain(newSingleThreadContext("MyMain"))   // java程序setMain之后Dispatchers.Main才能用！！！
+    GlobalScope.launch {
+        // 协程之间的依次执行
+        val job1 = GlobalScope.launch {
+            delay(1000)
+            println("one")
+        }
+        job1.join()
+        val job2 = GlobalScope.launch {
+            delay(200)
+            println("two")
+        }
+        job2.join()
+        val job3 = GlobalScope.launch {
+            delay(200)
+            println("three")
+        }
+
+
+        val deferred1 = GlobalScope.async  {
+            delay(1000)
+            println("one1")
+        }
+        deferred1.await()
+        val deferred2 = GlobalScope.async  {
+            delay(200)
+            println("two2")
+        }
+        deferred2.await()
+        val deferred3 = GlobalScope.async  {
+            delay(200)
+            println("three3")
+        }
+    }
+
 
 //    val job: Job = GlobalScope.launch {
 //        // 在后台启动一个新的协程并继续
@@ -283,6 +317,12 @@ private fun testFor() {
     cc.put("aa", 11)
     cc.put("bb", 22)
     cc.put("cc", 33)
+
+    cc.forEach {
+        println(it)
+        // forEach里不能用continue；且break要改成用return
+        return@forEach
+    }
 
     run loop@{
         for (entry in cc.entries) {     // for的let内加break
