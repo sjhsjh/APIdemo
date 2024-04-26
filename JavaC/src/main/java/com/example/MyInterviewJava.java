@@ -21,6 +21,13 @@ import java.util.concurrent.locks.ReentrantLock;
  * 规定：
  * 1、只有3个线程对象。
  * 2、不允许使用线程池的复用功能
+ *
+ *
+ * 统一的思路：
+ * 1、3个线程都先进入wait状态
+ * 2、每个线程的最后都唤醒下一个线程
+ * 3、3个线程都加入for循环
+ * 4、移除第一个线程的等待并开始
  */
 public class MyInterviewJava {
 
@@ -32,7 +39,7 @@ public class MyInterviewJava {
         // 方法2、使用 ReentrantLock  （基于AQS实现）
         // logByReentrantLock();
 
-        // 方法3、使用 信号量Semaphore  （加强版synchronized）（基于AQS实现）
+        // 方法3、使用 信号量 Semaphore(限流)  （加强版synchronized）（基于AQS实现）
         // 只有信号量的api是semaphore.acquire()和 semaphore.release();其他都是await +（notify OR 空 OR countDown）
         // logBySemaphore();
 
@@ -402,6 +409,7 @@ public class MyInterviewJava {
     /**
      * 这方法没有用到线程同步。A 、B、C 三条线程允许以任意顺序执行。
      * 利用冲破栅栏时，唤醒所有线程，然后对应线程打印对应内容。
+     * cyclicBarrier.await() 执行3次之后才冲破栅栏
      */
     private static void logByBarrierSecond() {
         new Thread(new PrintABCUsingCyclicBarrier(5, "A")).start();
@@ -451,7 +459,7 @@ public class MyInterviewJava {
     /**
      * 作用：等待多个线程都完成之后，自己才继续执行！
      * 当计数器的值为0时，countDownLatch.await被喚醒；
-     * 使用一次性；
+     * 使用一次性！！！！
      * countDownLatch.await()前执行 countDownLatch.countDown()无效 且 无影响；
      */
 
@@ -524,7 +532,7 @@ public class MyInterviewJava {
     private static Thread t1, t2, t3;
 
     /**
-     * 另一种写法：
+     * 另一种写法：更好理解！
      * 3个线程都先 LockSupport.park()，然后LockSupport.unpark(t1) 开启循环
      */
     private static void logByLockSupport() {
