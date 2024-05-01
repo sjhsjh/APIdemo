@@ -3,7 +3,7 @@ package com.example.apidemo.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import org.junit.Assert;
+// import org.junit.Assert;
 
 /**
  * @date 2016/6/30
@@ -31,10 +31,10 @@ public class PreferencesManager {
 
     private PreferencesManager(Context context) {
         mPreference = context.getSharedPreferences(DEFAULT_PREFERENCE_NAME, Context.MODE_PRIVATE);
-        Assert.assertNotNull(mPreference);
+        // Assert.assertNotNull(mPreference);
 
         mEditor = mPreference.edit();
-        Assert.assertNotNull(mEditor);
+        // Assert.assertNotNull(mEditor);
     }
 
     public String getString(String key, String defValue) {

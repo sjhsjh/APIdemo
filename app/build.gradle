@@ -64,7 +64,7 @@ android {
 
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
-        testCompile 'junit:junit:4.12'
+//        testCompile 'junit:junit:4.12'
 /*        compileSdkVersion升级28时，编译报错：junit.framework.Assert不存在。
         原因：Assert类在新版本中从junit.framework中移除，移到org.junit中。
         解决办法：libs中增加junit包，build.gradle中添加compile files("libs/junit-4.12.jar")*/
