@@ -1,2 +1,2 @@
-include ':app', ':statisticslibrary', ':JavaC', ':compiler'
+include ':app', ':statisticslibrary', ':JavaC', ':compiler', ':debugmonitor'
 // include ':app', ':statisticslibrary', ':JavaC', ':arcface'
