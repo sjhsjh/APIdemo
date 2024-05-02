@@ -112,8 +112,9 @@ android {
         implementation 'com.google.firebase:firebase-ads:17.2.0'
 //        implementation 'com.github.sjhsjh:Permission:1.0.2'  // 权限库
 
-        debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
-        releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+//        debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+//        releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
+
 
         implementation 'com.blankj:utilcode:1.25.0'     // 1.26.0就报错
 //        implementation 'com.blankj:utilcodex:1.25.0'  // if u use AndroidX, use the following

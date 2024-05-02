@@ -6,9 +6,10 @@ import com.didichuxing.doraemonkit.DoraemonKit;
 import com.example.apidemo.manager.ADManager;
 import com.example.apidemo.utils.CrashHandler;
 import com.example.apidemo.utils.NLog;
-import com.squareup.leakcanary.LeakCanary;
+// import com.squareup.leakcanary.LeakCanary;
 import com.tcl.lockscreen.statistics.StatisticsKind;
 import com.tcl.lockscreen.statistics.StatisticsWrapper;
+import com.tencent.matrix.resource.analyzer.onepiece.util.Utils2;
 
 /**
  * Created on 2017/3/29.
@@ -28,6 +29,7 @@ public class APIDemoApplication extends Application {
         DoraemonKit.install(this);
         ADManager.getInstance().initAD(mContext);
         // initLeakCanary();
+        Utils2.init(this);
     }
 
     public static Context getContext() {
@@ -55,13 +57,13 @@ public class APIDemoApplication extends Application {
 
     private void initLeakCanary() {
         NLog.i("sjh1", "initLeakCanary IS_DEBUG = " + BuildConfig.IS_DEBUG);
-        if (BuildConfig.IS_DEBUG) {
-            if (LeakCanary.isInAnalyzerProcess(this)) {
-                // This process is dedicated to LeakCanary for heap analysis.
-                // You should not init your app in this process.
-                return;
-            }
-            LeakCanary.install(this);
-        }
+        // if (BuildConfig.IS_DEBUG) {
+        //     if (LeakCanary.isInAnalyzerProcess(this)) {
+        //         // This process is dedicated to LeakCanary for heap analysis.
+        //         // You should not init your app in this process.
+        //         return;
+        //     }
+        //     LeakCanary.install(this);
+        // }
     }
 }
