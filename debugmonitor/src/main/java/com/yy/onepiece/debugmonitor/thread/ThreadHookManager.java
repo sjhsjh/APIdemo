@@ -5,6 +5,14 @@ import de.robv.android.xposed.DexposedBridge;
 import de.robv.android.xposed.XC_MethodHook;
 
 /**
+ * Android 创建线程主要是通过以下几种方式：
+ *
+ * Thread 及其子类
+ * TheadPoolExecutor 及其子类、Executors、ThreadFactory 实现类
+ * AsyncTask
+ * Timer 及其子类
+ *
+ *
  * @author shaojinhui@yy.com
  * @date 2020/7/24
  */

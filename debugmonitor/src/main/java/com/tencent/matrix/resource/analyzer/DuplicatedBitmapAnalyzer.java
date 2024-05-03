@@ -17,7 +17,6 @@
 package com.tencent.matrix.resource.analyzer;
 
 import android.util.Log;
-
 import com.squareup.haha.perflib.ArrayInstance;
 import com.squareup.haha.perflib.ClassInstance;
 import com.squareup.haha.perflib.ClassInstance.FieldValue;
@@ -87,7 +86,7 @@ public class DuplicatedBitmapAnalyzer implements HeapSnapshotAnalyzer<Duplicated
         final Set<ArrayInstance> byteArrays = new HashSet<>();
 
         final List<Instance> reachableInstances = new ArrayList<>();
-        for (Heap heap : snapshot.getHeaps()) {
+        for (Heap heap : snapshot.getHeaps()) {     // default、 app、image、zygote
             if (!"default".equals(heap.getName()) && !"app".equals(heap.getName())) {
                 continue;
             }
@@ -134,6 +133,7 @@ public class DuplicatedBitmapAnalyzer implements HeapSnapshotAnalyzer<Duplicated
         final Map<ArrayInstance, Object[]> cachedValues = new HashMap<>();
         for (ArrayInstance instance : byteArrays) {
             cachedValues.put(instance, instance.getValues());
+            // instance.getValues() 应该是对象在内存中的连续的数据块！！判断数据块的某个位置内容是否相等来判断是否是同内容的bitmap！！
         }
 
         int columnIndex = 0;
@@ -164,6 +164,7 @@ public class DuplicatedBitmapAnalyzer implements HeapSnapshotAnalyzer<Duplicated
                     // Move all ArrayInstance that we have hit the end of to the candidate result list.
                     for (ArrayInstance instance : branch) {
                         if (HahaHelper.getArrayInstanceLength(instance) == columnIndex + 1) {
+                            // 每个ArrayInstance内应该是相同bitmap的buffer
                             terminatedArrays.add(instance);
                             Log.d("sjh8", "instance   " + instance);
                         }
@@ -194,6 +195,7 @@ public class DuplicatedBitmapAnalyzer implements HeapSnapshotAnalyzer<Duplicated
                                 .findPath(snapshot, duplicateBitmaps);
 
                         final List<ReferenceChain> referenceChains = new ArrayList<>();
+                        // 找出gcRootHolder来排除部分结果
                         for (Result result : results.values()) {
                             if (result.excludingKnown) {
                                 continue;
@@ -237,7 +239,7 @@ public class DuplicatedBitmapAnalyzer implements HeapSnapshotAnalyzer<Duplicated
 //                                }
 //                            }
 
-                            // edit by sjh
+                            // edit by sjh  正则 排除部分结果
                             boolean isExcluded = false;
                             if ((gcRootHolder instanceof ClassObj)) {
                                 final String holderClassName = ((ClassObj) gcRootHolder).getClassName();
