@@ -18,7 +18,6 @@ package com.tencent.matrix.resource.analyzer.model;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 import static com.tencent.matrix.resource.common.utils.Preconditions.checkNotNull;
 import static java.util.Collections.unmodifiableMap;
 

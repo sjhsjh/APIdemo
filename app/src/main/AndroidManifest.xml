@@ -200,6 +200,7 @@
         <activity android:name=".activity.NestScrollActivity" />
         <activity android:name=".activity.CoordinatorActivity" />
         <activity android:name=".activity.AppBarActivity" />
+        <activity android:name=".activity.APMActivity" />
         <activity
             android:name=".activity.AutoClickActivity"
             android:launchMode="singleTop" />

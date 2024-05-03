@@ -22,13 +22,11 @@ import com.squareup.haha.trove.THashMap;
 import com.squareup.haha.trove.TObjectProcedure;
 import java.util.Collection;
 import java.util.HashMap;
-
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 /**
  * Created by tangyinsheng on 2017/6/6.
  */
-
 public final class AnalyzeUtil {
 
     /**

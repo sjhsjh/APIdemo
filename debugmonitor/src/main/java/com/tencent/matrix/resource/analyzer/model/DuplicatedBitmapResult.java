@@ -13,15 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.tencent.matrix.resource.analyzer.model;
 
 import com.tencent.matrix.resource.common.utils.DigestUtil;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +28,6 @@ import java.util.List;
 /**
  * Created by tangyinsheng on 2017/6/6.
  */
-
 public class DuplicatedBitmapResult extends AnalyzeResult {
 
     private final List<DuplicatedBitmapEntry> mDuplicatedBitmapEntries;

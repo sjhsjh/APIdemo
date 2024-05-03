@@ -47,7 +47,7 @@ object BitmapAnalyzer {
         }
 
         val excludedBmps = AndroidExcludedBmpRefs.createDefaults().build()
-        var duplicatedBmpResult = DuplicatedBitmapAnalyzer(mMinBmpLeakSize, excludedBmps).analyze(heapSnapshot)
+        val duplicatedBmpResult = DuplicatedBitmapAnalyzer(mMinBmpLeakSize, excludedBmps).analyze(heapSnapshot)
 
 
         val jsonObject = JSONObject()

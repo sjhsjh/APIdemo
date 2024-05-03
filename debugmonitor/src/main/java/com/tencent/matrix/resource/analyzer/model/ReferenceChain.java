@@ -18,7 +18,6 @@ package com.tencent.matrix.resource.analyzer.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import static java.util.Collections.unmodifiableList;
 
 /**
