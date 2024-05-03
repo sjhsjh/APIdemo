@@ -80,11 +80,14 @@ public class PermissionUtils {
             return true;
         } else {
             int result = context.checkPermission(permission, Process.myPid(), Process.myUid());
+            // android 11开始 .READ_EXTERNAL_STORAGE 权限直接是拒绝
             if (result == PackageManager.PERMISSION_DENIED) {
                 return false;
             }
 
             String op = AppOpsManager.permissionToOp(permission);   // 需要api 23
+            NLog.d("sjh7",
+                    " permission ： " + permission + " op = " + op +  (result == PackageManager.PERMISSION_GRANTED));
             if (TextUtils.isEmpty(op)) {
                 return true;
             }

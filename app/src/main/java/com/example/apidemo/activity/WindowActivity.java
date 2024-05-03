@@ -145,9 +145,7 @@ public class WindowActivity extends BaseActivity {
         if (requestCode == OVERLAY_REQUEST_CODE) {
             //再次判断“悬浮权限”
             if (Build.VERSION.SDK_INT >= 23) {
-                if (Settings.canDrawOverlays(this)) {
-                    NLog.i("sjh7", "overlay permission:  true");
-                }
+                NLog.i("sjh7", "overlay permission: " + Settings.canDrawOverlays(this));
             }
         }
 

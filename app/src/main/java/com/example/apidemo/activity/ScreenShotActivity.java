@@ -2,8 +2,10 @@ package com.example.apidemo.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import com.didichuxing.doraemonkit.util.PermissionUtil;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.screenshot.FloatWindowsService;
@@ -25,8 +27,15 @@ public class ScreenShotActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ScreenShotActivity.this, ScreenShotPermissionActivity.class);
-                startActivity(intent);
+                if (Settings.canDrawOverlays(ScreenShotActivity.this)) {
+                    // 小米9 不行
+                    Intent intent =
+                            new Intent(ScreenShotActivity.this, ScreenShotPermissionActivity.class);
+                    startActivity(intent);
+                } else {
+                    PermissionUtil.requestDrawOverlays(ScreenShotActivity.this);
+                }
+
             }
         });
         ((Button) findViewById(R.id.button2)).setText("关闭截屏服务");
