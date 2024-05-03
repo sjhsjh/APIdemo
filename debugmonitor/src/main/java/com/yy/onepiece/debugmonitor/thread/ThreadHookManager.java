@@ -1,5 +1,6 @@
 package com.yy.onepiece.debugmonitor.thread;
 
+import android.util.Log;
 import java.util.Set;
 import de.robv.android.xposed.DexposedBridge;
 import de.robv.android.xposed.XC_MethodHook;
@@ -11,7 +12,7 @@ import de.robv.android.xposed.XC_MethodHook;
  * TheadPoolExecutor 及其子类、Executors、ThreadFactory 实现类
  * AsyncTask
  * Timer 及其子类
- *
+ * HandlerThread
  *
  * @author shaojinhui@yy.com
  * @date 2020/7/24
@@ -45,6 +46,7 @@ public class ThreadHookManager {
         if (!hookSwitch) {
             return;
         }
+        Log.d("sjh2", "beginHook ");
         unhooks = DexposedBridge.hookAllConstructors(Thread.class, mThreadHook);
     }
 

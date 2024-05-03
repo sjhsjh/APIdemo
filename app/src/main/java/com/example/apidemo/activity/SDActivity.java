@@ -339,7 +339,8 @@ public class SDActivity extends BaseActivity {
         String path1 = "/storage/emulated/0/Pictures/JPEG_20200317_145937.jpg";
         String path2 = "/storage/emulated/0/tencent/shouyoubao/ScreenRcordImg/ic_default_share.png";
         Bitmap bitmap0 = BitmapFactory.decodeFile(path2);        // Android 11 ok??
-        ((ImageView) findViewById(R.id.iv)).setImageBitmap(bitmap0);
+
+        // ((ImageView) findViewById(R.id.iv)).setImageBitmap(bitmap0);
         ///////////////////////////////////////////////////////////////////////////
 
         ContentResolver contentResolver = context.getContentResolver();
@@ -352,7 +353,7 @@ public class SDActivity extends BaseActivity {
                 Log.d("sjh9", "path = " + path);
 
                 Bitmap bitmap = BitmapFactory.decodeFile(path);     // Android 11 ok??
-                ((ImageView) findViewById(R.id.iv)).setImageBitmap(bitmap);
+                // ((ImageView) findViewById(R.id.iv)).setImageBitmap(bitmap);
             } catch (Exception e) {
                 Log.d("sjh9", e.getLocalizedMessage());
             }

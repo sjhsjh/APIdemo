@@ -84,8 +84,8 @@ public class ThreadMonitor extends AbstractMonitor {
     }
 
     private void writeSD(String content) {
-        String timeString =                TimeUtils
-                        .getFormatTimeString(System.currentTimeMillis(), "year-mon-day_hour:min:sec");
+        String timeString = TimeUtils
+                .getFormatTimeString(System.currentTimeMillis(), "year-mon-day_hour:min:sec");
 
         String filePath = MonitorConfig.INSTANCE.getThreadMonitorDir() + File.separator + timeString + ".txt";
         FileIOUtils.writeFileFromString(filePath, content);
