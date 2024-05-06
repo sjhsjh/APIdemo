@@ -95,6 +95,36 @@ public class APMActivity extends BaseActivity{
             }
         });
 
+        ((Button) findViewById(R.id.button6)).setText("executor.submit(new Runnable())");
+        findViewById(R.id.button6).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // 测试线程的内存占用，100条约占用2M，即一条占用20KB左右的native空间
+                while(true){
+                    for (int i = 0; i < 100; i++) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(Integer.MAX_VALUE);
+                                } catch (InterruptedException e) {
+
+                                }
+                            }
+                        }).start();
+                    }
+                    try {
+                        Thread.sleep(8000);
+                    } catch (InterruptedException e) {
+
+                    }
+                }
+                
+            }
+        });
+
+
     }
 
 

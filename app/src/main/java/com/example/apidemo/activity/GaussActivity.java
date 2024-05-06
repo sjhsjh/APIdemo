@@ -11,7 +11,9 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.Button;
 import android.widget.ImageView;
 import com.blankj.utilcode.util.FileUtils;
 import com.bumptech.glide.Glide;
@@ -23,6 +25,8 @@ import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
 import com.example.apidemo.utils.image.BitmapUtils;
+import com.tencent.matrix.resource.analyzer.BitmapAnalyzer;
+
 import java.io.File;
 
 /**
@@ -37,6 +41,17 @@ public class GaussActivity extends BaseActivity {
 
         final ImageView imageView1 = findViewById(R.id.image1);
         final ImageView imageView2 = findViewById(R.id.image2);
+
+        ((Button)findViewById(R.id.button1)).setText("dumpHprof");
+        findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                BitmapAnalyzer.INSTANCE.dumpHprof();
+            }
+        });
+
+
 
         imageView1.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override

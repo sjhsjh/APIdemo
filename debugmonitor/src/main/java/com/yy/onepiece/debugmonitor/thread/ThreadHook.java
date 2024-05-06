@@ -62,13 +62,13 @@ public class ThreadHook extends XC_MethodHook {
             // me.weishu.epic.art.entry.Entry64.referenceBridge(Entry64.java:239)
             // Entry64_2 never used
             // 第一个出现内容com.example.apidemo的栈
-            if (constructStack == null && stArray[i].toString().startsWith("com.example.apidemo")) {
-                constructStack = stArray[i].toString();
-                Log.w(TAG, "(In app) Thread construct at : " + constructStack);
+            if (constructStackInApp == null && stArray[i].toString().startsWith("com.example.apidemo")) {
+                constructStackInApp = stArray[i].toString();
+                Log.w(TAG, "(In app) Thread construct at : " + constructStackInApp);
             }
             if (stArray[i].toString().contains("referenceBridge(Entry") && i + 1 < stArray.length) {
-                constructStackInApp = stArray[i + 1].toString();
-                Log.w(TAG, "Thread construct at : " + constructStackInApp);
+                constructStack = stArray[i + 1].toString();
+                Log.w(TAG, "Thread construct at : " + constructStack);
             }
         }
         return constructStack;

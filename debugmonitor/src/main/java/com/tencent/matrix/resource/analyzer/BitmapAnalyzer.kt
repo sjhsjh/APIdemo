@@ -74,7 +74,7 @@ object BitmapAnalyzer {
         System.runFinalization()
     }
 
-    private fun dumpHprof(): File {
+    fun dumpHprof(): File {
         FileUtils.createOrExistsDir(hprofFileDirPath)
         // /storage/emulated/0/Android/data/com.example.apidemo/files/apidemo-dir/Hprof/bitmap.hprof
         // 28 MB
