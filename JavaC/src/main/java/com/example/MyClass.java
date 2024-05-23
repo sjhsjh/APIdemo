@@ -20,8 +20,18 @@ public class MyClass {
         // kotlinStaticTest();
         fanxingTest();
 
+        synchronizedTest();
     }
-
+    
+    ////////////////////////////////////////////////////////////////
+    public static void synchronizedTest() {
+        ThreadA a = new ThreadA();
+        a.setName("A");
+        a.start();
+        ThreadB b = new ThreadB();
+        b.setName("B");
+        b.start();
+    }
     ////////////////////////////////////////////////////////////////
     interface I<T> {
         T funC(T a);
