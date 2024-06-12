@@ -3,8 +3,11 @@ package com.example;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import kotlin.jvm.JvmClassMappingKt;
 import kotlin.reflect.KClass;
@@ -115,6 +118,44 @@ public class MyClass {
         // void demo(Source<? extends Object> strs) {
         //     Source<Object> objects = strs; // ！！！在 Java 中不允许
         // }
+    }
+
+    private static void javaApi() {
+        String s = " as";
+        s.length();
+        s.isEmpty();
+
+        int[] arr = new int[5];
+        int l = arr.length;
+
+
+        boolean a = (s.charAt(1) == 'a');
+        System.out.println(a + "//" + s.charAt(1));
+        System.out.println((int) s.charAt(1));
+        System.out.println((char) 65);
+        System.out.println(s.indexOf("a"));
+        System.out.println(s.indexOf('a'));
+
+        List list = new ArrayList<String>();
+        list.size();
+
+        //  hashmap遍历
+        Map<String, Integer> map = new HashMap<>();
+        map.put("one", 1);
+        map.put("two", 2);
+        
+        for (String key : map.keySet()) {
+            System.out.println("Key = " + key + ", Value = " + map.get(key));
+        }
+
+        // hashset遍历
+        HashSet<String> set = new HashSet<>();
+        set.add("one");
+        set.add("two");
+
+        for (String element : set) {
+            System.out.println(element);
+        }
     }
 
     /**
