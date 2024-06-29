@@ -402,6 +402,11 @@ public class AndroidUtils {
             }
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            "x86_64".equals(Build.SUPPORTED_ABIS[0]);
+            NLog.i("sjh0", "Build.SUPPORTED_ABIS[0] = " + Build.SUPPORTED_ABIS[0]);
+        }
+
 
         String cpuAbi = System.getProperty("os.arch");
         NLog.i("sjh0", "cpuAbi = " + cpuAbi);   // aarch64

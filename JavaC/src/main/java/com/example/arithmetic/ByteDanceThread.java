@@ -1,4 +1,4 @@
-package com.example;
+package com.example.arithmetic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,6 @@ import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
@@ -29,7 +28,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * 3、3个线程都加入for循环
  * 4、移除第一个线程的等待并开始
  */
-public class MyInterviewJava {
+public class ByteDanceThread {
 
     // private static final Object lock = new Object();
     public static void main(String[] args) {
