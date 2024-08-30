@@ -1,6 +1,7 @@
 package com.example.arithmetic;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Pdd {
 
@@ -64,7 +65,53 @@ public class Pdd {
         return max;
     }
 
+    public class TreeNode {
+        int val;
+        TreeNode left;
+        TreeNode right;
 
+        TreeNode() {
+        }
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+
+        TreeNode(int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
+    }
+
+    // Temu 二面 ：求二叉树高度
+    // 1、不能用递归
+    // 2、要用深度优先算法（含递归or栈）
+    // 即要使用 栈实现先根遍历
+    public static int getDepth(TreeNode head) {
+        if(head == null)    return 0;
+        int dep = 1;
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode treeNode = head;
+        // 先左节点，再右节点，然后出栈根节点
+        while (treeNode != null || !stack.isEmpty()) {
+            while (treeNode != null) {
+                // 入栈根节点 并 遍历左节点
+                stack.push(treeNode);
+                treeNode = treeNode.left;
+                if (stack.size() > dep) {
+                    dep = stack.size();
+                }
+            }
+            if (!stack.isEmpty()) {
+                // 出栈根节点 来 遍历右节点
+                TreeNode pop = stack.pop();
+                treeNode = pop.right;
+            }
+        }
+
+        return dep;
+    }
 
     // Temu 一面
     // 单词逆序

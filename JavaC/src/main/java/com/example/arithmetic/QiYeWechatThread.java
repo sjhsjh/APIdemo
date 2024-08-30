@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 /**
  * 企业微信算法——生产与消费
+ * https://code.meideng.dev/17194029670837933
  */
 public class QiYeWechatThread {
 

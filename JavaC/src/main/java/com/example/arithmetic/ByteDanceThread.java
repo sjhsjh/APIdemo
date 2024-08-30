@@ -43,6 +43,7 @@ public class ByteDanceThread {
         // logBySemaphore();
 
         // 方法4、使用 CyclicBarrier (有2种方法)（基于Condition实现）
+        // （调用await方法的线程会被阻塞，直到 cyclicBarrier.await() 一共执行3次之后才冲破栅栏）
         // logByBarrier();
         // logByBarrierSecond();
 
@@ -51,6 +52,8 @@ public class ByteDanceThread {
 
         // 方法6、使用 LockSupport （基于Unsafe的native实现, 比其他方式更底层）
         logByLockSupport();
+
+        // 方法7、LinkedBlockingQueue。（一个由链表结构组成的双向阻塞队列。）
 
         // onlyNotify();
     }
@@ -533,6 +536,7 @@ public class ByteDanceThread {
     /**
      * 另一种写法：更好理解！
      * 3个线程都先 LockSupport.park()，然后LockSupport.unpark(t1) 开启循环
+     * 先park指定的线程，然后通过 LockSupport.unpark(t1)  来启动！！
      */
     private static void logByLockSupport() {
         t1 = new Thread(() -> {
