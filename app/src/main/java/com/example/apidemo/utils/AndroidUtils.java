@@ -20,8 +20,10 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Debug;
+import android.os.Parcel;
 import android.os.PowerManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -43,6 +45,71 @@ import java.util.List;
  */
 public class AndroidUtils {
     public static final String BITMAP_FOLDER = "bitmap";
+
+    /**
+     * writeXXX()和readXXX()执行后 都会产生偏移量； 且偏移量是共用；
+     * dataSize: 得到当前parcel对象的实际存储空间; 随着写入数据，数值增大；
+     * dataCapacity: 表示 Parcel 对象能够容纳的数据总量的上限，即 Parcel 内部缓冲区的大小、 >=dataSize()、到达上限时会自动扩容、
+     */
+    public static void parcelTest() {
+        Parcel parcel = Parcel.obtain();
+        for (int i = 0; i < 10; i++) {
+            parcel.writeInt(i);
+            Log.i("sjh1", "write double ----> " + i);
+        }
+        parcel.setDataPosition(0);  //  设置偏移量 指针位置
+        while (parcel.dataPosition() < parcel.dataSize()) {
+            String fvalue = parcel.readString();
+            Log.i("sjh1",
+                    " read double is=" + fvalue + ", --->" + parcel.dataPosition() + ", --->" +
+                            parcel.dataSize() + ", --->" + parcel.dataCapacity());
+        }
+
+
+        // for (int i = 0; i < 17; i++) {
+        //     parcel.writeDouble(i);
+        //     Log.i("sjh1", "write double ----> ");
+        // }
+
+        // 方法一
+        // int i = 0;
+        // int datasize = parcel.dataSize();    //  得到当前parcel对象的实际存储空间
+        // while (i < datasize) {
+        //     parcel.setDataPosition(i);
+        //     double fvalue = parcel.readDouble();
+        //     Log.i("sjh1", " read double is=" + fvalue + ", --->"  + parcel.dataPosition());
+        //     i += 8; // double占用字节为 8byte
+        // }
+
+        // 方法二，由于对象的类型一致，我们可以直接利用readXXX()读取值会产生偏移量
+        // parcel.setDataPosition(0);  //  设置偏移量 指针位置
+        // while (parcel.dataPosition() < parcel.dataSize()) {
+        //     double fvalue = parcel.readDouble();
+        //     Log.i("sjh1",
+        //             " read double is=" + fvalue + ", --->" + parcel.dataPosition() + ", --->" +
+        //                     parcel.dataSize() + ", --->" + parcel.dataCapacity());
+        // }
+
+
+        // Parcel parcel = Parcel.obtain();
+        // for (int i = 8; i < 10; i++) {
+        //     parcel.writeInt(i);             // 长度4
+        // }
+        // // parcel.writeFloat(4234234.4f);   // 长度4
+        // // parcel.writeLong(99L);           // 长度8
+        // // parcel.writeDouble(4234234.4);  // 长度8
+        // /*
+        //  * Parcel.cpp中
+        //  * 1、先写入了当前数据的长度writeInt32(len);
+        //  * 以长度为4对齐，不足4也需要填充为4；
+        //  * 两个字母长4；
+        //  * const size_t padded = pad_size(len);
+        //  */
+        // parcel.writeString("abcee");     // 长度变化  8   12  12  16   16
+        //
+
+    }
+
 
     public static String debugLog(long receiveTime) {
         SimpleDateFormat simpledate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

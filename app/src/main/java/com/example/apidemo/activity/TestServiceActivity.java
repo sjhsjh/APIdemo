@@ -1,6 +1,5 @@
 package com.example.apidemo.activity;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -11,11 +10,13 @@ import android.os.RemoteException;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.Book;
 import com.example.apidemo.IMyAidlInterface;
 import com.example.apidemo.R;
 import com.example.apidemo.service.TestService;
+import com.example.apidemo.utils.AndroidUtils;
 import com.example.apidemo.utils.NLog;
 
 /**
@@ -25,19 +26,25 @@ import com.example.apidemo.utils.NLog;
 public class TestServiceActivity extends BaseActivity {
     private final String TAG = "TestServiceActivity";
     public final static String ISHEAD = "isHead";
+    public final static String IS_LOCAL_BINDER = "isLocalBinder";
     private boolean mIsBind = false;
     private TestService.MyBinder mConnectedBinder;
     private IMyAidlInterface mMyAidlInterface;
+    private boolean isLocalBinder = false;   // 本地binder 还是 远程binder
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {   // onBind返回非null之后调用. Component是TestService, IBinder是TestService的binder.
-            NLog.d(TAG, "onServiceConnected.  ComponentName = " + name.toString() + "IBinder = " + service.toString());
-            /*  TAG: 返回本地binder */
-            mConnectedBinder = (TestService.MyBinder)service;
-            mConnectedBinder.binderLog();
-            /*  TAG: 启动AIDL远程binder */
-     //       mMyAidlInterface = IMyAidlInterface.Stub.asInterface(service);
+            NLog.d(TAG,"onServiceConnected.  ComponentName = " + name.toString() + "\nIBinder = " + service.toString());
+            if (isLocalBinder) {
+                /*  TAG: 返回本地binder */
+                mConnectedBinder = (TestService.MyBinder) service;
+                mConnectedBinder.binderLog();
+            } else {
+                /*  TAG: 启动AIDL远程binder */
+                mMyAidlInterface = IMyAidlInterface.Stub.asInterface(service);
+            }
+
         }
 
         /**
@@ -83,6 +90,7 @@ public class TestServiceActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TestServiceActivity.this, TestService.class);
+                intent.putExtra(IS_LOCAL_BINDER, isLocalBinder);
                 // BIND_AUTO_CREATE表示在Activity和Service建立关联后自动创建Service，这会使得MyService中的onCreate()方法得到执行，但onStartCommand()方法不会执行。
                 mIsBind = true;
                 bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
@@ -116,8 +124,15 @@ public class TestServiceActivity extends BaseActivity {
             public void onClick(View v) {
                 try {
                    NLog.d(TAG, TAG + " mMyAidlInterface = " + mMyAidlInterface);
+
                     if(mMyAidlInterface != null){
-                       NLog.d(TAG, TAG + " aidl:" + mMyAidlInterface.plus(new Book(5), new Book(8)));
+                        NLog.d(TAG,TAG + " aidl:" + mMyAidlInterface.plus(new Book(5), new Book(8)));
+
+                        Toast.makeText(TestServiceActivity.this, "mMyAidlInterface plus success",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(TestServiceActivity.this, "mMyAidlInterface null",
+                                Toast.LENGTH_SHORT).show();
                     }
                 } catch (RemoteException e) {
                     e.printStackTrace();
@@ -125,14 +140,23 @@ public class TestServiceActivity extends BaseActivity {
             }
         });
 
-        ((TextView)findViewById(R.id.textView1)).setText("test connection ");
+        ((TextView)findViewById(R.id.textView1)).setText("excute local aidl method ");
         findViewById(R.id.textView1).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(mConnectedBinder != null){
+                if (mConnectedBinder != null) {
                     mConnectedBinder.binderLog();
                 }
+            }
+        });
+
+        ((TextView) findViewById(R.id.textView2)).setText("test parcel ");
+        findViewById(R.id.textView2).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                AndroidUtils.parcelTest();
             }
         });
 

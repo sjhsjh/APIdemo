@@ -69,7 +69,7 @@ public class TestService extends Service{
             Notification notification = new Notification.Builder(this)
                     .setAutoCancel(true)
                     .setContentTitle("title")
-                    .setContentText("text")
+                    .setContentText("text-这是前台通知")
                     .setSmallIcon(R.drawable.ic_launcher)
                     .setContentIntent(pendingIntent)
                     .setWhen(System.currentTimeMillis())
@@ -79,7 +79,7 @@ public class TestService extends Service{
         }
 
 
-        if(mThread == null || !mThread.isAlive()){  // 防止开启多个线程.
+        if (mThread == null || !mThread.isAlive()) {  // 防止开启多个线程.
             mThread = new Thread(mRunnable);        // 开线程定时循环工作
             mThread.start();
         }
@@ -94,10 +94,17 @@ public class TestService extends Service{
         NLog.d(TAG, "onBind");
         // 当其他组件调用bindService()方法时，此方法将会被调用.返回一个IBinder对象，它是用来支撑其他组件与service之间的通信。如果不想让这个service被绑定，在此返回null即可
 
-        /*  TAG: 返回本地binder */
-         return mMyBinder;
-        /*  TAG: 启动AIDL远程binder ，返回AIDL文件的内部类Binder对象！ */
-        //return mAIDLBinder;
+        boolean isLocalBinder = intent.getBooleanExtra(TestServiceActivity.IS_LOCAL_BINDER, false);
+        NLog.d(TAG, "onBind isLocalBinder=" + isLocalBinder);
+
+        if (isLocalBinder) {
+            /*  TAG: 返回本地binder */
+            return mMyBinder;
+        } else {
+            /*  TAG: 启动AIDL远程binder ，返回AIDL文件的内部类Binder对象！ */
+            return mAIDLBinder;
+        }
+
     }
 
     @Override
@@ -131,12 +138,13 @@ public class TestService extends Service{
     /*  TAG: 本地binder */
     public class MyBinder extends Binder{
         public void binderLog(){
-            NLog.d(TAG, "binderLog");
+            NLog.d(TAG, "本地binder binderLog");
         }
     }
 
     /*  TAG: AIDL远程binder ，AIDL文件的内部类Binder对象！ */
     private AIDLBinder mAIDLBinder = new AIDLBinder();
+
     public class AIDLBinder extends IMyAidlInterface.Stub{
 
         @Override
@@ -147,6 +155,11 @@ public class TestService extends Service{
         @Override
         public int plus(Book book1, Book book2) throws RemoteException {
             return book1.getNumber() + book2.getNumber();
+        }
+
+        @Override
+        public int minus(Book book1, Book book2) throws RemoteException {
+            return book1.getNumber() - book2.getNumber();
         }
 
     }
