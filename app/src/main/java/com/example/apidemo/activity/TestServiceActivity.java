@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.Book;
 import com.example.apidemo.IMyAidlInterface;
+import com.example.apidemo.IOnServerCallback;
 import com.example.apidemo.R;
 import com.example.apidemo.service.TestService;
 import com.example.apidemo.utils.AndroidUtils;
@@ -43,6 +44,25 @@ public class TestServiceActivity extends BaseActivity {
             } else {
                 /*  TAG: 启动AIDL远程binder */
                 mMyAidlInterface = IMyAidlInterface.Stub.asInterface(service);
+
+                try {
+                    mMyAidlInterface.registerListener(new IOnServerCallback.Stub() {
+                        @Override
+                        public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat,
+                                               double aDouble, String aString) throws RemoteException {
+
+                        }
+
+                        @Override
+                        public void onBookReceived(Book book) throws RemoteException {
+                            NLog.w(TAG, "onServiceConnected.  onBookReceived book= " + book.toString()
+                                    + "num=" + book.getNumber()
+                                    + "Thread=" + Thread.currentThread());  // main thread
+                        }
+                    });
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -117,7 +137,7 @@ public class TestServiceActivity extends BaseActivity {
             }
         });
 
-        ((TextView)findViewById(R.id.button6)).setText("excute aidl method ");
+        ((TextView)findViewById(R.id.button6)).setText("excute aidl method plus");
         findViewById(R.id.button6).setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -125,10 +145,11 @@ public class TestServiceActivity extends BaseActivity {
                 try {
                    NLog.d(TAG, TAG + " mMyAidlInterface = " + mMyAidlInterface);
 
-                    if(mMyAidlInterface != null){
-                        NLog.d(TAG,TAG + " aidl:" + mMyAidlInterface.plus(new Book(5), new Book(8)));
+                    if (mMyAidlInterface != null) {
+                        int sum = mMyAidlInterface.plus(new Book(5), new Book(8));
+                        NLog.d(TAG, TAG + " aidl:" + sum);
 
-                        Toast.makeText(TestServiceActivity.this, "mMyAidlInterface plus success",
+                        Toast.makeText(TestServiceActivity.this, "mMyAidlInterface plus " + sum,
                                 Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(TestServiceActivity.this, "mMyAidlInterface null",
@@ -163,7 +184,7 @@ public class TestServiceActivity extends BaseActivity {
     }
 
     private void unBindAllService(){
-        if(mIsBind){
+        if (mIsBind) {
             mIsBind = false;
             unbindService(mServiceConnection);  // 不能多次unBind
         }

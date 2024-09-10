@@ -13,6 +13,7 @@ import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import com.example.apidemo.Book;
 import com.example.apidemo.IMyAidlInterface;
+import com.example.apidemo.IOnServerCallback;
 import com.example.apidemo.R;
 import com.example.apidemo.activity.TestServiceActivity;
 import com.example.apidemo.utils.AndroidUtils;
@@ -129,7 +130,7 @@ public class TestService extends Service{
     public void onDestroy() {
         NLog.d(TAG, "onDestroy. 服务停止！");
         // service调用的最后一个方法.在此进行资源的回收
-        if(mHandler != null){
+        if (mHandler != null) {
             mHandler.removeCallbacks(mRunnable);
         }
         super.onDestroy();
@@ -146,7 +147,7 @@ public class TestService extends Service{
     private AIDLBinder mAIDLBinder = new AIDLBinder();
 
     public class AIDLBinder extends IMyAidlInterface.Stub{
-
+        private IOnServerCallback cb;
         @Override
         public void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat, double aDouble, String aString) throws RemoteException {
 
@@ -154,6 +155,10 @@ public class TestService extends Service{
 
         @Override
         public int plus(Book book1, Book book2) throws RemoteException {
+            if (cb != null) {
+                // 服务端通知客户端 我已收到book1
+                cb.onBookReceived(book1);
+            }
             return book1.getNumber() + book2.getNumber();
         }
 
@@ -162,6 +167,15 @@ public class TestService extends Service{
             return book1.getNumber() - book2.getNumber();
         }
 
+        @Override
+        public void registerListener(IOnServerCallback callback) throws RemoteException {
+            cb = callback;
+        }
+
+        @Override
+        public void unRegisterListener(IOnServerCallback callback) throws RemoteException {
+            cb = null;
+        }
     }
 
 }
