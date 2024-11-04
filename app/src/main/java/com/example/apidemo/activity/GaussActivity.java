@@ -11,6 +11,8 @@ import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
+import android.support.annotation.Nullable;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -26,7 +28,6 @@ import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
 import com.example.apidemo.utils.image.BitmapUtils;
 import com.tencent.matrix.resource.analyzer.BitmapAnalyzer;
-
 import java.io.File;
 
 /**
@@ -50,9 +51,17 @@ public class GaussActivity extends BaseActivity {
                 BitmapAnalyzer.INSTANCE.dumpHprof();
             }
         });
+        ((Button)findViewById(R.id.button2)).setText("glideTest");
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                glideTest(imageView1);
+            }
+        });
 
-
+        // SurfaceView
+        // SurfaceFlinger
         imageView1.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
             @Override
             public boolean onPreDraw() {
@@ -83,8 +92,11 @@ public class GaussActivity extends BaseActivity {
         //         .centerCrop()
         //         .transform(new BlurTransformation(), new GrayscaleTransformation())
 
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-                + "/APIDemoLog/CameraView.png");
+        // /storage/emulated/0
+        NLog.i("sjh0",  "glide getAbsolutePath = " + Environment.getExternalStorageDirectory().getAbsolutePath());
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/camera.jpg");
+        NLog.i("sjh0", "glide isFileExists = " + FileUtils.isFileExists(file));
+
         if (FileUtils.isFileExists(file)) {
             try {
                 Glide.with(this).load(file)
@@ -99,9 +111,16 @@ public class GaussActivity extends BaseActivity {
                                 // java.lang.RuntimeException: Canvas: trying to draw too large(192000000bytes) bitmap.（from DisplayListCanvas）
                                 // DisplayListCanvas.MAX_BITMAP_SIZE等于100 MB.
 //                                imageView1.setImageDrawable(resource);
+                               imageView1.setImageDrawable(resource);
 
                                 NLog.i("sjh0", "onResourceReady byteCount : " + BitmapUtils.drawableToBitamp(resource).getAllocationByteCount());   // 192000000
                                 NLog.i("sjh0", "onResourceReady format : " + BitmapUtils.drawableToBitamp(resource).getConfig().name());            // ARGB_8888
+                            }
+
+                            @Override
+                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                super.onLoadFailed(errorDrawable);
+                                NLog.w("sjh0", "glide errorDrawable = " + errorDrawable);
                             }
                         });
             } catch (OutOfMemoryError error) {

@@ -131,8 +131,24 @@ public class ClickAccessibilityService extends BaseAccessibilityService {
         }
 
         // 京东自动抢货
-        if (AutoClickActivity.enableJingDong && event.getPackageName().toString().contains("jingdong")) {
+        if (AutoClickActivity.enableJingDong && (event.getPackageName().toString().contains(
+                "jingdong")|| event.getPackageName().toString().contains("taobao"))) {
             if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+
+                // if (event.getClassName().toString().contains(".WebActivity")) {     // 退出抢购失败页面
+                //     if (enable && isRunning && !list.isEmpty()) {
+                //         list.add(0, new Runnable() {
+                //             @Override
+                //             public void run() {
+                //                 performGlobalAction(GLOBAL_ACTION_BACK);
+                //                 execNext();
+                //                 NLog.d("sjh2","==action back");
+                //             }
+                //         });
+                //         return;
+                //     }
+                // }
+
                 NLog.d("sjh2","==receive app jingdong change. getClassName==" + event.getClassName().toString());
                 final Random r1 = new Random();
                 ClickAccessibilityService bs = null;
