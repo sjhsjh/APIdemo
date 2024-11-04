@@ -35,6 +35,7 @@ public class MyClass {
         b.setName("B");
         b.start();
     }
+
     ////////////////////////////////////////////////////////////////
     interface I<T> {
         T funC(T a);
@@ -110,7 +111,7 @@ public class MyClass {
         System.out.println(ObjectClass.User2);
 
         // java中获取kotlin中的KClass
-        KClass kClass = JvmClassMappingKt.getKotlinClass(  Utils.comObj.getQqq().getClass());
+        KClass kClass = JvmClassMappingKt.getKotlinClass(Utils.comObj.getQqq().getClass());
 
         // interface Source<T> {
         //     T nextT();
@@ -288,6 +289,7 @@ public class MyClass {
 abstract class Base {
     String str = this.toString();
     int code = cal();
+
     abstract int cal();
 }
 
@@ -302,7 +304,6 @@ class Son extends Base {
 abstract class Grandson extends Son {
     abstract int cal();
 }
-
 
 class Animal {
     public Animal() {

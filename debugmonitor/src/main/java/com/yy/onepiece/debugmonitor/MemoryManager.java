@@ -8,6 +8,8 @@ import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Process;
+import android.system.ErrnoException;
+import android.system.Os;
 import android.text.TextUtils;
 import android.util.Log;
 import com.bumptech.glide.Glide;
@@ -44,8 +46,15 @@ public class MemoryManager {
         mActivityManager = (ActivityManager) context.getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
     }
 
+    /**
+     * 获取内存数据的 3 种方式
+     *  // new ActivityManager.MemoryInfo();
+     *  // Runtime.getRuntime().totalMemory();
+     *  // new Debug.MemoryInfo().getTotalPss();
+     */
     public String getAllMemoryDetail() {
         StringBuilder sb = new StringBuilder();
+
         sb.append(getMemoryData2());
         sb.append("\n");
         sb.append(getMemoryData());
@@ -267,19 +276,26 @@ public class MemoryManager {
         int length = files.length; // 即进程中的fd数量,约72
         stringBuilder.append("created fd length : " + length);
 
-        // for (int i = 0; i < length; i++) {
-        //     if (Build.VERSION.SDK_INT >= 21) {
-        //         try {
-        //             String str = Os.readlink(files[i].getAbsolutePath()); // 得到软链接实际指向的文件
-        //             // todo 对单个FD如“anon_inode:[eventfd]”进行计数
-        //             stringBuilder.append("readlink : " + str);
-        //         } catch (ErrnoException e) {
-        //             e.printStackTrace();
-        //         }
-        //     } else {
-        //         // 6.0以下系统可以通过执行readlink命令去得到软连接实际指向文件，但是耗时较久
-        //     }
-        // }
+
+        // Log.i(TAG, FileIOUtils.readFile2String(files[20], null));    // 文件内容乱码
+
+        // 同 PerformanceUtils.getFdInfo()
+        // 列出FD以及其指向文件信息
+        for (int i = 0; i < length; i++) {
+            if (Build.VERSION.SDK_INT >= 21) {
+                String linkTarget ="";
+                try {
+                    linkTarget = Os.readlink(files[i].getAbsolutePath()); // 得到软链接实际指向的文件
+                    // todo 对单个FD 如“anon_inode:[eventfd]”进行计数
+                    stringBuilder.append("readlink : " + linkTarget);
+                    Log.d(TAG, "$file====>" + linkTarget);
+                } catch (ErrnoException e) {
+                    Log.d(TAG, "$file====> " + linkTarget + "  " + e);
+                }
+            } else {
+                // 6.0以下系统可以通过执行readlink命令去得到软连接实际指向文件，但是耗时较久
+            }
+        }
 
         Log.w(TAG, stringBuilder.toString());
         return stringBuilder.toString();
