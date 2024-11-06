@@ -12,6 +12,7 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.support.annotation.Nullable;
+import android.util.Pair;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -26,6 +27,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.apidemo.BaseActivity;
 import com.example.apidemo.R;
 import com.example.apidemo.utils.NLog;
+import com.example.apidemo.utils.SharedMemoryUtil;
 import com.example.apidemo.utils.image.BitmapUtils;
 import com.tencent.matrix.resource.analyzer.BitmapAnalyzer;
 import java.io.File;
@@ -42,6 +44,7 @@ public class GaussActivity extends BaseActivity {
 
         final ImageView imageView1 = findViewById(R.id.image1);
         final ImageView imageView2 = findViewById(R.id.image2);
+        final ImageView imageView3 = findViewById(R.id.image3);
 
         ((Button)findViewById(R.id.button1)).setText("dumpHprof");
         findViewById(R.id.button1).setOnClickListener(new View.OnClickListener() {
@@ -57,6 +60,17 @@ public class GaussActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 glideTest(imageView1);
+            }
+        });
+        ((Button)findViewById(R.id.button3)).setText("共享内存 写入");
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Pair<Integer, Integer> pair = SharedMemoryUtil.writeSharedMemory();
+                Bitmap b = SharedMemoryUtil.readSharedMemory(pair.first, pair.second);
+
+                imageView3.setImageBitmap(b);
             }
         });
 
