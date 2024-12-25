@@ -13,6 +13,7 @@ import com.example.apidemo.R;
 import com.example.apidemo.utils.Constant;
 import com.example.apidemo.utils.NLog;
 import com.example.apidemo.utils.PreferencesManager;
+import com.pkgname.Java2CJNI;
 
 /**
  *  activity进出动画、禁止截屏功能
@@ -61,7 +62,29 @@ public class FunctionActivity extends BaseActivity {
 
             }
         });
+        ((Button)findViewById(R.id.button3)).setText("java call c");
+        findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                Java2CJNI jObj = new Java2CJNI();
+                String res = jObj.javaMethod();
+
+                Toast.makeText(FunctionActivity.this, "jni res = " + res, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        ((Button)findViewById(R.id.button4)).setText("java call c javaIncrease");
+        findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                int res = Java2CJNI.javaIncrease(5);
+
+                Toast.makeText(FunctionActivity.this, "jni res = " + res, Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
