@@ -11,7 +11,7 @@ add_library( # Sets the name of the library.  设置生成so文件名
         # Sets the library as a shared library.
         SHARED
         # Provides a relative path to your source file(s).  要编译的C/C++文件
-        src/main/jni/Java2C.cpp)
+           src/main/jni/Java2Cplus.cpp)
 
 
 

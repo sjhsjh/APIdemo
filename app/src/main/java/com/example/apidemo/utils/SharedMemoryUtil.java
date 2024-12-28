@@ -31,7 +31,7 @@ import java.nio.ByteBuffer;
  *
  * MemoryFile是对SharedMemory的包装，官方推荐直接使用SharedMemory（更灵活）。
  *
- *
+ * @date 2024/11/6
  */
 public class SharedMemoryUtil {
     private static final int SHARED_MEMORY_SIZE = 1024;
@@ -39,8 +39,8 @@ public class SharedMemoryUtil {
 
     public static Pair<Integer, Integer> writeSharedMemory() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) return null;
-        try {
 
+        try {
             File jpegFile = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/camera.jpg");
             // 1、使用文件流把文件读入到内存
             FileInputStream inputStream = new FileInputStream(jpegFile);

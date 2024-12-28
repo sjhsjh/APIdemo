@@ -3,15 +3,15 @@
 //
 
 #include <jni.h>
-#include "com_pkgname_Java2CJNI.h"
+#include "com_pkgname_Java2CJNIplus.h"
 #include<android/log.h>
 
 /**
  cpp文件名无要求
 */
-JNIEXPORT jstring JNICALL Java_com_pkgname_Java2CJNI_javaMethod(JNIEnv* env, jobject instance)
+JNIEXPORT jstring JNICALL Java_com_pkgname_Java2CJNI_javaMethodPlus(JNIEnv* env, jobject instance)
 {
-    return (env)->NewStringUTF("I am From Native C22");
+    return (env)->NewStringUTF("I am From Native C++");
 }
 
 /**
@@ -54,7 +54,7 @@ JNIEXPORT jstring JNICALL Java_com_pkgname_Java2CJNI_javaMethod(JNIEnv* env, job
  */
 
 
-JNIEXPORT jint JNICALL Java_com_pkgname_Java2CJNI_javaIncrease
+JNIEXPORT jint JNICALL Java_com_pkgname_Java2CJNI_javaIncreasePlus
 (JNIEnv *env, jclass jcs, jint num){
 //	printf("来自java的int数值为%ld", num);
 

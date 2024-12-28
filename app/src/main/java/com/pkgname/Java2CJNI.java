@@ -25,5 +25,9 @@ public class Java2CJNI {
 
     public static native int javaIncrease(int num);
 
+
+    public native String javaMethodPlus();
+
+    public static native int javaIncreasePlus(int num);
 }
 
