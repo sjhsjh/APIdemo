@@ -62,24 +62,26 @@ public class FunctionActivity extends BaseActivity {
 
             }
         });
-        ((Button)findViewById(R.id.button3)).setText("java call c");
+        ((Button)findViewById(R.id.button3)).setText("java call c/c++");
         findViewById(R.id.button3).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 Java2CJNI jObj = new Java2CJNI();
                 String res = jObj.javaMethod();
+                // String res = jObj.javaMethodPlus();
 
                 Toast.makeText(FunctionActivity.this, "jni res = " + res, Toast.LENGTH_SHORT).show();
 
             }
         });
-        ((Button)findViewById(R.id.button4)).setText("java call c javaIncrease");
+        ((Button)findViewById(R.id.button4)).setText("java call c/c++ javaIncrease");
         findViewById(R.id.button4).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 int res = Java2CJNI.javaIncrease(5);
+                // int res = Java2CJNI.javaIncreasePlus(5);
 
                 Toast.makeText(FunctionActivity.this, "jni res = " + res, Toast.LENGTH_SHORT).show();
 
