@@ -6,12 +6,12 @@
 #include "com_pkgname_Java2CJNI.h"
 #include<android/log.h>
 #include <stdio.h>
-
+#include "MyLog.h"
 
 /**
  * c函数与cpp函数不一样, 且头文件的extern "C" 可以不一样
 */
-
+#define LOG_TAG "JavaToC"   // 覆盖MyLog.h中的LOG_TAG
 
 JNIEXPORT jstring JNICALL Java_com_pkgname_Java2CJNI_javaMethod(JNIEnv* env, jobject instance)
 {
@@ -46,7 +46,10 @@ JNIEXPORT jstring JNICALL Java_com_pkgname_Java2CJNI_javaMethod(JNIEnv* env, job
 JNIEXPORT jint JNICALL Java_com_pkgname_Java2CJNI_javaIncrease
         (JNIEnv *env, jclass jcs, jint num){
 	printf("<JavaToC.c>。来自java的int数值为%ld", num);    // 来自stdio.h。 实际无打印
-
+    LOGD("jni print");
+    LOGI("jni print int = %d", num);
+    LOGI("jni print long = %ld", num);
+    LOGE("jni print str = %s", "testStr");
 
 
     //因为jint是long类型所以直接赋值

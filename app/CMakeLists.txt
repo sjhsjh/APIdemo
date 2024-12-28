@@ -14,6 +14,19 @@ add_library( # Sets the name of the library.  设置生成so文件名
         src/main/jni/Java2Cplus.cpp
         src/main/jni/JavaToC.c)
 
+#日志所需
+find_library( # Sets the name of the path variable.
+        log-lib
+        # Specifies the name of the NDK library that
+        # you want CMake to locate.
+        log)
+
+target_link_libraries( # Specifies the target library.
+        Java2C         #改成你自己的库
+        # Links the target library to the log library
+        # included in the NDK.
+        ${log-lib})
+
 
 
 ## 设置构建本地库所需的最小版本的cbuild。
