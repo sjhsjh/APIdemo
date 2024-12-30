@@ -15,6 +15,8 @@ import com.example.apidemo.utils.NLog;
 import com.example.apidemo.utils.PreferencesManager;
 import com.pkgname.Java2CJNI;
 
+import java.util.ArrayList;
+
 /**
  *  activity进出动画、禁止截屏功能
  * Created by Administrator on 2018/8/5 0005.
@@ -68,8 +70,13 @@ public class FunctionActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Java2CJNI jObj = new Java2CJNI();
-                String res = jObj.javaMethod();
-                // String res = jObj.javaMethodPlus();
+                // String res = jObj.javaMethod();
+
+                ArrayList<Integer> list = new ArrayList<Integer>();
+                list.add(77);
+                list.add(88);
+                String res = jObj.javaMethodPlus("java ", true
+                        , list, list.size());
 
                 Toast.makeText(FunctionActivity.this, "jni res = " + res, Toast.LENGTH_SHORT).show();
 
@@ -85,6 +92,17 @@ public class FunctionActivity extends BaseActivity {
 
                 Toast.makeText(FunctionActivity.this, "jni res = " + res, Toast.LENGTH_SHORT).show();
 
+            }
+        });
+        ((Button)findViewById(R.id.button5)).setText("java call c/c++ nativeNewObj");
+        findViewById(R.id.button5).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Java2CJNI jObj = Java2CJNI.nativeNewObj();
+
+                Toast.makeText(FunctionActivity.this, "jni longData = " + jObj.longData,
+                        Toast.LENGTH_SHORT).show();
             }
         });
 

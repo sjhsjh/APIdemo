@@ -1,5 +1,7 @@
 package com.pkgname;
 
+import java.util.ArrayList;
+
 /**
      配置ndk.dir
      app的build.gradle + CMakeLists.txt 得到so名称
@@ -15,6 +17,14 @@ package com.pkgname;
 //
 public class Java2CJNI {
 
+    public boolean booleanData = true;
+    public byte byteData;
+    private int intData = 99;    // 私有
+    public long longData;
+    public float floatData;
+    public double doubleData;
+    public String stringData;
+
     //加载so库
     static {
         System.loadLibrary("Java2C");   // 后面CMakeLists和JNI中是需要和这个名称对应的。
@@ -26,8 +36,12 @@ public class Java2CJNI {
     public static native int javaIncrease(int num);
 
 
-    public native String javaMethodPlus();
+    public native String javaMethodPlus(String str, boolean isOk,
+                                        ArrayList list, int len);
 
     public static native int javaIncreasePlus(int num);
+
+
+    public static native Java2CJNI nativeNewObj();
 }
 

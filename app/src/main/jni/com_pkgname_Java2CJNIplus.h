@@ -33,10 +33,13 @@
         第二个参数jobject是  Java函数所在类的实例的Java对象引用。
      */
     JNIEXPORT jstring JNICALL Java_com_pkgname_Java2CJNI_javaMethodPlus
-      (JNIEnv *, jobject);
+            (JNIEnv *, jobject, jstring, jboolean isOk, jobject listObj, jint len);
 
     JNIEXPORT jint JNICALL Java_com_pkgname_Java2CJNI_javaIncreasePlus
-      (JNIEnv *, jclass, jint);
+            (JNIEnv *, jclass, jint);
+
+    JNIEXPORT jobject JNICALL Java_com_pkgname_Java2CJNI_nativeNewObj
+            (JNIEnv *, jclass);
 
 
     #ifdef __cplusplus

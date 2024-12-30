@@ -9,7 +9,8 @@
 #include "MyLog.h"
 
 /**
- * c函数与cpp函数不一样, 且头文件的extern "C" 可以不一样
+ * c函数与cpp函数不一样, c函数多个env参数和*号。
+ * 且头文件的extern "C" 可以不一样
 */
 #define LOG_TAG "JavaToC"   // 覆盖MyLog.h中的LOG_TAG
 
