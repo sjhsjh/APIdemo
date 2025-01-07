@@ -152,6 +152,10 @@ public class JavaApi {
         boolean ww = (s1.charAt(1) == 97);
         System.out.println( "w="+w + " ww=" + ww + (char)(s1.charAt(1)-32));
 
+        StringBuilder sb = new StringBuilder("originalString");
+        sb.length();
+        sb.setCharAt(1, ' ');   // 改字符串里的字符！
+
 
 
         //判断两个字符串相等记得用 equals， 而不是==

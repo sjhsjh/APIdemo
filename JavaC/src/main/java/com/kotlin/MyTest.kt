@@ -632,6 +632,7 @@ fun intAndInteger(): Int {
     println("=====objArray.javaClass=======" + objArray.javaClass)        // class [Ljava.lang.Integer;
 
     var intArray = IntArray(5, { it + 10 })
+
     println(intArray.javaClass)   // class [I
     for (x in intArray) {
         objArray[0] = x
