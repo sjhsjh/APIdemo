@@ -49,7 +49,7 @@ public class GridViewAdapter extends ArrayAdapter<String> {
         mGridView = gridView;
         mGridView.setOnScrollListener(new ScrollListenerImpl());
         //应用程序最大可用内存
-        int maxMemory = (int) Runtime.getRuntime().maxMemory();
+        int maxMemory = (int) Runtime.getRuntime().maxMemory(); // 268 435 456 bytes
         System.out.println("maxMemory=" + maxMemory);   // 134 217 728 bytes
         //设置图片缓存大小为maxMemory的1/3
         int cacheSize = maxMemory / 3;

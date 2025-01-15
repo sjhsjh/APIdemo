@@ -274,28 +274,31 @@ public class MemoryManager {
             return "";
         }
         int length = files.length; // 即进程中的fd数量,约72
-        stringBuilder.append("created fd length : " + length);
+        stringBuilder.append("created fd length : " + length + " ");
 
 
         // Log.i(TAG, FileIOUtils.readFile2String(files[20], null));    // 文件内容乱码
 
         // 同 PerformanceUtils.getFdInfo()
         // 列出FD以及其指向文件信息
-        for (int i = 0; i < length; i++) {
-            if (Build.VERSION.SDK_INT >= 21) {
-                String linkTarget ="";
-                try {
-                    linkTarget = Os.readlink(files[i].getAbsolutePath()); // 得到软链接实际指向的文件
-                    // todo 对单个FD 如“anon_inode:[eventfd]”进行计数
-                    stringBuilder.append("readlink : " + linkTarget);
-                    Log.d(TAG, "$file====>" + linkTarget);
-                } catch (ErrnoException e) {
-                    Log.d(TAG, "$file====> " + linkTarget + "  " + e);
+        if (false) {
+            for (int i = 0; i < length; i++) {
+                if (Build.VERSION.SDK_INT >= 21) {
+                    String linkTarget = "";
+                    try {
+                        linkTarget = Os.readlink(files[i].getAbsolutePath()); // 得到软链接实际指向的文件
+                        // todo 对单个FD 如“anon_inode:[eventfd]”进行计数
+                        stringBuilder.append("readlink : " + linkTarget);
+                        Log.d(TAG, "$file====>" + linkTarget);
+                    } catch (ErrnoException e) {
+                        Log.d(TAG, "$file====> " + linkTarget + "  " + e);
+                    }
+                } else {
+                    // 6.0以下系统可以通过执行readlink命令去得到软连接实际指向文件，但是耗时较久
                 }
-            } else {
-                // 6.0以下系统可以通过执行readlink命令去得到软连接实际指向文件，但是耗时较久
             }
         }
+
 
         Log.w(TAG, stringBuilder.toString());
         return stringBuilder.toString();
