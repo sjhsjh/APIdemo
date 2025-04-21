@@ -1,5 +1,6 @@
 import com.example.MyObjectB
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
@@ -7,12 +8,18 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.Arrays
 import kotlin.system.measureTimeMillis
 
+
 fun main(args: Array<String>) {
 	MyObjectB(1).internalVar = 22
+
+	testMutex()
 
 //	launch {
 //		flowTest()
@@ -30,13 +37,95 @@ fun main(args: Array<String>) {
 //	}
 
 
-	printArray()
+//	printArray()
 //	printCollection()
 //	printFunction()
 
-	commonApi()
+//	commonApi()
 
 
+}
+
+fun mutexIsFair() {
+	runBlocking<Unit> {
+		val mutex = Mutex()
+
+		// 先申请锁的协程，先获得锁！！
+		// 输出顺序严格遵循协程启动顺序（0,1,2,3,4），体现公平性
+		repeat(5) { i ->
+			launch {
+				delay(100L * i) // 模拟不同协程的启动延迟
+				mutex.withLock {
+					println("协程 $i 获得锁")
+					delay(1500) // 持有锁期间执行操作
+				}
+			}
+		}
+
+	}
+}
+
+fun testMutex() {
+//	GlobalScope.launch {
+//
+//	}
+	runBlocking<Unit> {
+		val mutex = Mutex()
+		var sharedResource = 0
+
+
+		val job00 = launch {
+//			repeat(5000) { index ->
+			mutex.withLock {
+				println("Thread ${Thread.currentThread().name} is locking the mutex11")
+				delay(50000)
+				println("Thread ${Thread.currentThread().name} is locking the mutex22")
+				sharedResource ++
+			}
+//			}
+		}
+		launch {  }
+		delay(2000)
+		val job11 = launch {
+//			repeat(5000) { index ->
+			println("Thread ${Thread.currentThread().name} is locking the mutex33")
+			mutex.withLock {
+				println("Thread ${Thread.currentThread().name} is locking the mutex44")
+				sharedResource ++
+				delay(5)
+			}
+		}
+//		}
+
+
+		// 启动两个协程来修改共享资源
+//		val job = launch {
+//			repeat(5000) { index ->
+//				mutex.withLock {
+//					println("Thread ${Thread.currentThread().name} is locking the mutex")
+//					sharedResource ++
+//					delay(5)
+//				}
+//			}
+//		}
+//
+//	val job2 = 	launch(Dispatchers.IO) {
+//			repeat(5000) { index ->
+//				mutex.withLock {
+//					println("Thread ${Thread.currentThread().name} is locking the mutex")
+//				sharedResource ++
+//					delay(7)
+//				}
+//			}
+//		}
+//job.join()
+//job2.join()
+
+		// 等待所有协程完成
+//		delay(20000) // 非必需，只是为了确保所有操作完成以便观察结果
+//		println("Final value of sharedResource: $sharedResource")
+
+	}
 }
 
 /**
