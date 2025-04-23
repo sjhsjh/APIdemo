@@ -1,10 +1,9 @@
 import com.example.MyObjectB
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
@@ -17,15 +16,14 @@ import kotlin.system.measureTimeMillis
 
 
 fun main(args: Array<String>) {
-	MyObjectB(1).internalVar = 22
+//	MyObjectB(1).internalVar = 22
 
-	testMutex()
 
-//	launch {
+//	GlobalScope.launch {
 //		flowTest()
 //	}
+	flowTest2()
 
-//	flowTest2()
 
 //	out@ for (x in 0..10) {
 //		for (y in 1..9) {
@@ -36,6 +34,9 @@ fun main(args: Array<String>) {
 //		}
 //	}
 
+
+
+//	testMutex()
 
 //	printArray()
 //	printCollection()
@@ -48,12 +49,12 @@ fun main(args: Array<String>) {
 
 fun mutexIsFair() {
 	runBlocking<Unit> {
+		launch {
 		val mutex = Mutex()
 
 		// 先申请锁的协程，先获得锁！！
 		// 输出顺序严格遵循协程启动顺序（0,1,2,3,4），体现公平性
 		repeat(5) { i ->
-			launch {
 				delay(100L * i) // 模拟不同协程的启动延迟
 				mutex.withLock {
 					println("协程 $i 获得锁")
@@ -189,12 +190,15 @@ println("boolean array  " + 	listOf(false, true).toTypedArray()[1])
 //	数组: arr.size
 }
 
-@InternalCoroutinesApi
 private suspend fun flowTest() {
 	println("====================flowTest====================")
-	(1..3).asFlow().collect { value ->
-		println(value)
-	}
+    channelFlow {
+        for (i in 1..5) {
+            delay(100)
+            send(i)
+        }
+    }
+
 }
 
 /**
@@ -202,17 +206,6 @@ private suspend fun flowTest() {
  * collect相当于forEach循环从 流 中读取元素来执行代码块
  */
 fun flowTest2() = runBlocking {
-	(1..3).asFlow().catch {
-
-	}
-
-//    channelFlow {
-//        for (i in 1..5) {
-//            delay(100)
-//            send(i)
-//        }
-//    }
-
 	// 默认情况下flow内 和collect内是串行执行 且都在同一线程。
 	val time = measureTimeMillis {
 		flow {
@@ -230,6 +223,7 @@ fun flowTest2() = runBlocking {
 	}
 
 	print("cost $time\n")
+
 }
 
 

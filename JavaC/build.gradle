@@ -10,7 +10,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
     // 用于java程序中设置Dispatchers.Main！！编译android工程时需要注释这句。
-//    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0'
 
     // 代码解析库
     implementation 'com.github.javaparser:javaparser-core:3.18.0'

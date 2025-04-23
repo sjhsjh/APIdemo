@@ -114,16 +114,16 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 NLog.d("sjh0", "onItemClick position is " + position);
-                if(position == 0){
-                    if(!DoraemonKit.isShow()){
+                if (position == 0) {
+                    if (!DoraemonKit.isShow()) {
                         DoraemonKit.show();
                         // firebase 统计
-                        Usage.pv("event_test","test_value");
+                        Usage.pv("event_test", "test_value");
                         // Crashlytics.logException(new Exception("测试crash"));
-                    }else {
+                    } else {
                         DoraemonKit.hide();
                     }
-                }else {
+                } else {
                     Object activityClass = parent.getItemAtPosition(position); // 根据位置判断跳转哪个activity!!!会调用adapter的getItem().
                     NLog.d("sjh0", "activity Class = " + activityClass.toString());
 
