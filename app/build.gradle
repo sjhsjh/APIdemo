@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'   // 可选.含findViewById功能
+//apply plugin: 'kotlin-parcelize'
 //apply plugin: 'kotlin-kapt'               // 可选.java使用annotationProcessor ，kotlin中使用kapt插件来支持Android的注解处理
-apply plugin: 'io.fabric'                   // firebase Crashlytics
+//apply plugin: 'io.fabric'                   // firebase Crashlytics
 
 android {
     compileSdkVersion 30
@@ -25,10 +26,11 @@ android {
         versionName "1.0"
         multiDexEnabled true
 
-        // 用于注解处理器报错： Annotation processors must be explicitly declared now.  The following dependencies on the compile classpath are found to contain annotation processor.
+        // 用于注解处理器报错： Annotation processors must be explicitly declared now.
+        // The following dependencies on the compile classpath are found to contain annotation processor.
         javaCompileOptions {
             annotationProcessorOptions {
-                includeCompileClasspath true
+//                includeCompileClasspath true
             }
         }
     }
@@ -63,36 +65,36 @@ android {
     }
 
     dependencies {
-        compile fileTree(include: ['*.jar'], dir: 'libs')
-//        testCompile 'junit:junit:4.12'
+        implementation fileTree(include: ['*.jar'], dir: 'libs')
 /*        compileSdkVersion升级28时，编译报错：junit.framework.Assert不存在。
         原因：Assert类在新版本中从junit.framework中移除，移到org.junit中。
         解决办法：libs中增加junit包，build.gradle中添加compile files("libs/junit-4.12.jar")*/
 
-        compile project(':statisticslibrary')
+        implementation project(':statisticslibrary')
 //        compile project(':arcface')
 //        compile project(':JavaC')
-        compile project(':compiler')
+        implementation project(':compiler')
+        annotationProcessor project(':compiler')    // !!gradle7.0开始
 
         implementation 'com.android.support:appcompat-v7:27.1.1'
         implementation 'com.android.support:recyclerview-v7:27.1.1'
         implementation 'com.android.support:design:27.1.1'      // CoordinatorLayout与AppBarLayout
 
-        compile 'com.google.code.gson:gson:2.8.0'
+        implementation 'com.google.code.gson:gson:2.8.0'
         // rxjava
-        compile 'io.reactivex.rxjava2:rxjava:2.1.0'
-        compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+        implementation 'io.reactivex.rxjava2:rxjava:2.1.0'
+        implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
         // okhttp
-        compile 'com.squareup.okhttp3:okhttp:3.7.0'
-        compile 'com.squareup.okhttp3:logging-interceptor:3.7.0'
+        implementation 'com.squareup.okhttp3:okhttp:3.7.0'
+        implementation 'com.squareup.okhttp3:logging-interceptor:3.7.0'
         // retrofit
-        compile 'com.squareup.retrofit2:retrofit:2.2.0'
-        compile 'com.squareup.retrofit2:converter-gson:2.2.0'
-        compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
-        //compile(name: 'login-debug', ext: 'aar')
-        // ViewModel and LiveData
-        compile "android.arch.lifecycle:extensions:1.1.0"   // 需要在 repositories 内加上 google()
-        annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
+        implementation 'com.squareup.retrofit2:retrofit:2.2.0'
+        implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
+        implementation 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+//        //compile(name: 'login-debug', ext: 'aar')
+//        // ViewModel and LiveData
+//        compile "android.arch.lifecycle:extensions:1.1.0"   // 需要在 repositories 内加上 google()
+//        annotationProcessor "android.arch.lifecycle:compiler:1.1.0"
 
 //        compile project(':ReadmoreTextview')
 //        compile 'com.borjabravo:readmoretextview:2.1.0'   // 不支持布局完成后的setText
@@ -119,6 +121,8 @@ android {
         implementation 'com.blankj:utilcode:1.25.0'     // 1.26.0就报错
 //        implementation 'com.blankj:utilcodex:1.25.0'  // if u use AndroidX, use the following
 
+        // fix 找不到com.google.common.util.concurrent.ListenableFuture的类文件
+        implementation "com.google.guava:guava:31.0.1-android"
         def work_version = "1.0.0-alpha11"
         // use -ktx for Kotlin
         implementation "android.arch.work:work-runtime:$work_version"
@@ -161,4 +165,4 @@ dependencies {
 }
 
 // firebase. Add to the bottom of the file
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'

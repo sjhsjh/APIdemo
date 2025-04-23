@@ -24,7 +24,7 @@ buildscript {
         // maven { url 'http://repo1.maven.org/maven2' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.build:gradle:7.0.4'
         // Plugin with id 'com.novoda.bintray-release' not found的解决方法:根目录build.gradle下添加该行代码
 //        classpath 'com.novoda:bintray-release:0.7.0'      // ReadmoreTextview
 
@@ -34,7 +34,7 @@ buildscript {
         // firebase
         classpath 'com.google.gms:google-services:4.2.0'
         // firebase Crashlytics
-        classpath 'io.fabric.tools:gradle:1.26.1'
+//        classpath 'io.fabric.tools:gradle:1.26.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong

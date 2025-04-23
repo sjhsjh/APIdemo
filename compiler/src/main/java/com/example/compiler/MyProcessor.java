@@ -64,6 +64,10 @@ public class MyProcessor extends AbstractProcessor {
         messager = processingEnv.getMessager();
         filer = processingEnv.getFiler();
         elementUtils = processingEnv.getElementUtils();
+
+        // build tab 里打印
+        // 每次删掉TestManager文件再build就必定有日志了
+        System.out.println("AbstractProcessor init");
         messager.printMessage(Diagnostic.Kind.OTHER, "MyProcessor init.");
     }
 

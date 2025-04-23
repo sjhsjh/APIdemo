@@ -119,7 +119,7 @@ public class MainActivity extends BaseActivity {
                         DoraemonKit.show();
                         // firebase 统计
                         Usage.pv("event_test","test_value");
-                        Crashlytics.logException(new Exception("测试crash"));
+                        // Crashlytics.logException(new Exception("测试crash"));
                     }else {
                         DoraemonKit.hide();
                     }
