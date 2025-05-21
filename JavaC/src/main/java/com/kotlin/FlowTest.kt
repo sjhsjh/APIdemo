@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.buffer
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
@@ -169,7 +170,9 @@ fun flowTest() = runBlocking {
 
 
 }
-
+//==发射值api不同：
+//sateFlow.value = "hello"     + sateFlow.collect——StateFlow的collect瞬间仍能收到最新值，跟普通flow不一样！
+//sharedFlow.state.emit(i)      + sharedFlow.collect
 fun hotFlow() = runBlocking {
     val mutableStateFlow = MutableStateFlow<Int>(0)
 //    // 不想处理默认值的方法：
@@ -183,7 +186,7 @@ fun hotFlow() = runBlocking {
         mutableStateFlow.collect {
             println("collect before $it")
         }
-        // 无法执行。 StateFlow 的收集者调用 collect 会挂起当前协程，而且永远不会结束。只能用Job.cancel()来终止collect！
+        // 无法执行。 StateFlow 的收集者调用 collect 会挂起当前协程，而且永远不会结束!!只能用Job.cancel()来终止collect！
         println("collect over")
     }
 //	stateJob.cancel() // 取消状态流收集
@@ -243,23 +246,28 @@ fun hotFlow() = runBlocking {
 
 }
 
-
+// 用conflate时，若生产者内无挂起，则生产者内可连续emit！！
+// 若生产者内挂起，则轮到collect执行，执行循环读取“待消费队列”元素来消费，直到读取完毕结束collect。
 fun backpressure () = runBlocking {
     val time = measureTimeMillis {
         flow {
-            (1..5).forEach {
-                delay(200)
+            (1..12).forEach {
+//                delay(200)
                 println("emit: $it, ${System.currentTimeMillis()}, ${Thread.currentThread().name}")
                 emit(it)
             }
         }
 //       .flowOn(Dispatchers.Default)   // 效果约等于 .buffer()
-        .buffer()       // 生产者和消费者在 同一线程，不同协程
-//       .conflate()    // 生产者和消费者在 同一线程，不同协程,collect读数据只从“未消费队列”读取最新数据
+//        .buffer()       // 生产者和消费者在 同一线程，不同协程
+       .conflate()        // 生产者和消费者在 同一线程，不同协程,collect读数据只从“未消费队列”读取最新一个数据并清空队列
         .collect {
             // 消费效率较低
+//            for(){       // 伪代码
+//                getData()
+//                runnable.run()
+//            }
             println("Collect $it in, ${System.currentTimeMillis()}, ${Thread.currentThread().name}")
-            delay(500)
+            delay(1000)
             println("Collect $it out, ${System.currentTimeMillis()}, ${Thread.currentThread().name}")
         }
     }
@@ -273,12 +281,14 @@ fun backpressure () = runBlocking {
 //                println("emit: $it, ${System.currentTimeMillis()}, ${Thread.currentThread().name}")
 //                emit(it)
 //            }
-//        }.collectLatest {
+//        }.collectLatest {  // emit的瞬间，取消collectLatest正在执行的旧数据代码块，执行新数据的代码块。
+//            // 生产者和消费者在 同一线程，不同协程,
 //            // 消费效率较低
 //            println("Collect $it, ${System.currentTimeMillis()}, ${Thread.currentThread().name}")
 //            delay(500)
 //            println("Collect $it done, ${System.currentTimeMillis()}, ${Thread.currentThread().name}")
 //        }
+//        println("over=====")
 //    }
 //    println("time: $time")
 

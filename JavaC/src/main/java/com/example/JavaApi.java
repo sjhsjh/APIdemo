@@ -78,6 +78,8 @@ public class JavaApi {
         map.put("two", 2);
         map.containsKey("one");
         map.containsValue(2);
+        int a = map.get("");        // 装箱和拆箱问题
+        Integer a2 = map.get("");
 
         for (String key : map.keySet()) {
             System.out.println("Key = " + key + ", Value = " + map.get(key));
@@ -161,6 +163,7 @@ public class JavaApi {
         //判断两个字符串相等记得用 equals， 而不是==
 
         "ss".indexOf("sda");
+        "ss".indexOf('s');
         "ss".substring(0, 2);        // 全小写！！！
 
 
