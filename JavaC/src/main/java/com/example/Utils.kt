@@ -1,13 +1,13 @@
-package com.example
+﻿package com.example
 
 class Utils {
 //    public final static Lcom/example/Utils$comObj; comObj
-
+// 22
 //    public final static Ljava/lang/String; TAG_CONST = "tag_const"
 //    private final static Ljava/lang/String; TAG_NOT_CONST = "tag_not_const"
 //    private static Ljava/lang/String; qqq
 
-//    public final static invokeStaticMethod()
+	//    public final static invokeStaticMethod()
 
     // 是非静态内部类（普通内部类）。但外部类拥有同名的public static对象。
     // 引用外部类时就生成该内部类对象并用静态变量保存。
