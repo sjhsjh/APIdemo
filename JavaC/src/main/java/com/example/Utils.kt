@@ -6,7 +6,7 @@ class Utils {
 //    public final static Ljava/lang/String; TAG_CONST = "tag_const"
 //    private final static Ljava/lang/String; TAG_NOT_CONST = "tag_not_const"
 //    private static Ljava/lang/String; qqq
-
+// test 33S
 	//    public final static invokeStaticMethod()
 
     // 是非静态内部类（普通内部类）。但外部类拥有同名的public static对象。
