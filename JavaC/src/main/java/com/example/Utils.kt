@@ -2,7 +2,7 @@
 
 class Utils {
 //    public final static Lcom/example/Utils$comObj; comObj
-// main 33
+// main 44
 //    public final static Ljava/lang/String; TAG_CONST = "tag_const"
 //    private final static Ljava/lang/String; TAG_NOT_CONST = "tag_not_const"
 //    private static Ljava/lang/String; qqq
